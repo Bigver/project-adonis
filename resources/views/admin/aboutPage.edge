@@ -20,7 +20,8 @@
         </div>
         <!-- ฟอร์มสำหรับ submit ข้อความ -->
         {{--  ขนาด form กำหนดเอาเอง ใน public/app  --}}
-        <form class="card-body form-about"> 
+        <form class="card-body form-about" action="{{route('about.create')}}" method="post" id="myForm" > 
+          {{ csrfField() }}
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">image 1</label>
             <input
@@ -29,6 +30,7 @@
               id="ecommerce-product-name"
               placeholder="image1"
               name="img1"
+              value={{data.img1}}
               aria-label="image1" />
           </div>
           <div class="mb-3">
@@ -39,6 +41,7 @@
               id="ecommerce-product-name"
               placeholder="image2"
               name="img2"
+              value={{data.img2}}
               aria-label="image2" />
           </div>
           <div class="mb-3">
@@ -49,6 +52,7 @@
               id="ecommerce-product-name"
               placeholder="image3"
               name="img3"
+              value={{data.img3}}
               aria-label="image3" />
           </div>
           <div class="mb-3">
@@ -58,12 +62,13 @@
               class="form-control"
               id="ecommerce-product-name"
               placeholder="title about"
-              name="productTitle"
+              name="title"
+              value={{data.title}}
               aria-label="title about" />
           </div>
           <!-- Description -->
-          <div id="editor"  class="text-editor form-control h-50"></div>
-          <input type="hidden" name="message" id="message">
+          <div id="editor" class="text-editor form-control h-50">{{data.detail}}</div>
+          <input type="hidden" name="detail" id="message">
           <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Submit</button>
         </form>
       </div>
@@ -86,12 +91,12 @@
   },
   theme: 'snow' // กำหนด theme เป็น snow เพื่อให้ได้หน้าตาเหมือน Pantip
 });
-
+  
   // เมื่อผู้ใช้กด submit form
   document.getElementById('myForm').addEventListener('submit', function(event) {
     // ดึงข้อความจาก text editor
     var message = quill.root.innerHTML;
-
+    console.log(message)
     // กำหนดข้อความใน input hidden
     document.getElementById('message').value = message;
   });

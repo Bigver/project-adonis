@@ -8,6 +8,11 @@ Route.group(() => {
     Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news')
     Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
+
+    //about
+    Route.post('/about/create', 'AboutsController.create').as('about.create')
+
+
 }).prefix('admin').middleware('auth')
 
 

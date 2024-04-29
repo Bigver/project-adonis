@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import AboutService from 'App/Service/about_service';
 
 export default class PagesController {
     public async loginPage({ view }: HttpContextContract) {    
@@ -18,8 +19,13 @@ export default class PagesController {
       return view.render("admin/Dashboard");
     }
 
-    public async aboutAdmin({ view }: HttpContextContract) {    
-      return view.render("admin/aboutPage");
+    public async aboutAdmin({ view }: HttpContextContract) {  
+      const filter = {
+        id: 1
+      };
+      let aboutData: any = await AboutService.all({ filters: filter })
+      aboutData =aboutData[0].serialize()   
+      return view.render("admin/aboutPage" , {data : aboutData});
     }
 
     public async homeAdmin({ view }: HttpContextContract) {    
