@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"path": "../../../../worx/vuexy-vuejs-html-laravel-admin-dashboard-template-v10.0.0/html-version/Bootstrap5/vuexy-bootstrap-html-admin-template"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "vuexy-bootstrap-html-admin-template"
+	}
+}
