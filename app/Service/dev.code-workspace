@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "../../../dev"
+	},
+	{
+		"path": "../../../git/adonisjs-intern-app"
+	},
+	{
+		"path": "../.."
+	}
+],
+  "settings": {}
+}
