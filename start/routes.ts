@@ -5,10 +5,19 @@ Route.group(() => {
     Route.get('/homeAdmin', 'PagesController.homeAdmin').as('admin.home')
     Route.get('/aboutAdmin', 'PagesController.aboutAdmin').as('admin.about')
     Route.get('/interestingAdmin', 'PagesController.interestingAdmin').as('admin.interesting')
-    Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news')
+    Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news') //เพชร Admin AddNews Page
     Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
-}).prefix('admin').middleware('auth')
+    Route.post('/news/add', 'NewsController.add').as('news.add') // เพชร addNews Functions
+    Route.get('/news', 'PagesController.newsPage').as('news.page') // User News Page
+    Route.get('/newscontent/:id', 'PagesController.newsContent').as('news.content') // User NewsContent
+    Route.post('/newsupdate/:id', 'NewsController.update').as('news.update')// News Admin Update
+    Route.get('/newsupdating/:id', 'PagesController.newsUpdatePage').as('news.update.page')
+    Route.get('/news/update/', 'PagesController.newsUpdateList').as('news.update.list') //Admin  List News Page
+    Route.get('/news/status/:id', 'NewsController.toggleStatus').as('news.status') // Change News Status Functions
+    Route.get('/news/delete/:id', 'NewsController.delete').as('news.delete') // Admin News Delete
+
+}).prefix('admin').middleware('auth').middleware('authcheck')
 
 
 
