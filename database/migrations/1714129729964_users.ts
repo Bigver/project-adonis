@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.string('password', 180).notNullable()
       table.enum('role', ['admin', 'user']).defaultTo('user')
       table.string('remember_me_token').nullable()
-
+      table.text('access')
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */

@@ -8,12 +8,22 @@ Route.group(() => {
     Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news')
     Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
+    Route.get('/productListAdmin', 'PagesController.productListAdmin').as('admin.productList')
+    Route.get('/userAdmin', 'PagesController.userAdmin').as('admin.user')
 
+
+    
     //about
     Route.post('/about/create', 'AboutsController.create').as('about.create')
+     
+
+    //user
+    Route.get('/user/:id/edit','PagesController.userUpdateAdmin').as('user.edit')
+    Route.get('/user/delete/:id', 'UsersController.destroy').as('user.remove')
+    Route.post('/user/update/:id', 'UsersController.update').as('user.update')
 
 
-}).prefix('admin').middleware('auth')
+}).prefix('admin').middleware('auth').middleware('authCheck')
 
 
 

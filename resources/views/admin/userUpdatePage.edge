@@ -1,0 +1,119 @@
+@layout('layout')
+@set('title', 'homepage')
+
+@section('body')
+
+<div class="app-ecommerce container-xxl container-p-y flex-grow">
+  <!-- Add Product -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
+    <div class=" row col d-flex  text-center">
+    </div>
+  </div>
+
+  <div class="row col d-flex justify-content-center">
+    <!-- First column-->
+    <div class="col-12 col-lg-8">
+      <!-- Product Information -->
+      <div class="card mb-4">
+        <div class="card-header">
+          <h5 class="card-tile mb-0">Update User</h5>
+        </div>
+        <!-- ฟอร์มสำหรับ submit ข้อความ -->
+        {{--  ขนาด form กำหนดเอาเอง ใน public/app  --}}
+        <form class="card-body form-about" action="{{route('user.update' , {id : users.id})}}" method="post" id="myForm" > 
+          {{ csrfField() }}
+          <div class="mb-3">
+            <label class="form-label" for="ecommerce-product-name">username</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ecommerce-product-name"
+              placeholder="username"
+              name="username"
+              value={{users.username}}
+              aria-label="image1" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="ecommerce-product-name">email</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ecommerce-product-name"
+              placeholder="email"
+              name="email"
+              value={{users.email}}
+              aria-label="image2" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="ecommerce-product-name">password</label>
+            <input
+              type="text"
+              class="form-control"
+              id="ecommerce-product-name"
+              placeholder="password"
+              name="password"
+              value={{users.password}}
+              aria-label="image3" />
+          </div>
+
+
+          <div class="mb-3">
+            <label for="form-label">role</label>
+            <input type="hidden" name="role" id="user_type">
+            <select class="form-control form-control-lg" id="user_type_select">
+              @if(users.role == 'admin')
+                <option value="admin">admin</option>
+                <option value="user">user</option>
+              @else 
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              @endif
+              
+            </select>
+          </div>
+
+          <div class="mb-3 mt-3">
+            <label for="form-label d-grid">จัดการการเข้าถึง</label>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="user_admin" id="subscribe_checkbox" value="yes">
+                <label class="form-check-label" for="subscribe_checkbox">
+                UserAdmin
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="check_admin" id="subscribe_checkbox" value="yes">
+                <label class="form-check-label" for="subscribe_checkbox">
+                checking products and orders
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="pages_admin" id="subscribe_checkbox" value="yes">
+                <label class="form-check-label" for="subscribe_checkbox">
+                PageAdmin
+                </label>
+            </div>
+        </div>
+
+
+
+          <!-- Description -->
+          <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    var form = document.querySelector('form');
+    var select = document.getElementById('user_type_select');
+    var hiddenInput = document.getElementById('user_type');
+
+    form.onsubmit = function() {
+    hiddenInput.value = select.value;
+    };
+</script>
+
+
+
+@end

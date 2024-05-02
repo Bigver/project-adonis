@@ -5,7 +5,7 @@
   class="light-style layout-navbar-fixed layout-menu-fixed layout-compact"
   dir="ltr"
   data-theme="theme-default"
-  data-assets-path="../../assets/"
+  data-assets-path="/assets/"
   data-template="vertical-menu-template-starter">
   <head>
     <meta charset="utf-8" />
@@ -16,9 +16,16 @@
     <title>{{ title }}</title>
 
     <meta name="description" content="" />
+
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="/app.css">
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon/favicon.ico" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,29 +34,33 @@
       href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&ampdisplay=swap"
       rel="stylesheet" />
 
-    <link rel="stylesheet" href="../../assets/vendor/fonts/tabler-icons.css" />
-    <!-- <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome.css" /> -->
-    <!-- <link rel="stylesheet" href="../../assets/vendor/fonts/flag-icons.css" /> -->
+    <!-- Icons -->
+    <link rel="stylesheet" href="/assets/vendor/fonts/fontawesome.css" />
+    <link rel="stylesheet" href="/assets/vendor/fonts/tabler-icons.css" />
+    <link rel="stylesheet" href="/assets/vendor/fonts/flag-icons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="../../assets/css/demo.css" />
+    <link rel="stylesheet" href="/assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="../../assets/vendor/libs/node-waves/node-waves.css" />
-    <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/node-waves/node-waves.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/typeahead-js/typeahead.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css" />
+    <link rel="stylesheet" href="/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
 
     <!-- Page CSS -->
 
     <!-- Helpers -->
-    <script src="../../assets/vendor/js/helpers.js"></script>
+    <script src="/assets/vendor/js/helpers.js"></script>
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-    <script src="../../assets/vendor/js/template-customizer.js"></script>
+    <script src="/assets/vendor/js/template-customizer.js"></script>
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="../../assets/js/config.js"></script>
-    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="/assets/js/config.js"></script>
 
 </head>
 
@@ -104,57 +115,75 @@
             <li class="menu-item active">
               <a href="index.html" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-smart-home"></i>
-                <div data-i18n="Page 1">DashBoard</div>
+                <div>DashBoard</div>
               </a>
             </li>
+            @if ( access.userAdmin == 'yes' )
             <li class="menu-item">
-                <a href="page-2.html" class="menu-link">
-                  <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">User</div>
-                </a>
+              <a href="{{route('admin.user')}}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <div>User</div>
+              </a>
+          </li>
+            @endif
+            @if ( access.checkAdmin == 'yes' )
+            <li class="menu-item">
+              <a href="{{route('admin.product')}}" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <div>สินค้า</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="app-ecommerce-product-list.html" class="menu-link">
+                    <div>Product List</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="{{route('admin.product')}}" class="menu-link">
+                    <div>Add Product</div>
+                  </a>
+                </li>
+              </ul>
             </li>
+            <li class="menu-item">
+              <a href="page-2.html" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <div>รายการสั่งซื้อ</div>
+              </a>
+          </li> 
+            @endif
+            @if (access.pageAdmin == 'yes')
             <li class="menu-item">
               <a href="{{route('admin.home')}}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-app-window"></i>
-                <div data-i18n="Page 2">หน้าแรก</div>
+                <div>หน้าแรก</div>
               </a>
-            </li>
-            <li class="menu-item">
-                <a href="{{route('admin.product')}}" class="menu-link">
-                  <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">สินค้า</div>
-                </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('admin.interesting')}}" class="menu-link">
                   <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">สาระน่ารู้</div>
+                  <div>สาระน่ารู้</div>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('admin.news')}}" class="menu-link">
                   <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">ข่าวสารและกิจกรรม</div>
+                  <div>ข่าวสารและกิจกรรม</div>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('admin.about')}}" class="menu-link">
                   <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">เกี่ยวกับเรา</div>
+                  <div>เกี่ยวกับเรา</div>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('admin.contact')}}" class="menu-link">
                   <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">ติดต่อเรา</div>
+                  <div>ติดต่อเรา</div>
                 </a>
             </li>
-            <li class="menu-item">
-                <a href="page-2.html" class="menu-link">
-                  <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div data-i18n="Page 2">รายการสั่งซื้อ</div>
-                </a>
-            </li>
+            @endif
           </ul>
         </aside>
         <!-- / Menu -->
@@ -203,7 +232,7 @@
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                      <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                      <img src="/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -212,7 +241,7 @@
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
                             <div class="avatar avatar-online">
-                              <img src="../../assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
+                              <img src="/assets/img/avatars/1.png" alt class="h-auto rounded-circle" />
                             </div>
                           </div>
                           <div class="flex-grow-1">
@@ -317,21 +346,28 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
 
-    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
-    <script src="../../assets/vendor/libs/popper/popper.js"></script>
-    <script src="../../assets/vendor/js/bootstrap.js"></script>
-    <script src="../../assets/vendor/libs/node-waves/node-waves.js"></script>
-    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
-    <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
-
-    <script src="../../assets/vendor/js/menu.js"></script>
+    
+    <script src="/assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="/assets/vendor/libs/popper/popper.js"></script>
+    <script src="/assets/vendor/js/bootstrap.js"></script>
+    <script src="/assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="/assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="/assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="/assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="/assets/vendor/js/menu.js"></script>
 
     <!-- endbuild -->
 
     <!-- Vendors JS -->
+    <script src="/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js"></script>
 
     <!-- Main JS -->
-    <script src="../../assets/js/main.js"></script>
+    <script src="/assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="/assets/js/app-ecommerce-order-list.js"></script>
+    <script src="/assets/js/app-user-list.js"></script>
 
     <!-- Page JS -->
   </body>

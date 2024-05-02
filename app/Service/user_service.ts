@@ -20,7 +20,8 @@ public static async createUser(data : any){
     }
 
 
-public static async updateUser(id : any , data : any){
+public static async updateUser(id : any , data : any , access : any){
+    data.access = access
     const user = await User.find(id)
     return await user?.merge(data).save()
     

@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AboutService from 'App/Service/about_service';
+import UserService from 'App/Service/user_service';
 
 export default class PagesController {
     public async loginPage({ view }: HttpContextContract) {    
@@ -15,8 +16,22 @@ export default class PagesController {
       return view.render("user/homePage");
     }
 
-    public async Dashboard({ view }: HttpContextContract) {    
+    public async Dashboard({ view }: HttpContextContract) {  
       return view.render("admin/Dashboard");
+    }
+
+    public async userAdmin({ view }: HttpContextContract) {  
+      const filters = {}  
+      let users: any = await UserService.all({ filters: filters });
+      return view.render("admin/userPage" , {userAll : users});
+    }
+
+    public async userUpdateAdmin({ view , params }: HttpContextContract) {  
+      const id = params.id
+      const filters = { id : id }  
+      let users: any = await UserService.all({ filters: filters });
+      users = users[0].serialize()
+      return view.render("admin/userUpdatePage" , {users});
     }
 
     public async aboutAdmin({ view }: HttpContextContract) {  
@@ -24,7 +39,9 @@ export default class PagesController {
         id: 1
       };
       let aboutData: any = await AboutService.all({ filters: filter })
-      aboutData =aboutData[0].serialize()   
+      if (aboutData.length != 0){
+        aboutData = aboutData[0].serialize() 
+      }
       return view.render("admin/aboutPage" , {data : aboutData});
     }
 
@@ -34,6 +51,10 @@ export default class PagesController {
 
     public async productAdmin({ view }: HttpContextContract) {    
       return view.render("admin/productPage");
+    }
+
+    public async productListAdmin({ view }: HttpContextContract) {    
+      return view.render("admin/productListPage");
     }
 
     public async interestingAdmin({ view }: HttpContextContract) {    

@@ -8,7 +8,10 @@ export default class AboutsController {
         };
         try {
           let aboutData: any = await AboutService.all({ filters: filter })
-          aboutData =aboutData[0].serialize() 
+          console.log(aboutData)
+          if (aboutData){
+            aboutData =aboutData[0].serialize() 
+          }
           const about = request.only(["img1", "img2", "img3", "title","detail"]);
           if (aboutData){
             await  AboutService.updateAbout(1 , about);

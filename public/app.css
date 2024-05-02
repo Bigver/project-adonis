@@ -3,3 +3,11 @@
 .form-about{
     height: 100%;
 }
+
+
+.tool a{
+    padding: 5px;
+    width: 50px;
+    color: white;
+    border-radius: 5px;
+}

@@ -32,9 +32,24 @@ export default class UsersController {
 
   async update({ params , request, response } : HttpContextContract) {
     const { id } = params
-    const userData = request.only(['email', 'username' , 'password'])
-    await UserService.updateUser( id , userData)
-    return response.redirect().toRoute('page.admin')
+    const { user_admin  ,  check_admin ,  pages_admin } = request.all() || null;
+    let accessData : any
+    const userAdmin = user_admin || "no"
+    const checkAdmin = check_admin  || "no"
+    const pageAdmin = pages_admin || "no"
+
+    accessData = [];
+
+    accessData.push({
+      userAdmin,
+      checkAdmin,
+      pageAdmin
+    });
+    const access = JSON.stringify(accessData);
+
+    const userData = request.only(['email', 'username' , 'password' , 'role'])
+    await UserService.updateUser( id , userData , access)
+    return response.redirect().toRoute('admin.user')
   }
 
   async destroy({response , params} : HttpContextContract){
@@ -45,6 +60,7 @@ export default class UsersController {
   async login({ request, response, auth , session }: HttpContextContract) {
     const email = request.input("email");
     const password = request.input("password");
+    
     try {     
       const user = await User.query().where("email", email).firstOrFail();
       if (!(await Hash.verify(user.password, password))) {
@@ -56,10 +72,12 @@ export default class UsersController {
       if (authUser.role == "admin"){
         return response.redirect().toRoute('admin.dashboard')
       } else{
-        return response.redirect().toRoute('page.home')
+        return response.redirect('/')
       }
+
     } catch (error) {
       session.flash('error', 'Email หรือ password ไม่ถูกต้อง')
+      console.log(error)
       return response.redirect().back()
     }
   }
