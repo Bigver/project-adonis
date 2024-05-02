@@ -34,8 +34,6 @@ Route.group(() => {
     Route.get('/Interestingstatus/:id', 'InterestingsController.toggleStatus').as('Interestings.status') // Change News Status
 
 
-}).prefix('admin').middleware('auth').middleware('authCheck')
-=======
     Route.post('/news/add', 'NewsController.add').as('news.add') // เพชร addNews Functions
     Route.get('/news', 'PagesController.newsPage').as('news.page') // User News Page
     Route.get('/newscontent/:id', 'PagesController.newsContent').as('news.content') // User NewsContent
@@ -45,8 +43,8 @@ Route.group(() => {
     Route.get('/news/status/:id', 'NewsController.toggleStatus').as('news.status') // Change News Status Functions
     Route.get('/news/delete/:id', 'NewsController.delete').as('news.delete') // Admin News Delete
 
-}).prefix('admin').middleware('auth').middleware('authcheck')
->>>>>>> 4aabc4a719259254adcafa8aff2bf89965b0c185
+}).prefix('admin').middleware('auth').middleware('authCheck')
+
 
 
 
