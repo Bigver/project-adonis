@@ -2,23 +2,45 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AboutService from 'App/Service/about_service';
 import UserService from 'App/Service/user_service';
 import interestingsService from 'App/Service/interestings_service';
+import NewsService from 'App/Service/NewsService';
 
 export default class PagesController {
-    public async loginPage({ view }: HttpContextContract) {    
-        return view.render("loginPage");
-      }
+  public async loginPage({ view }: HttpContextContract) {
+    return view.render("loginPage");
+  }
 
+  public async registerPage({ view }: HttpContextContract) {
+    return view.render("registerPage");
+  }
 
-    public async registerPage({ view }: HttpContextContract) {    
-      return view.render("registerPage");
+  public async homePage({ view }: HttpContextContract) {
+    return view.render("user/homePage");
+  }
+
+  public async Dashboard({ view }: HttpContextContract) {
+    return view.render("admin/Dashboard");
+  }
+
+  public async newsPage({ view }: HttpContextContract) {
+    try {
+      const news = await NewsService.getShowNews()
+      return view.render('user/newsPage', { news });
+    } catch (error) {
+      // หากเกิดข้อผิดพลาด
+      console.error(error);
+      return view.render('errors.serverError');
     }
+  }
 
-    public async homePage({ view }: HttpContextContract) {    
-      return view.render("user/homePage");
-    }
+  public async newsUpdateList({ view }: HttpContextContract) {
+    try {
+      const filter = {};
+      const news = await NewsService.all({ filter: filter }).paginate(1, 10)
+      const serializedNews = news.serialize();
+      return view.render("admin/newsUpdateListPage", { news: serializedNews });
+    } catch (error) {
 
-    public async Dashboard({ view }: HttpContextContract) {  
-      return view.render("admin/Dashboard");
+       }
     }
 
     public async userAdmin({ view }: HttpContextContract) {  
@@ -45,14 +67,26 @@ export default class PagesController {
       }
       return view.render("admin/aboutPage" , {data : aboutData});
     }
+  
 
-    public async homeAdmin({ view }: HttpContextContract) {    
-      return view.render("admin/homePage");
-    }
+  public async newsUpdatePage({ params, view }: HttpContextContract) {
+    try {
+      const filter = {};
+      const news = await NewsService.all({ filter: filter }).paginate(1, 10)
+      const serializedNews = news.serialize();
+      const item = await NewsService.all({ filters: { id: params.id } })
+      const items = item[0]
+      return view.render('admin/newsUpdatePage', { news: items, items: serializedNews })
+    } catch (error) {
 
-    public async productAdmin({ view }: HttpContextContract) {    
-      return view.render("admin/productPage");
     }
+  }
+
+  public async newsContent({ view, params }: HttpContextContract) {
+    const items = await NewsService.all({ filters: { id: params.id } })
+    const item = items[0]
+    return view.render('user/newsContent', { item })
+  }
 
     public async productListAdmin({ view }: HttpContextContract) {    
       return view.render("admin/productListPage");
@@ -62,9 +96,11 @@ export default class PagesController {
       return view.render("admin/interestingPage");
     }
 
-    public async newsAdmin({ view }: HttpContextContract) {    
-      return view.render("admin/newsPage");
-    }
+
+
+  public async homeAdmin({ view }: HttpContextContract) {
+    return view.render("admin/homePage");
+  }
 
     public async contactAdmin({ view }: HttpContextContract) {    
       return view.render("admin/contactPage");
@@ -81,5 +117,14 @@ export default class PagesController {
 
     public async UpdateinterestingPage({ view }: HttpContextContract) {    
       return view.render("admin/UpdateInterestingPage");
+    }
+  public async productAdmin({ view }: HttpContextContract) {
+    return view.render("admin/productPage");
+  }
+
+
+
+    public async newsAdmin({ view }: HttpContextContract) {
+      return view.render("admin/newsPage");
     }
 }
