@@ -8,11 +8,8 @@ Route.group(() => {
     Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news') //เพชร Admin AddNews Page
     Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
-<<<<<<< HEAD
     Route.get('/productListAdmin', 'PagesController.productListAdmin').as('admin.productList')
     Route.get('/userAdmin', 'PagesController.userAdmin').as('admin.user')
-
-
     
     //about
     Route.post('/about/create', 'AboutsController.create').as('about.create')
