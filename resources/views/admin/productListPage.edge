@@ -1,0 +1,71 @@
+@layout('layout')
+@set('title', 'homepage')
+
+@section('body')
+<div class="container">
+    {{--  <h1 class="fw-bold mb-2 text-uppercase">List of interesting</h1>  --}}
+    <br><br>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0">LIST OF PRODUCT</h5>
+            <div class="dt-buttons btn-group">
+                <a href="{{ route('admin.product') }}" class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
+                    <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Product</span></span>
+                </a>
+            </div>
+        </div>
+        <div class="card-datatable table-responsive">
+            <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                <div class="card-header d-flex border-top rounded-0 flex-wrap py-2">
+                    <div class="me-5 ms-n2 pe-5">
+                        <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                           
+                    </div>
+                    <div class="d-flex justify-content-start justify-content-md-end align-items-baseline">
+                        <div class="dt-action-buttons d-flex flex-column align-items-start align-items-md-center justify-content-sm-center mb-3 mb-md-0 pt-0 gap-4 gap-sm-0 flex-sm-row">
+                  
+                            <div class="dt-buttons btn-group flex-wrap d-flex">
+                       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                    <thead class="border-top">
+                        <tr>
+                           
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 100px;" aria-label="sku: activate to sort column ascending">Image</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 150px;" aria-label="price: activate to sort column ascending">NameProduct</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 300px;" aria-label="qty: activate to sort column ascending">Price</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 120px;" aria-label="status: activate to sort column ascending">Status</th>
+                            <th class="sorting_disabled dtr-hidden" rowspan="1" colspan="1" style="display: none;" aria-label="Actions">Actions</th>
+                        </tr>
+                    </thead>
+            
+                    @each(item in products.data)
+                    <tr>
+                        <td> <img src="{{ item.img_product }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.price_product.length > 100 ? item.price_product.substr(0, 1000) + '...' : item.price_product }}</td>
+                    
+                        <td> <div class="d-flex" > <a  href="{{ route('product.edit', { id: item.id }) }}" class="btn btn-info btn-xs">Edit</a>
+                            &nbsp;&nbsp;
+                             <a href="{{route('product.remove' , {id : item.id})}}" class="btn btn-danger btn-xs">Delete</a>
+                             &nbsp;&nbsp;
+                    </tr>
+                    @endeach
+                  
+                </table>
+          
+                  
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+    
+           
+</div>
+
+
+@end
