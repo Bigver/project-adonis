@@ -23,14 +23,13 @@ Route.group(() => {
     Route.post('/user/update/:id', 'UsersController.update').as('user.update')
 
 
+    //interesting
     Route.get('/showInteresting', 'PagesController.showInteresting').as('showInteresting')
     Route.get('/UpdateinterestingPage', 'PagesController.UpdateinterestingPage').as('UpdateinterestingPage')
     Route.post('/addInteresting', 'InterestingsController.add').as('add.Interesting')
     Route.post('/UpdateInteresting/:id', 'InterestingsController.UpdateInteresting').as('UpdateInteresting')
-
     Route.get('/Interestingedit/:id', 'InterestingsController.editInteresting').as('Interesting.edit')
     Route.get('/Interesting/delete/:id', 'InterestingsController.deleteInteresting').as('Interesting.remove')
-
     Route.get('/Interestingstatus/:id', 'InterestingsController.toggleStatus').as('Interestings.status') // Change News Status
 
 
