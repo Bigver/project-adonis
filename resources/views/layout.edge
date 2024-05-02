@@ -160,10 +160,22 @@
               </a>
             </li>
             <li class="menu-item">
-                <a href="{{route('admin.interesting')}}" class="menu-link">
-                  <i class="menu-icon tf-icons ti ti-app-window"></i>
-                  <div>สาระน่ารู้</div>
-                </a>
+              <a href="{{route('admin.interesting')}}" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <div >สาระน่ารู้</div>
+              </a>
+              <ul class="menu-sub">
+                <li class="menu-item">
+                  <a href="{{route('showInteresting')}}" class="menu-link">
+                    <div >Interesting</div>
+                  </a>
+                </li>
+                <li class="menu-item">
+                  <a href="{{route('admin.interesting')}}" class="menu-link">
+                    <div >Add Interesting</div>
+                  </a>
+                </li>
+              </ul>
             </li>
             <li class="menu-item">
                 <a href="{{route('admin.news')}}" class="menu-link">

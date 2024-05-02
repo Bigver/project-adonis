@@ -8,7 +8,6 @@ Route.group(() => {
     Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news')
     Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
-<<<<<<< HEAD
     Route.get('/productListAdmin', 'PagesController.productListAdmin').as('admin.productList')
     Route.get('/userAdmin', 'PagesController.userAdmin').as('admin.user')
 

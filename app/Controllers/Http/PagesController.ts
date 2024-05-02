@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AboutService from 'App/Service/about_service';
 import UserService from 'App/Service/user_service';
+import interestingsService from 'App/Service/interestings_service';
 
 export default class PagesController {
     public async loginPage({ view }: HttpContextContract) {    
@@ -67,5 +68,18 @@ export default class PagesController {
 
     public async contactAdmin({ view }: HttpContextContract) {    
       return view.render("admin/contactPage");
+    }
+
+
+    public async showInteresting({ view }: HttpContextContract) {   
+      const filter = {}
+      const item = await interestingsService.all({filter:filter}).paginate(1,10)
+      const items = item.serialize()
+
+      return view.render("admin/interestingListPage", {items});
+    }
+
+    public async UpdateinterestingPage({ view }: HttpContextContract) {    
+      return view.render("admin/UpdateInterestingPage");
     }
 }
