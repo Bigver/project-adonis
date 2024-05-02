@@ -39,6 +39,18 @@ export default class HomeService {
               return home;
       }
     }
+
+    public static async createHome(data : any){
+      const home = await Home.create(data)
+      return home
+      }
+  
+  
+  public static async updateHome(id : any , data : any){
+      const home = await Home.find(id)
+      return await home?.merge(data).save()
+      
+  }
     
 
 }

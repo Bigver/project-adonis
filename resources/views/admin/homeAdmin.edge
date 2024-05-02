@@ -7,52 +7,127 @@
 <div class="app-ecommerce container-xxl container-p-y flex-grow">
     <div class="row col d-flex justify-content-center">
       <!-- First column-->
-      <div class="col-12 col-lg-8" style="width:1300px">
+      <div class="col-12 col-lg-8">
         <!-- Product Information -->
         <div class="card mb-4">
           <div class="card-header">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-tile mb-0"><u>Home Database</u></h2>
-                  <a href="{{route('admin.home.addhome')}}">
-                    <button class="btn btn-primary edit-btn" data-target="slideshow">Add</button>
-                  </a>
+                <h2 class="card-tile mb-0"><u>Home update</u></h2>
             </div>
-            <div>
-              <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
-                <thead class="border-top">
-                    <tr>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="2" colspan="1" style="width: 100px;" aria-label="sku: activate to sort column ascending">Image</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 150px;" aria-label="price: activate to sort column ascending">Title</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 300px;" aria-label="qty: activate to sort column ascending">Description</th>
-                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 120px;" aria-label="status: activate to sort column ascending"></th>
-                    </tr>
-                </thead>
-                @each(item in home.data)
-                <tr>
-                    <td> <img src="{{ item.keyvisual_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td> <img src="{{ item.slideshow1_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td> <img src="{{ item.slideshow1_video_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td> <img src="{{ item.slideshow2_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td> <img src="{{ item.slideshow2_video_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td> <img src="{{ item.slideshow3_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td> <img src="{{ item.slideshow3_video_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
-                    <td>{{{ item.home_messages}}}</p></td>
-                    <td> 
-                      {{--  <div class="d-flex" > <a  href="{{ route('Interesting.edit', { id: item.id }) }}" class="btn btn-info btn-xs">Edit</a>  --}}
-                        &nbsp;&nbsp;
-                        {{item.status}}
-                        &nbsp;&nbsp;
-                         <a href="{{route('admin.home.delete' , {id : item.id})}}" class="btn btn-danger btn-xs">Delete</a>
-                    </td>
-                </tr>
-                @endeach
-              
-            </table>
-            </div>
+            <form class="card-body form-about" action="{{route('admin.home.update')}}" style="margin: 10px" method="POST" id="myForm"> 
+              {{ csrfField() }}
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Key Visual Image Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.keyvisual_img_url}}
+                  name="keyvisual_img_url"
+                  />
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Key Visual Image Preview:</label>
+                <br>
+                <img src="{{home.keyvisual_img_url}}" alt="" width="800px">
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Slidershow 1 Image Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow1_img_url}}
+                  name="slideshow1_img_url"/>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Slidershow 1 Video Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow1_video_url}}
+                  name="slideshow1_video_url"/>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Slidershow 2 Image Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow2_img_url}}
+                  name="slideshow2_img_url"/>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Slidershow 2 Video Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow2_video_url}}
+                  name="slideshow2_video_url"/>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Slidershow 3 Image Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow3_img_url}}
+                  name="slideshow3_img_url"/>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Slidershow 3 Video Url:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow3_video_url}}
+                  name="slideshow3_video_url"/>
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Messages:</label>
+                <div id="editor"  class="text-editor form-control h-50">{{{home.home_messages}}}</div>
+                <input type="hidden" name="home_messages" id="home_messages" >
+              </div>
+              <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Submit</button>
+            </form>
           </div>
         </div>
       </div>
     </div>
 </div>
+
+
+<!-- เรียกใช้ไฟล์ JavaScript ของ Quill.js -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+  var quill = new Quill('#editor', {
+  modules: {
+    toolbar: [
+      [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+      ['bold', 'italic', 'underline'],
+      ['image'] // เพิ่มเครื่องมือสำหรับเพิ่มรูปภาพ
+    ]
+  },
+  theme: 'snow' // กำหนด theme เป็น snow เพื่อให้ได้หน้าตาเหมือน Pantip
+});
+
+  // เมื่อผู้ใช้กด submit form
+  document.getElementById('myForm').addEventListener('submit', function(event) {
+    // ดึงข้อความจาก text editor
+    var message = quill.root.innerHTML;
+
+    // กำหนดข้อความใน input hidden
+    document.getElementById('home_messages').value = message;
+  });
+</script>
 
 @end

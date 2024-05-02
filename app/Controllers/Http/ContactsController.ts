@@ -1,22 +1,24 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import AboutService from 'App/Service/about_service';
+import ContactService from 'App/Service/contact_service';
 
-export default class AboutsController {
+export default class ContactsController {
     async create({ request, response }: HttpContextContract) {
         const filter = {
             id: 1
         };
         try {
-          let aboutData: any = await AboutService.all({ filters: filter })
-          if (aboutData.length != 0){
+          let aboutData: any = await ContactService.all({ filters: filter })
+          console.log(aboutData)
+          if (aboutData != 0){
             aboutData =aboutData[0].serialize() 
           }
-          const about = request.only(["img1", "img2", "img3", "title","detail"]);
-          if (aboutData.length != 0 ){
-            await  AboutService.updateAbout(1 , about);
+          const about = request.only(["map", "location_title", "location_detail", "img_line","ink_facebook","ink_line"]);
+          console.log(about)
+          if (aboutData != 0){
+            await  ContactService.update(1 , about);
             return response.redirect("back");
           }
-          await  AboutService.createAbout(about);
+          await  ContactService.create(about);
           return response.redirect("back");
         } catch (error) {
           console.error(error);

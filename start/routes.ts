@@ -10,10 +10,14 @@ Route.group(() => {
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
     Route.get('/productListAdmin', 'PagesController.productListAdmin').as('admin.productList')
     Route.get('/userAdmin', 'PagesController.userAdmin').as('admin.user')
-    
+
+    //home
+    Route.post('/homeAdmin/update', 'HomeController.update').as('admin.home.update')
+
     //about
     Route.post('/about/create', 'AboutsController.create').as('about.create')
-     
+    //contact
+    Route.post('/contacts', 'ContactsController.create').as('contacts.create')
 
     //user
     Route.get('/user/:id/edit','PagesController.userUpdateAdmin').as('user.edit')
@@ -40,11 +44,20 @@ Route.group(() => {
     Route.get('/news/status/:id', 'NewsController.toggleStatus').as('news.status') // Change News Status Functions
     Route.get('/news/delete/:id', 'NewsController.delete').as('news.delete') // Admin News Delete
 
+
+    //product
+    Route.post('/product/create', 'ProductsController.createProduct').as('product.create')
+    Route.post('/product/update/:id', 'ProductsController.updateProduct').as('update.product')
+
+    Route.get('/product/delete/:id', 'ProductsController.deleteProduct').as('product.remove')
+    Route.get('/productedit/:id', 'ProductsController.editProduct').as('product.edit')
+    Route.get('/productlist', 'ProductsController.listProduct').as('product.list')
+
 }).prefix('admin').middleware('auth').middleware('authCheck')
 
 
 
-
+Route.get('/error', 'PagesController.errorPage').as('page.error')
 Route.get('/', 'PagesController.homePage').middleware('auth')
 
 

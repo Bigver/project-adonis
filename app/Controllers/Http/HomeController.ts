@@ -3,35 +3,36 @@ import HomeService from 'App/Service/home_service'
 
 export default class HomeController {
 
-
-      async add({ request, response }: HttpContextContract) {
+      async update({ request, response }: HttpContextContract) {
+        const filter = {
+            id: 1
+        };
         try {
-          const homeData = request.only([
-            'keyvisual_img_url',
-            'slideshow1_img_url',
-            'slideshow1_video_url',
-            'slideshow2_img_url',
-            'slideshow2_video_url',
-            'slideshow3_img_url',
-            'slideshow3_video_url',
-            'home_messages'])
-          await HomeService.create(homeData)
-          // console.log(homeData)
-          return response.redirect().back()
+          let homeData: any = await HomeService.all({ filters: filter })
+          console.log(homeData)
+          if (homeData.length != 0){
+            homeData =homeData[0].serialize() 
+          }
+          const home = request.only([
+            "keyvisual_img_url", 
+            "slideshow1_img_url", 
+            "slideshow1_video_url", 
+            "slideshow2_img_url", 
+            "slideshow2_video_url", 
+            "slideshow3_img_url", 
+            "slideshow3_video_url", 
+            "home_messages"]);
+
+          if (homeData.length != 0){
+            await  HomeService.updateHome(1 , home);
+            return response.redirect("back");
+          }
+          await  HomeService.createHome(home);
+          return response.redirect("back");
         } catch (error) {
-          console.error(error)
-          return response.status(500).json({ error: 'Failed to create Home' })
+          console.error(error);
+          return response.status(500).json({ error: "Failed to update Home" });
         }
       }
-
-
-    async delete({ response, params }: HttpContextContract) {
-        await HomeService.delete(params.id)
-        return response.redirect().back()
-    }
     
-    async toggleStatus({ response, params }: HttpContextContract) {
-      await HomeService.toggleStatus(params.id)
-      return response.redirect().back()
-  }
 }
