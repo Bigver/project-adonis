@@ -1,0 +1,58 @@
+@layout('layout')
+@set('title', 'homepage')
+
+@section('body')
+
+
+<div class="app-ecommerce container-xxl container-p-y flex-grow">
+    <div class="row col d-flex justify-content-center">
+      <!-- First column-->
+      <div class="col-12 col-lg-8" style="width:1300px">
+        <!-- Product Information -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h2 class="card-tile mb-0"><u>Home Database</u></h2>
+                  <a href="{{route('admin.home.addhome')}}">
+                    <button class="btn btn-primary edit-btn" data-target="slideshow">Add</button>
+                  </a>
+            </div>
+            <div>
+              <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                <thead class="border-top">
+                    <tr>
+                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="2" colspan="1" style="width: 100px;" aria-label="sku: activate to sort column ascending">Image</th>
+                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 150px;" aria-label="price: activate to sort column ascending">Title</th>
+                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 300px;" aria-label="qty: activate to sort column ascending">Description</th>
+                        <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 120px;" aria-label="status: activate to sort column ascending"></th>
+                    </tr>
+                </thead>
+                @each(item in home.data)
+                <tr>
+                    <td> <img src="{{ item.keyvisual_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td> <img src="{{ item.slideshow1_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td> <img src="{{ item.slideshow1_video_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td> <img src="{{ item.slideshow2_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td> <img src="{{ item.slideshow2_video_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td> <img src="{{ item.slideshow3_img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td> <img src="{{ item.slideshow3_video_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                    <td>{{{ item.home_messages}}}</p></td>
+                    <td> 
+                      {{--  <div class="d-flex" > <a  href="{{ route('Interesting.edit', { id: item.id }) }}" class="btn btn-info btn-xs">Edit</a>  --}}
+                        &nbsp;&nbsp;
+                        {{item.status}}
+                        &nbsp;&nbsp;
+                         <a href="{{route('admin.home.delete' , {id : item.id})}}" class="btn btn-danger btn-xs">Delete</a>
+                    </td>
+                </tr>
+                @endeach
+              
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+@end
