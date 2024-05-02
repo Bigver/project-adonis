@@ -8,6 +8,17 @@ Route.group(() => {
     Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news')
     Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
+    Route.get('/showInteresting', 'PagesController.showInteresting').as('showInteresting')
+    Route.get('/UpdateinterestingPage', 'PagesController.UpdateinterestingPage').as('UpdateinterestingPage')
+    Route.post('/addInteresting', 'InterestingsController.add').as('add.Interesting')
+    Route.post('/UpdateInteresting/:id', 'InterestingsController.UpdateInteresting').as('UpdateInteresting')
+
+    Route.get('/Interestingedit/:id', 'InterestingsController.editInteresting').as('Interesting.edit')
+    Route.get('/Interesting/delete/:id', 'InterestingsController.deleteInteresting').as('Interesting.remove')
+
+    Route.get('/Interestingstatus/:id', 'InterestingsController.toggleStatus').as('Interestings.status') // Change News Status
+
+
 }).prefix('admin').middleware('auth')
 
 
@@ -22,3 +33,4 @@ Route.post('/register', 'UsersController.register').as('user.register')
 Route.get('/login', 'PagesController.loginPage').as('page.login')
 Route.post('/login', 'UsersController.login').as('user.login')
 Route.get('/logout', 'UsersController.logout').as('user.logout')
+
