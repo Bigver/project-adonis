@@ -1,0 +1,29 @@
+@layout('layout')
+@set('title', 'news content')
+@section('body')
+<div class="content-wrapper">
+    <!-- Content -->
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <h4 class="py-3 mb-4"><span class="text-muted fw-light">News</span></h4>
+        <div class="row mb-5">
+            @each(item in news)
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100">
+                    <img class="card-img-top" src="{{item.imgUrl}}" alt="Card image cap" />
+                    <div class="card-body">
+                        <h5 class="card-title">{{item.title}}</h5>
+                        <p class="card-text">
+                            {{item.description}}
+                        </p>
+                        <div style="justify-content:space-between; display:flex">
+                            <a href="{{route('news.content' , {id : item.id})}}" class="btn btn-outline-primary">Read</a><br>
+                        </div>
+                        <p style="justify-content:right ; display:flex">{{item.updatedAt}}</p>
+                    </div>
+                </div>
+            </div>
+            @endeach
+        </div>
+    </div>
+</div>
+@end
