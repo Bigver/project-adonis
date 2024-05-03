@@ -73,18 +73,19 @@ export default class PagesController {
   }
 
   public async newsUpdatePage({ params, view }: HttpContextContract) {
-    try {
       const filter = {};
       const news = await NewsService.all({ filter: filter }).paginate(1, 10);
       const serializedNews = news.serialize();
       const item = await NewsService.all({ filters: { id: params.id } });
       const items = item[0];
-      return view.render("admin/newsUpdatePage", {
-        news: items,
-        items: serializedNews,
-      });
-    } catch (error) {}
+      return view.render("admin/newsUpdatePage", { news: items, items: serializedNews, });
   }
+
+  public async profilePage({ view }: HttpContextContract) {
+    return view.render("admin/userProfile");
+}
+
+
 
   public async newsContent({ view, params }: HttpContextContract) {
     const items = await NewsService.all({ filters: { id: params.id } });

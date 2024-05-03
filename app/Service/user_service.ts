@@ -27,6 +27,13 @@ public static async updateUser(id : any , data : any , access : any){
     
 }
 
+public static async updateProfile(id : any , data : any){
+  const user = await User.find(id)
+  return await user?.merge(data).save()
+  
+}
+
+
 public static async delete(id : any){
   const item = await User.findOrFail(id)
   return await item.delete()

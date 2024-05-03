@@ -52,6 +52,16 @@ export default class UsersController {
     return response.redirect().toRoute('admin.user')
   }
 
+  async updateProfile({ params , request, response } : HttpContextContract) {
+    const id = params.id
+    const userData = request.only(['email', 'username' , 'password' , 'role'])
+    await UserService.updateProfile( id , userData)
+    return response.redirect().toRoute('admin.user')
+  }
+
+
+
+
   async destroy({response , params} : HttpContextContract){
     await UserService.delete(params.id)
     return response.redirect('back')

@@ -30,8 +30,7 @@
                       <th>Title</th>
                       <th>Description</th>
                       <th>Image</th>
-                      <th style="justify-content:center; display:flex">Edit</th>
-                      <th style="justify-content:center">Status</th>
+                      <th style="justify-content:center">tool</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -39,22 +38,18 @@
                     <tr>
                         <td></td>
                         <td>{{ item.id }}</td>
-                        <td><a href="{{route('news.content', {id:item.id})}}">{{ item.title }}</a></td>
+                        <td><a href="{{route('news.content', {id:item.id})}}" >{{ item.title }}</a></td>
                         <td>{{ item.description.length > 50 ? item.description.substr(0, 50) + '...' : item.description }}</td>
                         <td><img src="{{ item.img_url }}" style="height: 60px; width: 95px;"></td>
-                        <td>
-                          <a href="{{route('news.update.page', {id:item.id})}}"  style=" text-transform: uppercase;" class="btn btn-warning" id="type-warning">Edit</a>                      
-                        </td>
-                        @if(item.status == 'show')
-                        <td>
-                          <a href="{{route('news.status', {id:item.id})}}" style=" text-transform: uppercase;height: 39px; width: 75px;" class="btn btn-primary" id="type-primary">{{item.status}}</a>
-                        </td>
-                        @else
-                        <td>
-                          <a href="{{route('news.status', {id:item.id})}}" style=" text-transform: uppercase;height: 39px; width: 75px;" class="btn btn-secondary" id="type-secondary">{{item.status}}</a>
-                        </td>
-                        @endif
-                        
+                        <td class="d-flex gap-1" >
+                          <a href="{{route('news.update.page', {id:item.id})}}"  class="btn btn-xs bg-primary text-white">Edit</a>                      
+                          <a href="{{route('news.delete', {id:item.id})}}" class="btn btn-xs bg-danger text-white" id="type-danger">Delete</a>
+                          @if(item.status == 'show')
+                          <a href="{{route('news.status', {id:item.id})}}" class="btn btn-xs bg-warning text-white" >{{item.status}}</a>
+                          @else
+                            <a href="{{route('news.status', {id:item.id})}}" class="btn btn-xs bg-warning text-white">{{item.status}}</a>
+                          @endif
+                        </td>                
                     </tr>
                     @endeach
                     

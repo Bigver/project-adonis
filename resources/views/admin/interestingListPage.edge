@@ -49,8 +49,9 @@
                         <td>{{ item.title }}</td>
                         <td>{{ item.description.length > 100 ? item.description.substr(0, 1000) + '...' : item.description }}</td>
                     
-                        <td> <div class="d-flex" > <a  href="{{ route('Interesting.edit', { id: item.id }) }}" class="btn btn-info btn-xs">Edit</a>
-                            &nbsp;&nbsp;
+                        <td> <div class="d-flex" > 
+                            <a  href="{{ route('Interesting.edit', { id: item.id }) }}" class="btn  btn-xs bg-primary text-white">Edit</a>
+                             &nbsp;&nbsp;
                              <a href="{{route('Interesting.remove' , {id : item.id})}}" class="btn btn-danger btn-xs">Delete</a>
                              &nbsp;&nbsp;
                              <a href="{{route('Interestings.status' , {id : item.id})}}" class="btn btn-warning btn-xs">{{item.status}}</a></div></td>

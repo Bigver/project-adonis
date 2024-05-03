@@ -10,6 +10,8 @@ Route.group(() => {
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
     Route.get('/productListAdmin', 'PagesController.productListAdmin').as('admin.productList')
     Route.get('/userAdmin', 'PagesController.userAdmin').as('admin.user')
+    Route.get('/profile', 'PagesController.profilePage').as('page.profile')
+    Route.post('/user/update/profile/:id', 'UsersController.updateProfile').as('user.update.profile')
 
     //home
     Route.post('/homeAdmin/update', 'HomeController.update').as('admin.home.update')

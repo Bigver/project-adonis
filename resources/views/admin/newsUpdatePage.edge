@@ -2,6 +2,7 @@
 @set('title', 'Update')
 
 @section('body')
+@if ( access.pageAdmin == 'yes' )
 <div class="app-ecommerce container-xxl container-p-y flex-grow">
     <!-- Add Product -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3">
@@ -64,7 +65,6 @@
               </div>
               <div style="display:flex; justify-content: space-between;">
               <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Submit</button>
-              <a href="{{route('news.delete', {id:news.id})}}" style="justify-self: end;"class="btn btn-danger waves-effect waves-light mt-3 " id="type-danger">Delete</a>
           </div>
           </form>
         </div>
