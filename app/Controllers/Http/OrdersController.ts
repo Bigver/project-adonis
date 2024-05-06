@@ -12,13 +12,16 @@ export default class OrderController {
                 throw new Error('User not authenticated');
             }
 
-            const data = request.only(['total'])
-            await OrderService.create(data);
-            await OrderService.checkout(userId);
+            // ดึงค่า total จาก request body หรือจากข้อมูลที่เหมาะสม
+            const total = request.input('total'); // หรือวิธีการที่คุณต้องการใช้ในการรับค่า total
+
+            // เรียกใช้งานฟังก์ชัน checkout ใน OrderService
+            await OrderService.checkout(userId, total);
 
             return response.redirect().back()
         } catch (error) {
             return response.status(500).send({ error: error.message });
         }
     }
+
 }

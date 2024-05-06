@@ -49,7 +49,7 @@ export default class OrderService {
         }
     }
 
-    public static async checkout(userId: number) {
+    public static async checkout(userId: number, total: number) {
         try {
             // หาข้อมูล cart ของ user จาก userId
             const cartItems = await CartItem.query()
@@ -59,7 +59,7 @@ export default class OrderService {
                 .preload('product'); // โหลดข้อมูลสินค้าที่เกี่ยวข้องด้วย
 
             // สร้าง order ใหม่
-            const order = await Order.create({ userId });
+            const order = await Order.create({ userId, total });
 
             // สร้าง order items โดยใช้ข้อมูลจาก cart items
             const orderItems = cartItems.map((cartItem) => {
