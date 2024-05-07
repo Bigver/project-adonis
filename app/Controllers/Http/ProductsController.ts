@@ -13,7 +13,7 @@ export default class ProductsController {
             'img3_product',
             'detail_product'
           ])
-          const product = await ProductService.createProduct(productData)
+          await ProductService.createProduct(productData)
           return response.redirect().back()
         } catch (error) {
           console.error(error)
@@ -59,15 +59,53 @@ export default class ProductsController {
         return response.redirect('back')
       }
   
-    async listProduct({ view , response}: HttpContextContract) {
-      try {
-        const filter = {};
-        const products = await ProductService.all({ filter: filter }).paginate(1,10);
-        const serializedProducts = products.serialize();
-        return view.render('admin//productListPage', { products: serializedProducts })
-      } catch (error) {
-        console.error(error)
-        return response.status(500).json({ error: 'Failed to fetch products' })
+      public async listProduct({ request, view, response }: HttpContextContract) {
+        try {
+          let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+          const limit = 4; // จำนวนรายการต่อหน้า
+          page = Math.max(page, 1);
+          // ดึงข้อมูลสินค้าพร้อมที่แบ่งหน้า
+          let products : any
+          const keyword = request.input('keyword')
+          let productsPaginator : any
+          if (keyword){
+    
+            productsPaginator = await Product.query()
+            .where('product_name', 'like', `%${keyword}%`)
+            .orWhere('detail_product', 'like', `%${keyword}%`)
+            .paginate(page);
+            products = productsPaginator.serialize();
+          } else {
+            productsPaginator = await Product.query().paginate(page, limit);
+            
+            products = productsPaginator.serialize();
+          }
+          console.log(keyword);
+          const paginationLinks = await ProductService.getUrlsForRange(1, productsPaginator.lastPage);
+      
+          return view.render('admin/productListPage', { products, pagination: productsPaginator, paginationLinks , keyword });
+        } catch (error) {
+          console.error(error);
+          return response.status(500).json({ error: error.message });
+        }
       }
-    }
-  }
+//     public async search({ view,request, response }: HttpContextContract) {
+//       try {
+          
+//           const keyword = request.input('keyword')
+//           const products = await Product.query()
+//               .where('product_name', 'like', `%${keyword}%`)
+//               .orWhere('detail_product', 'like', `%${keyword}%`)
+//               .paginate(1, 10)
+              
+//           const serializedProducts = products.serialize();
+
+//           console.log(serializedProducts);
+//           return view.render('admin/productListPage', { products:serializedProducts })
+//       } catch (error) {
+//         return response.status(500).json({ message: 'Internal Server Error' })
+//       }
+//   }
+  
+  
+}
