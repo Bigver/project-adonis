@@ -57,6 +57,22 @@ Route.group(() => {
     Route.get('/product/delete/:id', 'ProductsController.deleteProduct').as('product.remove')
     Route.get('/productedit/:id', 'ProductsController.editProduct').as('product.edit')
     Route.get('/productlist', 'ProductsController.listProduct').as('product.list')
+    
+    //Cart
+    Route.post('/cart/add', 'CartsController.addCart').as('add.cart')
+    Route.get('/shopcart', 'PagesController.shopCart').as('shopcart.page')
+    Route.post('/cartDecrease/:id', 'CartsController.decreaseProductQuantityInCart').as('decrease.cart')
+    Route.post('/cartIncrease/:id', 'CartsController.increaseProductQuantityInCart').as('increase.cart')
+
+    //Order
+    Route.post('/cart/checkout', 'OrderController.checkOut').as('checkout')
+    Route.get('/order/', 'PagesController.order').as('order.page')
+    Route.get('/order/:id', 'PagesController.orderDetail').as('order.detail')
+    Route.get('/orderChangeStatus/:id', 'OrderController.changeStatusOrder').as('order.change.status')
+
+
+
+
 
 }).prefix('admin').middleware('auth').middleware('authCheck')
 

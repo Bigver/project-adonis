@@ -6,6 +6,9 @@ import NewsService from "App/Service/NewsService";
 import HomeService from "App/Service/home_service";
 import ContactService from "App/Service/contact_service";
 import UrlService from "App/Service/getUrl_service";
+import OrderService from "App/Service/OrderService";
+import CartService from "App/Service/CartService";
+import ProductService from "App/Service/product_service";
 
 export default class PagesController {
   public async loginPage({ view }: HttpContextContract) {
@@ -187,5 +190,69 @@ export default class PagesController {
 
   public async newsAdmin({ view }: HttpContextContract) {
     return view.render("admin/newsPage");
+  }
+
+  public async shopCart({ view, auth }: HttpContextContract) {
+    try {
+      // ดึงข้อมูลผู้ใช้ที่เข้าสู่ระบบ
+      const user = auth.user?.serialize();
+
+      const filter = {};
+
+
+      // ตรวจสอบว่ามีผู้ใช้ที่เข้าสู่ระบบหรือไม่
+      if (!user) {
+        return view.render('errors.unauthorized');
+      }
+
+      // ดึงรายการสินค้าในตะกร้าของผู้ใช้
+      const cart = await CartService.getItemAll({ filters: { userId: user.id } }).preload('product').paginate(1, 10);
+      const carts = cart.serialize();
+
+      const cartItem = await CartService.getCartByUser(user.id)
+      const item = await ProductService.all({ filter: filter }).paginate(1, 10);
+      const items = item.serialize()
+
+      // ดึงรายการสินค้าในตะกร้าทั้งหมดของผู้ใช้
+      const cartItems = await CartService.itemAll({ filter: { userId: user.id } });
+      const serializedCartItems = cartItems.map((item) => item.serialize());
+
+      // คำนวณยอดรวมของรายการสินค้าในตะกร้า
+      let total = 0;
+      serializedCartItems.forEach((item: any) => {
+        total += item.total_price;
+      });
+
+      // ส่งข้อมูลไปยังแม่แบบเพื่อแสดงผล
+      return view.render("user/shopcartPage", { user: user, items, cartData: carts, total, cartItem });
+    } catch (error) {
+      console.error(error);
+      return view.render("errors.something_went_wrong");
+    }
+  }
+
+  public async order({ view }: HttpContextContract) {
+    const filter = {}
+    const orderItem = await OrderService.all({ filters: filter })
+
+    return view.render("user/order", { orderItem });
+  }
+
+
+  public async orderDetail({ view, params }: HttpContextContract) {
+    try {
+      const orderId = params.id
+      const item = await OrderService.itemAll(orderId);
+      console.log(item);
+
+      const orders = await OrderService.all({filters: {id: orderId}})
+      const order = orders.map((item) => item.serialize())
+
+      return view.render('user/orderDetail', { item, order });
+    } catch (error) {
+      console.error(error);
+      // ส่งข้อผิดพลาดไปยัง view สำหรับการแสดงผล
+      return view.render('error', { message: 'Failed to load order detail' });
+    }
   }
 }

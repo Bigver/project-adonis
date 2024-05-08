@@ -28,6 +28,38 @@ export default class CartService {
         return query
     }
 
+    public static getItemAll(filters?: any) {
+        let query = CartItem.query()
+
+        if (filters && filters.id) {
+            query = query.where('id', '=', filters.id)
+        }
+
+        // Return the query builder to allow chaining
+        return query
+    }
+
+    static async decreaseProduct(id: any) {
+        const item = await CartItem.findOrFail(id);
+
+        if (item.quantity > 1) {
+            item.quantity = item.quantity - 1;
+            await item.save();
+            return item;
+        } else {
+            // ถ้า quantity เป็น 0 ให้ลบ item ออกจากตะกร้า
+            await item.delete();
+            return null; // หรือคืนค่าอะไรก็ตามตามที่ต้องการ
+        }
+    }
+
+    static async increaseProduct(id: any) {
+      const item = await CartItem.findOrFail(id);
+      item.quantity = item.quantity + 1;
+      await item.save();
+      return item;
+  }
+
     public static async checkout(userId: number) {
         try {
             // หาข้อมูล cart ของ user จาก userId
@@ -126,4 +158,17 @@ export default class CartService {
         return await Cart.query().where('userId', userId).first();
     }
 
+
+    public static async getCartByUser(userId: number) {
+        try {
+            const cartItem = await CartItem.query()
+            .whereHas('cart', (query) => {
+                query.where('userId', userId);
+            })
+            .preload('product');
+            return cartItem
+        } catch (error) {
+            throw new Error('Failed to get cart by user')
+        }
+    }
 }

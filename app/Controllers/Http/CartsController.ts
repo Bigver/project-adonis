@@ -32,4 +32,14 @@ export default class CartsController {
         }
     }
 
+    async decreaseProductQuantityInCart({response,params} : HttpContextContract) {
+        await CartService.decreaseProduct(params.id)
+        return response.redirect().back()
+    }
+
+    async increaseProductQuantityInCart({response,params} : HttpContextContract) {
+        await CartService.increaseProduct(params.id)
+        return response.redirect().back()
+    }
+
 }

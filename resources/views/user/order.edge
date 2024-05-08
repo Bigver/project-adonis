@@ -1,0 +1,141 @@
+@layout('layout')
+@set('title', 'homepage')
+
+@section('body')
+@if ( access.checkAdmin == 'yes' )
+{{--  Product  --}}
+<div class="col-md-10 col-xl-11 me-5 mb-4 ms-5 mt-3 ">
+    <div class="card h-auto ">
+        <div class="card">
+            <div class="card-header ">
+              <h2 class="card-title mb-0">Order</h2>
+              {{--  <div class="d-flex justify-content-center align-items-center row py-3 gap-3 gap-md-0">
+                <div class="col-md-4 product_status"></div>
+                <div class="col-md-4 product_category"></div>
+                <div class="col-md-4 product_stock"></div>
+              </div>  --}}
+            </div>
+            <div class="card-datatable table-responsive">
+              
+                {{--  <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                    <div class="card-header d-flex border-top rounded-0 flex-wrap py-2">
+                        <div class="me-5 ms-n2 pe-5">
+                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
+                                <label>
+                                    <input type="search" class="form-control" placeholder="Search Product" aria-controls="DataTables_Table_0">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-start justify-content-md-end align-items-baseline">
+                            <div class="dt-action-buttons d-flex flex-column align-items-start align-items-md-center justify-content-sm-center mb-3 mb-md-0 pt-0 gap-4 gap-sm-0 flex-sm-row">
+                                <div class="dataTables_length mt-2 mt-sm-0 mt-md-3 me-2" id="DataTables_Table_0_length">
+                                    <label>
+                                        <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-select">
+                                            <option value="7">7</option>
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                            <option value="70">70</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                    </label>
+                                </div>
+                                <div class="dt-buttons btn-group flex-wrap d-flex">
+                                    <div class="btn-group">
+                                        <button class="btn btn-secondary buttons-collection dropdown-toggle btn-label-secondary me-3 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" aria-haspopup="dialog" aria-expanded="false">
+                                            <span><i class="ti ti-download me-1 ti-xs">
+                                                </i>อะไรวะ
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <button class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
+                                        <span>
+                                            <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
+                                                <span class="d-none d-sm-inline-block">Add Product</span>
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  --}}
+
+
+                {{--  Table  --}}
+                <table class="datatables-products table dataTable no-footer dtr-column text-center" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
+                <thead class="border-top">
+                    <tr>
+                        <th class="sorting text-center" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"  aria-sort="ascending">
+                            Order ID
+                        </th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1"  colspan="1" aria-label="category: activate to sort column ascending">
+                            User ID
+                        </th>
+                        <th class="sorting_disabled text-center" rowspan="1">
+                            Status
+                        </th>
+                        <th class="sorting text-center" tabindex="0" aria-controls="DataTables_Table_0" colspan="1" rowspan="1"aria-label="sku: activate to sort column ascending">
+                            Total Price
+                        </th>
+                        <th class="sorting_disabled text-center" rowspan="1" colspan="3" aria-label="Actions">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @each(order in orderItem)
+                    <tr class="odd">
+                        <td valign="top" class="dataTables_empty">{{order.id}}</td>
+                        <td>{{order.userId}}</td>
+                        <td>{{order.status}}</td>
+                        <td>{{order.total}}</td>
+                        <td>
+                                <a href="{{route('order.detail', {id: order.id})}}">
+                                    <button class="btn btn-info waves-effect">Detailed</button>
+                                </a>
+                                <a href="{{route('order.change.status', {id: order.id, status: order.status})}}">
+                                    <button class="btn btn-warning waves-effect">Switch State</button>
+                                </a>
+                        </td>
+                    </tr>
+                    @endeach
+                </tbody>
+              </table>
+
+            {{--  Table Footer  --}}
+            <div class="row mx-2">
+                <div class="col-sm-12 col-md-6">
+                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
+                        Showing 0 to 0 of 0 entries
+                    </div>
+                </div>
+
+                {{--  Prev Next  --}}
+                <div class="col-sm-12 col-md-6">
+                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
+                        <ul class="pagination">
+                            <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
+                                <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" class="page-link">
+                                    Previous
+                                </a>
+                            </li>
+                            <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next">
+                                <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" class="page-link">
+                                    Next
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+
+@endif
+
+@end

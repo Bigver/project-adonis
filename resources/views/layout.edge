@@ -146,7 +146,7 @@
               </ul>
             </li>
             <li class="menu-item">
-              <a href="page-2.html" class="menu-link">
+              <a href="{{route('order.page')}}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-credit-card"></i>
                 <div>รายการสั่งซื้อ</div>
               </a>
@@ -208,6 +208,12 @@
                   <div>ติดต่อเรา</div>
                 </a>
             </li>
+            <li class="menu-item">
+              <a href="{{route('shopcart.page')}}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <div>ตระกร้า</div>
+              </a>
+          </li>
             @endif
           </ul>
         </aside>
