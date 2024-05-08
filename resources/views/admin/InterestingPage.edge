@@ -18,7 +18,7 @@
           <div class="card-header">
             <h5 class="card-tile mb-0">Page Interesting</h5>
           </div>
-          <form class="card-body form-about" id="myForm" action="{{route('add.Interesting')}}" method="POST" >
+          <form class="card-body form-about" id="myForm" action="{{route('add.Interesting')}}" method="POST" enctype="multipart/form-data">
             {{ csrfField() }}
             <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Title</label>
@@ -39,6 +39,7 @@
                     placeholder="URL"
                     name="imgUrl"
                     aria-label="imgUrl" />
+                    <input type="file" class="form-control" name="imagefile1" accept="image/*">
                 </div>
               <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Description</label>

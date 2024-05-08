@@ -3,12 +3,21 @@ import _ from 'lodash'
 
 
 export default class UserService {
-  public static async all({filters = {}} : any){
-    const user = User.query()
-    if(_.result(filters,'id')){
-      user.where('id',filters.id)
+  public static all({ filters = {} }: any) {
+    const item = User.query()
+    if (_.result(filters, 'id')) {
+        item.where('id', filters.id)
     }
-    return user
+
+    return item
+}
+
+  public static async searchUser(keyword : any , page : any) {
+    const user = await User.query()
+    .where('username', 'like', `%${keyword}%`)
+    .orWhere('email', 'like', `%${keyword}%`)
+    .orWhere('id', 'like', `%${keyword}%`).paginate(page)
+    return user;
   }
     
 

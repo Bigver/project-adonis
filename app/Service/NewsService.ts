@@ -12,6 +12,14 @@ export default class NewsService {
         return item
     }
 
+    public static async searchNews(keyword : any , page : any) {
+        const newsPaginator = await News.query()
+        .where('title', 'like', `%${keyword}%`)
+        .orWhere('id', 'like', `%${keyword}%`).paginate(page)
+        return newsPaginator;
+      }
+        
+
     static async create(data: any) {
         try {
             const item = await News.create(data)

@@ -35,16 +35,21 @@
 
             <!-- Order List Table -->
             <div class="card">
-              <div class="card-header border-bottom">
-                <h5 class="card-title mb-3">Search Filter</h5>
-                <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
-                  <div class="col-md-4 user_role"></div>
-                  <div class="col-md-4 user_plan"></div>
-                  <div class="col-md-4 user_status"></div>
-                </div>
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-tile mb-0">Update News</h4>                     
+                <div class="dt-buttons btn-group">
+                  <div class="input-group mt-2 mb-3 w-auto h-50">
+                      <form id="searchForm" action="{{ route('admin.user') }}" method="get" class="input-group">
+                        <input type="text" name="keyword" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                       
+                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                        &nbsp;&nbsp; &nbsp;&nbsp;
+                      </form>
+                    </div>
+                  </div>
               </div>
               <div class="card-datatable table-responsive">
-                <table class="datatables-users table border-top">
+                <table class="table border-top">
                   <thead>
                     <tr>
                       <th>user_id</th>
@@ -55,7 +60,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @each(user in userAll)
+                    @each(user in users.data)
                     <tr>
                         <td scope="row">{{ user.id }}</td>
                         <td>{{ user.username }}</td>
@@ -70,6 +75,31 @@
                     
                 </tbody>
                 </table>
+                <nav aria-label="Page navigation" class="mt-3">
+                  <ul class="pagination justify-content-center">
+                    <li class="page-item ">
+                      @if (keyword)
+                      <div></div>
+                      @else
+                      <a class="page-link" href="{{ pagination.currentPage  === 1 ? '#' : `/admin/userAdmin?page=${pagination.currentPage - 1}` }}">Previous</a>
+                      @endif
+                    </li>
+              
+                    @if (keyword)
+                      <div></div>
+                      @else
+                      <li class="page-item"><a class="page-link">{{ pagination.currentPage }}</a></li>
+                      @endif
+                
+                    <li class="page-item">
+                      @if (keyword)
+                      <div></div>
+                      @else
+                      <a class="page-link" href="{{ pagination.currentPage === pagination.lastPage ? '#' : `/admin/userAdmin?page=${pagination.currentPage + 1}` }}">Next</a>
+                      @endif
+                    </li>
+                  </ul>
+                </nav>
               </div>
             </div>
           </div>

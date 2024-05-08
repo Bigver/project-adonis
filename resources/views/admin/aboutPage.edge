@@ -20,7 +20,7 @@
         </div>
         <!-- ฟอร์มสำหรับ submit ข้อความ -->
         {{--  ขนาด form กำหนดเอาเอง ใน public/app  --}}
-        <form class="card-body form-about" action="{{route('about.create')}}" method="post" id="myForm" > 
+        <form class="card-body form-about" action="{{route('about.create')}}" method="post" id="myForm"  enctype="multipart/form-data"> 
           {{ csrfField() }}
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">image 1</label>
@@ -32,6 +32,7 @@
               name="img1"
               value={{data.img1}}
               aria-label="image1" />
+              <input type="file" class="form-control" name="imagefile1" accept="image/*">
           </div>
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">image 2</label>
@@ -43,6 +44,7 @@
               name="img2"
               value={{data.img2}}
               aria-label="image2" />
+              <input type="file" class="form-control" name="imagefile2" accept="image/*">
           </div>
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">image 3</label>
@@ -54,6 +56,7 @@
               name="img3"
               value={{data.img3}}
               aria-label="image3" />
+              <input type="file" class="form-control" name="imagefile3" accept="image/*">
           </div>
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">title</label>

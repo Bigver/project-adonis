@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import NewsService from 'App/Service/NewsService';
+import uploadService from 'App/Service/uploads_service';
 
 
 export default class NewsController {
@@ -8,6 +9,14 @@ export default class NewsController {
     async add({ request, response }: HttpContextContract) {
         try {
             const data = request.only(['title', 'description', 'imgUrl', 'content'])
+            const File = request.file("imagefile1", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});
+            const fileName1 = await uploadService.upload(File)
+
+            if (File){
+                await uploadService.deleteFile(data.imgUrl)
+                data.imgUrl = `/uploads/${fileName1}`;
+              }
+            
             await NewsService.create(data);
             return response.redirect().back();
         } catch (error) {
@@ -20,6 +29,14 @@ export default class NewsController {
         try {
             const { id } = params;
             const data = request.only(['title', 'description', 'imgUrl', 'content']);
+            const File = request.file("imagefile1", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});
+            const fileName1 = await uploadService.upload(File)
+
+            if (File){
+                await uploadService.deleteFile(data.imgUrl)
+                data.imgUrl = `/uploads/${fileName1}`;
+              }
+              
             await NewsService.update(id, data);
             return response.redirect().toRoute('news.update.list')
         } catch (error) {

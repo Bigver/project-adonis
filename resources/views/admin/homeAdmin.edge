@@ -12,9 +12,9 @@
         <div class="card mb-4">
           <div class="card-header">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h2 class="card-tile mb-0"><u>Home update</u></h2>
+                <h5 class="card-tile mb-0">Home Page</h5>
             </div>
-            <form class="card-body form-about" action="{{route('admin.home.update')}}" style="margin: 10px" method="POST" id="myForm"> 
+            <form class="card-body form-about" action="{{route('admin.home.update')}}" style="margin: 10px" method="POST" id="myForm"  enctype="multipart/form-data" enctype="multipart/form-data"> 
               {{ csrfField() }}
               <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Key Visual Image Url:</label>
@@ -26,14 +26,10 @@
                   value={{home.keyvisual_img_url}}
                   name="keyvisual_img_url"
                   />
+                  <input type="file" class="form-control" name="imagefile1" accept="image/*">
               </div>
               <div class="mb-3">
-                <label class="form-label" for="ecommerce-product-name">Key Visual Image Preview:</label>
-                <br>
-                <img src="{{home.keyvisual_img_url}}" alt="" width="800px">
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="ecommerce-product-name">Slidershow 1 Image Url:</label>
+                <label class="form-label" for="ecommerce-product-name">Image Url 1:</label>
                 <input
                   type="text"
                   class="form-control"
@@ -41,6 +37,18 @@
                   placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
                   value={{home.slideshow1_img_url}}
                   name="slideshow1_img_url"/>
+                  <input type="file" class="form-control" name="imagefile2" accept="image/*">
+              </div>
+              <div class="mb-3">
+                <label class="form-label" for="ecommerce-product-name">Image Url 2:</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ecommerce-product-name"
+                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
+                  value={{home.slideshow3_img_url}}
+                  name="slideshow3_img_url"/>
+                  <input type="file" class="form-control" name="imagefile4" accept="image/*">
               </div>
               <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Slidershow 1 Video Url:</label>
@@ -53,16 +61,6 @@
                   name="slideshow1_video_url"/>
               </div>
               <div class="mb-3">
-                <label class="form-label" for="ecommerce-product-name">Slidershow 2 Image Url:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="ecommerce-product-name"
-                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
-                  value={{home.slideshow2_img_url}}
-                  name="slideshow2_img_url"/>
-              </div>
-              <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Slidershow 2 Video Url:</label>
                 <input
                   type="text"
@@ -71,16 +69,6 @@
                   placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
                   value={{home.slideshow2_video_url}}
                   name="slideshow2_video_url"/>
-              </div>
-              <div class="mb-3">
-                <label class="form-label" for="ecommerce-product-name">Slidershow 3 Image Url:</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="ecommerce-product-name"
-                  placeholder="ex. https://www.chewchewsnack.com/contents/076a7316d727d125a930849e51ec32b8.jpg"
-                  value={{home.slideshow3_img_url}}
-                  name="slideshow3_img_url"/>
               </div>
               <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Slidershow 3 Video Url:</label>

@@ -19,7 +19,7 @@
           <div class="card-header">
             <h5 class="card-tile mb-0">Page Interesting</h5>
           </div>
-          <form class="card-body form-about" id="myForm" action="{{route('UpdateInteresting', {id: inter.id})}}" method="POST" >
+          <form class="card-body form-about" id="myForm" action="{{route('UpdateInteresting', {id: inter.id})}}" method="POST"  enctype="multipart/form-data">
              
                       {{ csrfField() }}
                     <input type="hidden" name="id" value="{{ inter.id }}">
@@ -44,7 +44,9 @@
                     placeholder="URL"
                     name="imgUrl"
                     aria-label="imgUrl" 
-                    value='{{ inter.img_url }}'/>
+                    value='{{ inter.img_url }}'/>                    
+                    <input type="file" class="form-control" name="imagefile1" accept="image/*">
+
                 </div>
               <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Description</label>

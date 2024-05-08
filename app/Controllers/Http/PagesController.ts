@@ -5,6 +5,7 @@ import interestingsService from "App/Service/interestings_service";
 import NewsService from "App/Service/NewsService";
 import HomeService from "App/Service/home_service";
 import ContactService from "App/Service/contact_service";
+import UrlService from "App/Service/getUrl_service";
 
 export default class PagesController {
   public async loginPage({ view }: HttpContextContract) {
@@ -38,19 +39,51 @@ export default class PagesController {
     }
   }
 
-  public async newsUpdateList({ view }: HttpContextContract) {
+  public async newsUpdateList({ view , request }: HttpContextContract) {
     try {
       const filter = {};
-      const news = await NewsService.all({ filter: filter }).paginate(1, 10);
-      const serializedNews = news.serialize();
-      return view.render("admin/newsUpdateListPage", { news: serializedNews });
-    } catch (error) {}
+      let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+      const limit = 10; // จำนวนรายการต่อหน้า
+      page = Math.max(page, 1);
+      let news : any
+      const keyword = request.input('keyword')
+      let newsPaginator : any
+      
+      if (keyword){
+        newsPaginator = await NewsService.searchNews(keyword , page);
+      } else {
+        newsPaginator = await NewsService.all({ filter: filter }).paginate(page, limit);        
+      }
+      news = newsPaginator.serialize();
+
+      const paginationLinks = await UrlService.getUrlsForRange(1, newsPaginator.lastPage);
+      return view.render("admin/newsUpdateListPage", { news ,  pagination: newsPaginator, paginationLinks , keyword  });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  public async userAdmin({ view }: HttpContextContract) {
-    const filters = {};
-    let users: any = await UserService.all({ filters: filters });
-    return view.render("admin/userPage", { userAll: users });
+  public async userAdmin({ view , request }: HttpContextContract) {
+    try {
+      const filter = {};
+      let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+      const limit = 2; // จำนวนรายการต่อหน้า
+      page = Math.max(page, 1);
+      let users : any
+      const keyword = request.input('keyword')
+      let usersPaginator : any
+      
+      if (keyword){
+        usersPaginator = await UserService.searchUser(keyword , page);
+      } else {
+        usersPaginator = await UserService.all({ filter: filter }).paginate(page, limit);        
+      }
+      users = usersPaginator.serialize();
+      const paginationLinks = await UrlService.getUrlsForRange(1, usersPaginator.lastPage);
+      return view.render("admin/userPage", { users ,  pagination: usersPaginator, paginationLinks , keyword  });
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   public async userUpdateAdmin({ view, params }: HttpContextContract) {
@@ -69,7 +102,7 @@ export default class PagesController {
     if (aboutData.length != 0) {
       aboutData = aboutData[0].serialize();
     }
-    return view.render("admin/aboutPage", { data: aboutData });
+    return view.render("admin/aboutPage", { data: aboutData  });
   }
 
   public async newsUpdatePage({ params, view }: HttpContextContract) {
@@ -84,7 +117,6 @@ export default class PagesController {
   public async profilePage({ view }: HttpContextContract) {
     return view.render("admin/userProfile");
 }
-
 
 
   public async newsContent({ view, params }: HttpContextContract) {
@@ -124,16 +156,28 @@ export default class PagesController {
     return view.render("admin/contactPage" , {data : contactData});
   }
 
-  public async showInteresting({ view }: HttpContextContract) {
-    const filter = {};
-    const item = await interestingsService
-      .all({ filter: filter })
-      .paginate(1, 10);
-    const items = item.serialize();
-
-    return view.render("admin/interestingListPage", { items });
+  public async showInteresting({ view , request}: HttpContextContract) {
+    try {
+      const filter = {};
+      let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+      const limit = 2; // จำนวนรายการต่อหน้า
+      page = Math.max(page, 1);
+      let interestings : any
+      const keyword = request.input('keyword')
+      let interestingsPaginator : any
+      
+      if (keyword){
+        interestingsPaginator = await interestingsService.searchinteresting(keyword , page);
+      } else {
+        interestingsPaginator = await interestingsService.all({ filter: filter }).paginate(page, limit);        
+      }
+      interestings = interestingsPaginator.serialize();
+      const paginationLinks = await UrlService.getUrlsForRange(1, interestingsPaginator.lastPage);
+      return view.render("admin/interestingListPage", { items : interestings ,  pagination: interestingsPaginator, paginationLinks , keyword  });
+    } catch (error) {
+      console.log(error)
+    }
   }
-
   public async UpdateinterestingPage({ view }: HttpContextContract) {
     return view.render("admin/UpdateInterestingPage");
   }

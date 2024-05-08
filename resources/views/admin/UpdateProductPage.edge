@@ -21,7 +21,7 @@
             <h5 class="card-tile mb-0">Update Product</h5>
             </div>
           </div>
-          <form class="card-body form-about" action="{{route('update.product', {id: product.id })}}" method="POST" id="myForm"> 
+          <form class="card-body form-about" action="{{route('update.product', {id: product.id })}}" method="POST" id="myForm"  enctype="multipart/form-data"> 
             <input type="hidden" name="_method" value="PUT">
             {{ csrfField() }}
             <div class="mb-3">
@@ -53,6 +53,7 @@
                 placeholder="Enter new image URL1."
                 value="{{product.img_product}}"
                 name="img_product" />
+                <input type="file" class="form-control" name="imagefile1" accept="image/*">
             </div>
             <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Image 2</label>
@@ -63,6 +64,7 @@
                   placeholder="Enter new image URL2."
                   value="{{product.img2_product}}"
                   name="img2_product" />
+                  <input type="file" class="form-control" name="imagefile2" accept="image/*">
               </div>
               <div class="mb-3">
                 <label class="form-label" for="ecommerce-product-name">Image 3</label>
@@ -73,6 +75,7 @@
                   placeholder="Enter new image URL3."
                   value="{{product.img3_product}}"
                   name="img3_product" />
+                  <input type="file" class="form-control" name="imagefile3" accept="image/*">
               </div>
             <div class="mb-3">
                 <label class="form-label" for="content" >Detail</label>

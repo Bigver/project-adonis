@@ -12,6 +12,14 @@ export default class interestingsService {
     return item
     }
 
+    public static async searchinteresting(keyword : any , page : any) {
+        const interesting = await Interesting.query()
+        .where('title', 'like', `%${keyword}%`)
+        .orWhere('id', 'like', `%${keyword}%`).paginate(page)
+        return interesting;
+      }
+        
+
   
 
     static async create(data: any) {

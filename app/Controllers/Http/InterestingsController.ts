@@ -1,9 +1,17 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import interestingsService from 'App/Service/interestings_service';
+import uploadService from 'App/Service/uploads_service';
 export default class InterestingsController {
     async add({ request, response }:HttpContextContract) {
         try {
             const data = request.only(['title', 'description', 'imgUrl', 'content'])
+            const File = request.file("imagefile1", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});
+            const fileName1 = await uploadService.upload(File)
+
+            if (File){
+                await uploadService.deleteFile(data.imgUrl)
+                data.imgUrl = `/uploads/${fileName1}`;
+              }
             await interestingsService.create(data);
             return response.redirect().back();
         } catch (error) {
@@ -17,7 +25,13 @@ export default class InterestingsController {
     try {
       const { id } = params;
       const data = request.only(['title', 'description', 'imgUrl', 'content'])
-     
+      const File = request.file("imagefile1", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});
+            const fileName1 = await uploadService.upload(File)
+
+            if (File){
+                await uploadService.deleteFile(data.imgUrl)
+                data.imgUrl = `/uploads/${fileName1}`;
+              }
       await interestingsService.update(id, data);
       return response.redirect().toRoute('showInteresting')
     } catch (error) {

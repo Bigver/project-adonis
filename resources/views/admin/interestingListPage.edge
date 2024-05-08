@@ -10,9 +10,17 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">LIST OF INTERESTING</h5>
             <div class="dt-buttons btn-group">
-                <a href="{{ route('admin.interesting') }}" class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
-                    <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Interesting</span></span>
-                </a>
+                <div class="input-group mt-2 mb-3 w-auto h-50">
+                    <form id="searchForm" action="{{ route('showInteresting') }}" method="get" class="input-group">
+                      <input type="text" name="keyword" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                     
+                      <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                      &nbsp;&nbsp; &nbsp;&nbsp;
+                      <a href="{{ route('admin.product') }}" class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
+                        <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Product</span></span>
+                    </a>
+                    </form>
+                  </div>
             </div>
         </div>
         <div class="card-datatable table-responsive">
@@ -34,7 +42,7 @@
                 <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
                     <thead class="border-top">
                         <tr>
-                           
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 50px;" aria-label="sku: activate to sort column ascending">ID</th>
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 100px;" aria-label="sku: activate to sort column ascending">Image</th>
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 150px;" aria-label="price: activate to sort column ascending">Title</th>
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 300px;" aria-label="qty: activate to sort column ascending">Description</th>
@@ -45,6 +53,7 @@
             
                     @each(item in items.data)
                     <tr>
+                        <td>{{ item.id }}</td>
                         <td> <img src="{{ item.img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
                         <td>{{ item.title }}</td>
                         <td>{{ item.description.length > 100 ? item.description.substr(0, 1000) + '...' : item.description }}</td>
@@ -58,8 +67,33 @@
                     </tr>
                     @endeach
                   
-                </table>                
+                </table>           
                 </div>
+                <nav aria-label="Page navigation" class="mt-3">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item ">
+                        @if (keyword)
+                        <div></div>
+                        @else
+                        <a class="page-link" href="{{ pagination.currentPage  === 1 ? '#' : `/admin/showInteresting?page=${pagination.currentPage - 1}` }}">Previous</a>
+                        @endif
+                      </li>
+                
+                      @if (keyword)
+                        <div></div>
+                        @else
+                        <li class="page-item"><a class="page-link">{{ pagination.currentPage }}</a></li>
+                        @endif
+                  
+                      <li class="page-item">
+                        @if (keyword)
+                        <div></div>
+                        @else
+                        <a class="page-link" href="{{ pagination.currentPage === pagination.lastPage ? '#' : `/admin/showInteresting?page=${pagination.currentPage + 1}` }}">Next</a>
+                        @endif
+                      </li>
+                    </ul>
+                  </nav>     
             </div>
         </div>
     </div>

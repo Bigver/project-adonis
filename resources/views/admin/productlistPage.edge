@@ -11,9 +11,17 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">LIST OF PRODUCT</h5>
             <div class="dt-buttons btn-group">
-                <a href="{{ route('admin.product') }}" class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
-                    <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Product</span></span>
-                </a>
+                <div class="input-group mt-2 mb-3 w-auto h-50">
+                    <form id="searchForm" action="{{ route('product.list') }}" method="get" class="input-group">
+                      <input type="text" name="keyword" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                     
+                      <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                      &nbsp;&nbsp; &nbsp;&nbsp;
+                      <a href="{{ route('admin.product') }}" class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
+                        <span><i class="ti ti-plus me-0 me-sm-1 ti-xs"></i><span class="d-none d-sm-inline-block">Add Product</span></span>
+                    </a>
+                    </form>
+                  </div>
             </div>
         </div>
         <div class="card-datatable table-responsive">
@@ -35,29 +43,55 @@
                 <table class="datatables-products table dataTable no-footer dtr-column collapsed" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
                     <thead class="border-top">
                         <tr>
-                           
-                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 100px;" aria-label="sku: activate to sort column ascending">Image</th>
-                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 150px;" aria-label="price: activate to sort column ascending">NameProduct</th>
-                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 300px;" aria-label="qty: activate to sort column ascending">Price</th>
-                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 120px;" aria-label="status: activate to sort column ascending">Status</th>
-                            <th class="sorting_disabled dtr-hidden" rowspan="1" colspan="1" style="display: none;" aria-label="Actions">Actions</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"  aria-label="sku: activate to sort column ascending">ID</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"  aria-label="sku: activate to sort column ascending">Image</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" aria-label="price: activate to sort column ascending">NameProduct</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"  aria-label="qty: activate to sort column ascending">Price</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"  aria-label="status: activate to sort column ascending">Details</th>
+                            <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1"  aria-label="status: activate to sort column ascending">Status</th>
+                            {{--  <th class="sorting_disabled dtr-hidden" rowspan="1" colspan="1" style="display: none;">Actions</th>  --}}
                         </tr>
                     </thead>
-            
                     @each(item in products.data)
                     <tr>
+                        <td>{{ item.id }}</td>
                         <td> <img src="{{ item.img_product }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
                         <td>{{ item.product_name }}</td>
-                        <td>{{ item.price_product.length > 100 ? item.price_product.substr(0, 1000) + '...' : item.price_product }}</td>
-                    
+                        <td>{{ item.price_product}}</td>
+                        <td>{{{ item.detail_product.length > 50 ? item.detail_product.substr(0, 50) + '...' : item.detail_product }}}</td>
                         <td> <div class="d-flex" > <a  href="{{ route('product.edit', { id: item.id }) }}" class="btn btn-info btn-xs bg-primary">Edit</a>
                             &nbsp;&nbsp;
                              <a href="{{route('product.remove' , {id : item.id})}}" class="btn btn-danger btn-xs">Delete</a>
                              &nbsp;&nbsp;
                     </tr>
                     @endeach
-                  
                 </table>
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                      <li class="page-item ">
+                        @if (keyword)
+                        <div></div>
+                        @else
+                        <a class="page-link" href="{{ pagination.currentPage  === 1 ? '#' : `/admin/productlist?page=${pagination.currentPage - 1}` }}">Previous</a>
+                        @endif
+                      </li>
+                
+                      @if (keyword)
+                        <div></div>
+                        @else
+                        <li class="page-item"><a class="page-link">{{ pagination.currentPage }}</a></li>
+                        @endif
+                  
+                      <li class="page-item">
+                        @if (keyword)
+                        <div></div>
+                        @else
+                        <a class="page-link" href="{{ pagination.currentPage === pagination.lastPage ? '#' : `/admin/productlist?page=${pagination.currentPage + 1}` }}">Next</a>
+                        @endif
+                      </li>
+                    </ul>
+                  </nav>
+                
                 </div>
             </div>
         </div>
@@ -71,7 +105,7 @@
     <div class="misc-wrapper d-grid justify-content-center">
       <h2 class="mb-1 mt-4">Page Not Found :|</h2>
       <p class="mb-4 mx-2">Oops! 😖 The requested URL was not found on this server.</p>
-      <div class="mt-4">
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-*      <div class="mt-4">
         <img
           src="../../assets/img/illustrations/page-misc-error.png"
           alt="page-misc-error"

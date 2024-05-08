@@ -21,7 +21,7 @@
         </div>
         <!-- ฟอร์มสำหรับ submit ข้อความ -->
         {{--  ขนาด form กำหนดเอาเอง ใน public/app  --}}
-        <form class="card-body form-about" method="POST" action="{{route('contacts.create')}}" id="myForm"> 
+        <form class="card-body form-about" method="POST" action="{{route('contacts.create')}}" id="myForm"  enctype="multipart/form-data"> 
           {{ csrfField() }}
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">Minimap</label>
@@ -48,17 +48,6 @@
           <label class="form-label" for="ecommerce-product-name">location_detail</label>
           <div id="editor"  class="text-editor form-control h-50">{{{data.location_detail}}}</div>
           <input type="hidden" name="location_detail" id="message">
-          {{--  <div class="mb-3">
-            <label class="form-label" for="ecommerce-product-name">location_detail</label>
-            <input
-              type="text"
-              class="form-control"
-              id="ecommerce-product-name"
-              placeholder="location_detail"
-              name="location_detail"
-              value="{{data.location_detail}}"
-              aria-label="image3" />
-          </div>  --}}
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">img_line</label>
             <input
@@ -69,6 +58,7 @@
               name="img_line"
               value="{{data.img_line}}"
               aria-label="title about" />
+              <input type="file" class="form-control" name="imagefile1" accept="image/*">
           </div>
           <div class="mb-3">
             <label class="form-label" for="ecommerce-product-name">ink_facebook</label>
