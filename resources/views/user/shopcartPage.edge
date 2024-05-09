@@ -3,179 +3,171 @@
 
 @section('body')
 @if ( access.checkAdmin == 'yes' )
-<div style="display: inline-flex; align-item:center; justify-content:center">
+<div class="justify-content-center d-block align-item-center">
   
 
 {{--  Product  --}}
-  <div class="col-md-4 col-xl-5 mb-5 ms-4 mt-3 me-2">
+  <div class="col-md-11 col-xl-11 mb-5 ms-5 mt-3 ">
     <div class="card h-auto ">
-        <div class="card-header d-flex justify-content-center align-items-center">
-            <div class="card-title m-0 me-2">
-              <h2 class="m-0 me-2"><b>Products</b></h2>
-            </div>
-        </div>
+      <div class="card-header d-flex justify-content-between">
+        <h2 class="card-title m-0"><b>Products</b></h2>
+        <h6 class="m-0">
+          <a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#cartPopup">
+            <button class="btn btn-primary waves-effect waves-light">
+              <i class="ti ti-garden-cart"></i> Cart
+            </button>
+          </a>
+        </h6>
+      </div>
     </div>
     <br>
     <div class="card h-auto ">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex justify-content-center">
               <div>
-                  <div class="card-body">
-                    <ul class="list-group mb-3">
+                  <div class="card-body ">
+
+                    <div class="product_container">
+                      
                       @each(product in items.data)
-  
-                      {{--  Product List  --}}
-                      <li class="list-group-item ">
+                      <div class="product_item">
                         <div class="d-flex gap-3">
-                          <div class="d-inline-flex align-items-center p-2">
-                            <div class="d-block">
-                              <img src="{{product.img_product}}" alt="google home" class="w-px-200 me-5 mb-3">
-                              <form action="{{route('add.cart')}}" method="post" style="text-align:center">
-                                {{ csrfField() }}
-                                <input type="hidden" name="userId" id="userId" value="{{user.id}}">
-                                <input type="hidden" name="productId" id="productId" value="{{product.id}}">
-                                <input type="hidden" name="quantity" id="quantity" value="{{1}}">
-                                <button class="btn btn-secondary add-new btn-label-success waves-effect waves-light" type="submit">
-                                  <span>
-                                    <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                    <span class="d-none d-sm-inline-block">Add to Cart</span>
-                                  </span>
-                                </button>
-                              </form>
+                          <div class="d-inline-flex p-2">
+                            <div>
+                              <div class="w-px-200 h-px-200 mb-3 me-3">
+                                <img src="{{product.img_product}}" alt="google home" class="w-px-200 h-px-200 me-5 mb-3">
+                              </div>
+                              <div class="w-px-200 h-px-40">
+                                <form action="{{route('add.cart')}}" method="post" style="text-align:center">
+                                  {{ csrfField() }}
+                                  <input type="hidden" name="userId" id="userId" value="{{user.id}}">
+                                  <input type="hidden" name="productId" id="productId" value="{{product.id}}">
+                                  <input type="hidden" name="quantity" id="quantity" value="{{1}}">
+                                  <button class="btn btn-secondary add-new btn-label-success waves-effect waves-light" type="submit">
+                                    <span>
+                                      <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
+                                      <span class="d-none d-sm-inline-block">Add to Cart</span>
+                                    </span>
+                                  </button>
+                                </form>
+                              </div>
                             </div>
-                            <div class="flex-grow-1">
-                              <div class="col-md-12" style="font-size: 20px">
-                                <p>
-                                  <b>Product ID: </b>{{product.id}}
+                              <div class="col-xl-5">
+                                <p class="shop_product_detail">
+                                  <b>Product ID: </b><span>{{product.id}}</span>
+                                  <br>
+                                  <br>
+                                  <b>Name: </b> <span>{{product.product_name}}</span>
+                                  <br>
+                                  <br>
+                                  <b>Price: </b><span>{{product.price_product}}</span>
                                 </p>
-                                <p class="col-md-15 me-3">
-                                  <b>Name: </b>{{product.product_name}}
-                                </p>
-                                <p>
-                                  <b>Price: </b>{{product.price_product}}
-                                </p>
+                                
                               </div>
                           </div>
-                          </div>
                         </div>
-                      </li>
-                      @endeach                    
-                      
-                    </ul>
+                      </div>
+                      @endeach          
+
+                    </div>          
               </div>
             </div>
         </div>
     </div>
 </div>
 
-{{--  Cart  --}}
-<div class="col-md-6 col-xl-5 mb-4 mt-3 ms-4 mft-3">
-  <div class="card h-auto ">
-      <div class="card-header d-flex justify-content-center align-items-center">
-          <div class="card-title m-0 me-2">
-              <h2 class="m-0 me-2"><b>Cart</b></h2>
-          </div>
-      </div>
-  </div>
-  <br>
-  <div class="card h-auto ">
-      <div class="card-header d-flex justify-content-center align-items-center">
-          <div class="card-title m-0 me-2">
-            <div> 
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartPopup" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+        <div class="modal-content p-3 p-md-5 ">
+          <div class="modal-body">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 
+            {{--  Heading  --}}
+            <div class="text-center mb-4">
+              <h3 class="mb-2">Cart</h3>
+              {{--  <p class="text-muted address-subtitle">TEXT TEXT TEXT TEXT TEXT TEXT</p>  --}}
+            </div>
               
-              <div class="card-body">
-                <div class="col-xl-15 mb-3 mb-xl-0">
+              <div class="col-xl-15 mb-3 mb-xl-0">
 
 
-                  <ul class="list-group mb-3">
+                  @each(cart in cartData.data) 
+                  <div class="d-flex align-item-center justify-content-center">
+                    <div class="cart_container w-px-700">
+                      <div class="d-inline-flex justify-content-between">
 
-                    @each(cart in cartData.data) 
+                        <img src="{{cart.product.img_product}}" height="150px" width="180px">
 
-                    {{--  Product List  --}}
-                    <li class="list-group-item p-5">
-                      <div class="d-flex gap-3">
-                        <div class=" align-items-center">
-                          {{--  <img src="{{cart.product.img_product}}" alt="" width="200px">
-                          <p>Product ID {{cart.product_id}}</p>
-                          <p>Quantity {{cart.quantity}}</p>
-                          <p>Total Price {{cart.total_price}}</p>  --}}
-                          <img src="{{cart.product.img_product}}" class="w-px-200 h-px-140">
+                        <div class="ms-4 w-px-250" style="border: 1px solid gray;padding: 20px;">
+                          <h6 class="mb-0">{{cart.product.product_name}}</h6>
+                          <small class="text-muted d-block">Product ID: {{cart.product.id}}</small>
+                          <br>
+                          <h5>฿{{cart.product.price_product}} per each</h5>
                         </div>
-                        <div class="flex-grow-1">
-                          
-                          <div class="row">
 
-                            <div class="col-md-12 col-xl-12">
-                              <p class="col-md-12 col-xl-12">
-                                <p>
-                                  <b class="fs-5">Product ID: {{cart.product.id}}</b>
-                                </p>
-                                <p>
-                                  <b class="fs-5">Product Name: </b>
-                                    {{cart.product.product_name}}
-                                </p>
-                                    <div style="display:inline-flex;">
-                                      <div class="me-2 mb-2 text-center" style="height:30px;">
-                                        <b class="fs-5">
-                                          Quantity:
-                                        </b>
-                                    </div>
-                                      <form action="{{route('decrease.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
-                                        {{ csrfField() }}
-                                        <input type="hidden" name="user_id" value="{{user.id}}">
-                                        <input type="hidden" name="total_price" value="{{total_price}}">
-                                        <button type="submit" class="btn rounded-pill btn-icon btn-danger me-2" style="height:30px; font-size: 25px">
-                                          <b>-</b>
-                                        </button>
-                                      </form>
-                                      <div id="quantityInput" type="number" class="form-control form-control-sm me-2" style="width: 50px; height:34px;">
-                                        <b style="font-size: 18px">
-                                          {{cart.quantity}}
-                                        </b>
-                                      </div>
-                                    <form action="{{route('increase.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
-                                      {{ csrfField() }}
-                                      <input type="hidden" name="user_id" value="{{user.id}}">
-                                      <input type="hidden" name="total_price" value="{{total_price}}">
-                                      <button type="submit" class="btn rounded-pill btn-icon btn-success" style="height:30px; font-size: 25px">
-                                        <b>+</b>
-                                      </button>
-                                  </form>
-                                    </div>
-                              </p>  
-                            </div>
-                            <div class="col-md-12">
-                              <p class="col-md-13 me-3">
-                                <b class="fs-5 me-2">TotalPrice:</b>
-                                <span class="fs-5">{{cart.total_price}}</span>
-                              </p>
-                            </div>
+                        <div class="ms-4 w-px-250 d-block" style="text-align:center" >
+                          <div class="mt-2">
+                            <h6 class="mb-0">Quantity:</h6>
                           </div>
-                        </div>
-                      </div>
-                    </li>
-                    @endeach                    
-                    
-                  </ul>
-                  
-                    <a href="javascript:void(0)" class="list-group-item d-flex justify-content-center">
-                      <div>
-                        <form action="{{route('checkout')}}" method="POST">
-                          {{ csrfField() }}
-                          <input type="hidden" name="total" id="" value="{{total}}">
-                          <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Checkout</button>
-                        </form>
-                      </div>
-                    </a>
 
+                          <div class="d-inline-flex mt-3">
+                            <form action="{{route('decrease.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
+                              {{ csrfField() }}
+                              <input type="hidden" name="user_id" value="{{user.id}}">
+                              <input type="hidden" name="total_price" value="{{total_price}}">
+                              <button type="submit" class="btn rounded-pill btn-icon btn-danger me-2 h-px-30 w-px-40">
+                                <b>-</b>
+                              </button>
+                            </form>
+                            <div id="quantityInput" type="number" class="form-control form-control-sm me-2" style="width:60px; height:40px">
+                              <b class="fs-4">{{cart.quantity}}</b>
+                            </div>
+                            <form action="{{route('increase.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
+                              {{ csrfField() }}
+                              <input type="hidden" name="user_id" value="{{user.id}}">
+                              <input type="hidden" name="total_price" value="{{total_price}}">
+                              <button type="submit" class="btn rounded-pill btn-icon btn-success h-px-30 w-px-40">
+                                <b>+</b>
+                              </button>
+                            </form>
+                          </div>
+
+                          <div class="mt-3">
+                            Total Product Price: {{cart.total_price}}฿
+                          </div>
+                          
+                        </div>
+
+                        
+                      </div>
+                    </div>
+                  </div>
+                  @endeach                    
+                  
+                <div class="d-flex justify-content-center align-items-center m-3 mb-2 p-1">
+                    <div class="d-flex justify-content-between">
+                      <h2 >Total Cart Price: {{total}}฿</h2>
+                    </div>
                 </div>
+                
+                  <a href="javascript:void(0)" class="list-group-item d-flex justify-content-center">
+                    <div>
+                      <form action="{{route('checkout')}}" method="POST">
+                        {{ csrfField() }}
+                        <input type="hidden" name="total" id="" value="{{total}}">
+                        <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Checkout</button>
+                      </form>
+                    </div>
+                  </a>
 
               </div>
-            </div>
+
+              
           </div>
+        </div>
       </div>
-  </div>
-</div>
+    </div>
+    <!--/ Add CartPopup Modal -->
 
 </div>
 
