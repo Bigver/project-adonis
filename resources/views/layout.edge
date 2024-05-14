@@ -53,6 +53,7 @@
     <link rel="stylesheet" href="/assets/vendor/libs/datatables-buttons-bs5/buttons.bootstrap5.css" />
 
     <!-- Page CSS -->
+    <link rel="stylesheet" href="/app.css">
 
     <!-- Helpers -->
     <script src="/assets/vendor/js/helpers.js"></script>
@@ -147,7 +148,7 @@
             </li>
             <li class="menu-item">
               <a href="{{route('order.page')}}" class="menu-link">
-                <i class="menu-icon tf-icons ti ti-credit-card"></i>
+                <i class="menu-icon tf-icons ti ti-checklist"></i>
                 <div>รายการสั่งซื้อ</div>
               </a>
           </li> 
@@ -155,19 +156,19 @@
             @if (access.pageAdmin == 'yes')
             <li class="menu-item">
               <a href="{{route('admin.home')}}" class="menu-link">
-                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <i class="menu-icon tf-icons ti ti-home-2"></i>
                 <div>หน้าแรก</div>
               </a>
             </li>
             <li class="menu-item">
               <a href="{{route('admin.interesting')}}" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <i class="menu-icon tf-icons ti ti-bulb"></i>
                 <div >สาระน่ารู้</div>
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
                   <a href="{{route('showInteresting')}}" class="menu-link">
-                    <div >Interesting</div>
+                    <div >Interesting List</div>
                   </a>
                 </li>
                 <li class="menu-item">
@@ -179,7 +180,7 @@
             </li>
             <li class="menu-item ">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <i class="menu-icon tf-icons ti ti-article"></i>
                   <div>ข่าวสารและกิจกรรม</div>
                 </a>
                 <ul class="menu-sub">
@@ -198,19 +199,19 @@
 
             <li class="menu-item">
                 <a href="{{route('admin.about')}}" class="menu-link">
-                  <i class="menu-icon tf-icons ti ti-app-window"></i>
+                  <i class="menu-icon tf-icons ti ti-info-square-rounded"></i>
                   <div>เกี่ยวกับเรา</div>
                 </a>
             </li>
             <li class="menu-item">
                 <a href="{{route('admin.contact')}}" class="menu-link">
-                  <i class="menu-icon tf-icons ti ti-app-window"></i>
+                  <i class="menu-icon tf-icons ti ti-mail"></i>
                   <div>ติดต่อเรา</div>
                 </a>
             </li>
             <li class="menu-item">
               <a href="{{route('shopcart.page')}}" class="menu-link">
-                <i class="menu-icon tf-icons ti ti-app-window"></i>
+                <i class="menu-icon tf-icons ti ti-basket"></i>
                 <div>ตระกร้า</div>
               </a>
           </li>

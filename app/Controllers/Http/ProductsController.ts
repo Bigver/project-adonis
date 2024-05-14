@@ -104,15 +104,15 @@ export default class ProductsController {
   }
 
   async updateProductPage({ params, view }: HttpContextContract) {
-    const product = await Product.find(params.id);
+    const { id } = params
+    let product = await Product.find(id);
     return view.render("admin/updateProductPage", { product });
   }
 
   async editProduct({ params, view }: HttpContextContract) {
-    const Products = await ProductService.all({ filters: { id: params.id } });
-    const Product = Products[0];
-    const product = Product.serialize();
-    return view.render("admin/UpdateProductPage", { product });
+    const  id = params.id
+    const product = await ProductService.findById(id);
+    return view.render("admin/UpdateProductPage", { product  , productId : id});
   }
 
   async deleteProduct({ response, params }: HttpContextContract) {
@@ -124,25 +124,28 @@ export default class ProductsController {
 
   async listProduct({ request, view, response }: HttpContextContract) {
     try {
-      const filter = {}
+      const filters : any = {}
       let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
-      const limit = 10; // จำนวนรายการต่อหน้า
-      page = Math.max(page, 1);
+      const perPage = 5; // จำนวนรายการต่อหน้า
       // ดึงข้อมูลสินค้าพร้อมที่แบ่งหน้า
-      let products : any
       const keyword = request.input('keyword')
-      let productsPaginator : any
-      if (keyword){
-        productsPaginator = await ProductService.searchProduct(keyword , page);
-        products = productsPaginator.serialize();
-      } else {
-        productsPaginator = await ProductService.all({filter}).paginate(page, limit);
-        
-        products = productsPaginator.serialize();
-      }
-      const paginationLinks = await UrlService.getUrlsForRange(1, productsPaginator.lastPage);
+      filters.keyword = keyword
+
+      const products : any = await ProductService.all({filters})
+
+
+      const startIndex = (page - 1) * perPage
+      const endIndex = Math.min(startIndex + perPage, products.length)
+      const paginatedProducts = products.slice(startIndex, endIndex)
   
-      return view.render('admin/productListPage', { products, pagination: productsPaginator, paginationLinks , keyword });
+      return view.render('admin/productListPage', 
+        {products : paginatedProducts , 
+        pagination:products , 
+        total:products.length,
+        perPage: perPage,
+        currentPage: parseInt(page),
+        lastPage: Math.ceil(products.length / perPage),}
+      );
     } catch (error) {
       console.error(error);
       return response.status(500).json({ error: error.message });

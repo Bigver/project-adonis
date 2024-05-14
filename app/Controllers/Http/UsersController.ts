@@ -1,8 +1,8 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import User from "App/Models/User";
 import Hash from "@ioc:Adonis/Core/Hash";
 import UserService from "App/Service/user_service";
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import UrlService from "App/Service/getUrl_service";
 // import * as Pusher from 'pusher-js'
 
 export default class UsersController {
@@ -22,7 +22,7 @@ export default class UsersController {
       schema: newUserSchema
     })
     try {
-      await User.create(payload);
+      await UserService.createUser(payload);
       return response.redirect().toRoute('page.login')
     } catch (error) {
       session.flash('error', 'Email นี้อาจมีผู้ใช้งานแล้ว')
@@ -72,7 +72,8 @@ export default class UsersController {
     const password = request.input("password");
     
     try {     
-      const user = await User.query().where("email", email).firstOrFail();
+      
+      const user = await UserService.login(email)
       if (!(await Hash.verify(user.password, password))) {
         session.flash('error', 'Email หรือ password ไม่ถูกต้อง')
         return response.redirect().back()    
@@ -87,7 +88,6 @@ export default class UsersController {
 
     } catch (error) {
       session.flash('error', 'Email หรือ password ไม่ถูกต้อง')
-      console.log(error)
       return response.redirect().back()
     }
   }
@@ -95,5 +95,37 @@ export default class UsersController {
   async logout( { response  , auth} :HttpContextContract){   
     await auth.use('web').logout()
     return response.redirect().toRoute('page.login')
+}
+
+public async userAdmin({ view , request }: HttpContextContract) {
+  try {
+    let filters : any = {};
+    let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+    // const perPage = request.input('perPage', 10)
+    const perPage = 10; // จำนวนรายการต่อหน้า
+    // page = Math.max(page, 1);
+    const keyword = request.input('keyword')
+    filters.keyword = keyword
+
+    const users : any = await UserService.all({filters})   
+    const startIndex = (page - 1) * perPage
+    const endIndex = Math.min(startIndex + perPage, users.length)
+    const paginatedUsers = users.slice(startIndex, endIndex)
+
+
+    return view.render("admin/userPage", { users : paginatedUsers ,  pagination: users , 
+      total: users.length,
+      perPage: perPage,
+      currentPage: parseInt(page),
+      lastPage: Math.ceil(users.length / perPage),});
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+public async userUpdateAdmin({ view, params }: HttpContextContract) {
+  const id = params.id;
+  const users: any = await UserService.findByIdUser( id );
+  return view.render("admin/userUpdatePage", { users });
 }
 }

@@ -6,7 +6,7 @@ import fs from 'fs'
 export default class uploadService {
     public static async upload(File: any) {
         if (!File) {
-            return console.log("No file provided");
+            return
           }
           const fileName = `${DateTime.local().toFormat('yyyyMMddHHmmss')}-${File?.clientName}`
           // บันทึกไฟล์ลง disk ที่กำหนด
@@ -26,10 +26,8 @@ export default class uploadService {
     public static async deleteFile(File: any) {
       fs.unlink(`public${File}`, (err) => {
         if (err) {
-          console.error('Error deleting file:')
           return
         }
-        console.log('File deleted successfully')
       })
     }
      

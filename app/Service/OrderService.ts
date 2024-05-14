@@ -5,17 +5,22 @@ import OrderItem from "App/Models/OrderItem"
 import _ from "lodash";
 
 export default class OrderService {
-    public static async all({ filters = {} }: any) {
-        try {
-            const item = Order.query()
-            if (_.result(filters, 'id')) {
-                item.where('id', filters.id)
-            }
-            return item
-        } catch (error) {
-            throw new Error('Fail to get orders')
+    public static all({ filters = {} }: any) {
+        const item = Order.query()
+        if (_.result(filters, 'id')) {
+            item.where('id', filters.id)
         }
+
+        return item
     }
+
+    public static async searchOrders(keyword : any , page : any) {
+        const newsPaginator = await Order.query()
+        .where('user_id', 'like', `%${keyword}%`)
+        .orWhere('id', 'like', `%${keyword}%`).paginate(page)
+        return newsPaginator;
+      }
+        
 
     public static getAll(filters?: any) {
         let query = Order.query()
@@ -41,7 +46,6 @@ export default class OrderService {
     public static async create(data: any) {
         try {
             const item = await Order.create(data)
-            console.log(item)
             return item
         } catch (error) {
             throw new Error('Failed to create orders')
@@ -126,10 +130,6 @@ export default class OrderService {
 
     static async changeStatus(id: any) {
         const item = await Order.findOrFail(id);
-
-        console.log('item')
-        console.log(item)
-
         switch (item.status) {
             case 'pending':
                 item.status = 'processing'

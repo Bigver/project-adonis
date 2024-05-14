@@ -4,20 +4,20 @@ import uploadService from "App/Service/uploads_service";
 
 
 export default class AboutsController {
+
+  public async aboutAdmin({ view }: HttpContextContract) {
+    let aboutData: any = await AboutService.findById(1);
+    return view.render("admin/aboutPage", { data: aboutData  });
+  }
+  
   async create({ request, response }: HttpContextContract) {
-    const filter = {
-      id: 1,
-    };
    
     try {
      
-
-      let aboutData: any = await AboutService.all({ filters: filter });
+      let aboutData: any = await AboutService.findById(1);
      
       let about = request.only(["img1", "img2", "img3", "title", "detail"]);
-      if (aboutData.length != 0) {
-        aboutData = aboutData[0].serialize();
-      }
+      
       const File1 = request.file("imagefile1", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});
       const File2 = request.file("imagefile2", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});
       const File3 = request.file("imagefile3", {size: '2mb',extnames: ['jpg', 'png', 'gif'],});

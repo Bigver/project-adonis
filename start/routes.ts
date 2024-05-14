@@ -1,30 +1,32 @@
 import Route from '@ioc:Adonis/Core/Route'
 
+import "./member"
+
 Route.group(() => {
     Route.get('/dashboard', 'PagesController.Dashboard').as('admin.dashboard')
     Route.get('/homeAdmin', 'PagesController.homeAdmin').as('admin.home')
-    Route.get('/aboutAdmin', 'PagesController.aboutAdmin').as('admin.about')
     Route.get('/interestingAdmin', 'PagesController.interestingAdmin').as('admin.interesting')
     Route.get('/newsAdmin', 'PagesController.newsAdmin').as('admin.news') //เพชร Admin AddNews Page
-    Route.get('/contactAdmin', 'PagesController.contactAdmin').as('admin.contact')
     Route.get('/productAdmin', 'PagesController.productAdmin').as('admin.product')
     Route.get('/productListAdmin', 'PagesController.productListAdmin').as('admin.productList')
-    Route.get('/userAdmin', 'PagesController.userAdmin').as('admin.user')
-    Route.get('/profile', 'PagesController.profilePage').as('page.profile')
-    Route.post('/user/update/profile/:id', 'UsersController.updateProfile').as('user.update.profile')
-
+    
     //home
     Route.post('/homeAdmin/update', 'HomeController.update').as('admin.home.update')
 
     //about
     Route.post('/about/create', 'AboutsController.create').as('about.create')
+    Route.get('/aboutAdmin', 'AboutsController.aboutAdmin').as('admin.about')
     //contact
     Route.post('/contacts', 'ContactsController.create').as('contacts.create')
+    Route.get('/contactAdmin', 'ContactsController.contactAdmin').as('admin.contact')
 
     //user
-    Route.get('/user/:id/edit','PagesController.userUpdateAdmin').as('user.edit')
+    Route.get('/user/:id/edit','UsersController.userUpdateAdmin').as('user.edit')
     Route.get('/user/delete/:id', 'UsersController.destroy').as('user.remove')
     Route.post('/user/update/:id', 'UsersController.update').as('user.update')
+    Route.get('/userAdmin', 'UsersController.userAdmin').as('admin.user')
+    Route.get('/profile', 'PagesController.profilePage').as('page.profile')
+    Route.post('/user/update/profile/:id', 'UsersController.updateProfile').as('user.update.profile')
     // Route.get('/user/search', 'PagesController.userAdmin').as('searchuser')   //product
 
 
@@ -51,7 +53,7 @@ Route.group(() => {
 
     //product
     Route.post('/product/create', 'ProductsController.createProduct').as('product.create')
-    Route.post('/product/update/:id', 'ProductsController.updateProduct').as('update.product')
+    Route.post('/product/update/:id', 'ProductsController.updateProduct').as('product.update')
     Route.post('/products/search', 'ProductsController.listProduct').as('search')   //product
 
     Route.get('/product/delete/:id', 'ProductsController.deleteProduct').as('product.remove')

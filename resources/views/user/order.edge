@@ -7,60 +7,20 @@
 <div class="col-md-10 col-xl-11 me-5 mb-4 ms-5 mt-3 ">
     <div class="card h-auto ">
         <div class="card">
-            <div class="card-header ">
-              <h2 class="card-title mb-0">Order</h2>
-              {{--  <div class="d-flex justify-content-center align-items-center row py-3 gap-3 gap-md-0">
-                <div class="col-md-4 product_status"></div>
-                <div class="col-md-4 product_category"></div>
-                <div class="col-md-4 product_stock"></div>
-              </div>  --}}
-            </div>
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h4 class="card-tile mb-0">Update News</h4>                     
+                <div class="dt-buttons btn-group">
+                  <div class="input-group mt-2 mb-3 w-auto h-50">
+                      <form id="searchForm" action="{{ route('order.page') }}" method="get" class="input-group">
+                        <input type="text" name="keyword" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                       
+                        <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i></button>
+                        &nbsp;&nbsp; &nbsp;&nbsp;
+                      </form>
+                    </div>
+                  </div>
+              </div>
             <div class="card-datatable table-responsive">
-              
-                {{--  <div id="DataTables_Table_0_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
-                    <div class="card-header d-flex border-top rounded-0 flex-wrap py-2">
-                        <div class="me-5 ms-n2 pe-5">
-                            <div id="DataTables_Table_0_filter" class="dataTables_filter">
-                                <label>
-                                    <input type="search" class="form-control" placeholder="Search Product" aria-controls="DataTables_Table_0">
-                                </label>
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-start justify-content-md-end align-items-baseline">
-                            <div class="dt-action-buttons d-flex flex-column align-items-start align-items-md-center justify-content-sm-center mb-3 mb-md-0 pt-0 gap-4 gap-sm-0 flex-sm-row">
-                                <div class="dataTables_length mt-2 mt-sm-0 mt-md-3 me-2" id="DataTables_Table_0_length">
-                                    <label>
-                                        <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" class="form-select">
-                                            <option value="7">7</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="50">50</option>
-                                            <option value="70">70</option>
-                                            <option value="100">100</option>
-                                        </select>
-                                    </label>
-                                </div>
-                                <div class="dt-buttons btn-group flex-wrap d-flex">
-                                    <div class="btn-group">
-                                        <button class="btn btn-secondary buttons-collection dropdown-toggle btn-label-secondary me-3 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button" aria-haspopup="dialog" aria-expanded="false">
-                                            <span><i class="ti ti-download me-1 ti-xs">
-                                                </i>อะไรวะ
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <button class="btn btn-secondary add-new btn-primary ms-2 ms-sm-0 waves-effect waves-light" tabindex="0" aria-controls="DataTables_Table_0" type="button">
-                                        <span>
-                                            <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                                <span class="d-none d-sm-inline-block">Add Product</span>
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>  --}}
-
-
-                {{--  Table  --}}
                 <table class="datatables-products table dataTable no-footer dtr-column text-center" id="DataTables_Table_0" aria-describedby="DataTables_Table_0_info">
                 <thead class="border-top">
                     <tr>
@@ -82,15 +42,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @each(order in orderItem)
+                    @each(order in orderItem.data)
                     <tr class="odd">
                         <td valign="top" class="dataTables_empty">{{order.id}}</td>
-                        <td>{{order.userId}}</td>
+                        <td>{{order.user_id}}</td>
                         <td>{{order.status}}</td>
                         <td>{{order.total}}</td>
                         <td>
                                 <a href="{{route('order.detail', {id: order.id})}}">
-                                    <button class="btn btn-info waves-effect">Detailed</button>
+                                    <button class="btn btn-primary waves-effect">Detailed</button>
                                 </a>
                                 <a href="{{route('order.change.status', {id: order.id, status: order.status})}}">
                                     <button class="btn btn-warning waves-effect">Switch State</button>
@@ -100,32 +60,39 @@
                     @endeach
                 </tbody>
               </table>
-
+              <nav aria-label="Page navigation" class="mt-3">
+                <ul class="pagination justify-content-center">
+                  <li class="page-item ">
+                    @if (keyword)
+                    <div></div>
+                    @else
+                    <a class="page-link" href="{{ pagination.currentPage  === 1 ? '#' : `/admin/order?page=${pagination.currentPage - 1}` }}">Previous</a>
+                    @endif
+                  </li>
+            
+                  @if (keyword)
+                    <div></div>
+                    @else
+                    <li class="page-item"><a class="page-link">{{ pagination.currentPage }}</a></li>
+                    @endif
+              
+                  <li class="page-item">
+                    @if (keyword)
+                    <div></div>
+                    @else
+                    <a class="page-link" href="{{ pagination.currentPage === pagination.lastPage ? '#' : `/admin/order?page=${pagination.currentPage + 1}` }}">Next</a>
+                    @endif
+                  </li>
+                </ul>
+              </nav>   
             {{--  Table Footer  --}}
             <div class="row mx-2">
                 <div class="col-sm-12 col-md-6">
-                    <div class="dataTables_info" id="DataTables_Table_0_info" role="status" aria-live="polite">
-                        Showing 0 to 0 of 0 entries
-                    </div>
+                   
                 </div>
 
                 {{--  Prev Next  --}}
-                <div class="col-sm-12 col-md-6">
-                    <div class="dataTables_paginate paging_simple_numbers" id="DataTables_Table_0_paginate">
-                        <ul class="pagination">
-                            <li class="paginate_button page-item previous disabled" id="DataTables_Table_0_previous">
-                                <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="previous" tabindex="-1" class="page-link">
-                                    Previous
-                                </a>
-                            </li>
-                            <li class="paginate_button page-item next disabled" id="DataTables_Table_0_next">
-                                <a aria-controls="DataTables_Table_0" aria-disabled="true" role="link" data-dt-idx="next" tabindex="-1" class="page-link">
-                                    Next
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+
                 
             </div>
 

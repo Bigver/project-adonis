@@ -54,7 +54,7 @@
                     @each(item in items.data)
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td> <img src="{{ item.img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                        <td> <img src="/uploads/{{ item.img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
                         <td>{{ item.title }}</td>
                         <td>{{ item.description.length > 100 ? item.description.substr(0, 1000) + '...' : item.description }}</td>
                     

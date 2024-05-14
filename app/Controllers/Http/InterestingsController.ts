@@ -10,12 +10,12 @@ export default class InterestingsController {
 
             if (File){
                 await uploadService.deleteFile(data.imgUrl)
-                data.imgUrl = `/uploads/${fileName1}`;
+                data.imgUrl = `${fileName1}`;
               }
             await interestingsService.create(data);
             return response.redirect().back();
         } catch (error) {
-            console.error(error);
+            //console.error(error);
             
             return response.status(500).json({ error: 'Failed to add Interestings' });
         }
@@ -30,7 +30,7 @@ export default class InterestingsController {
 
             if (File){
                 await uploadService.deleteFile(data.imgUrl)
-                data.imgUrl = `/uploads/${fileName1}`;
+                data.imgUrl = `${fileName1}`;
               }
       await interestingsService.update(id, data);
       return response.redirect().toRoute('showInteresting')

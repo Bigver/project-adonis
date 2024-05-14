@@ -5,7 +5,7 @@ import OrderItem from "App/Models/OrderItem"
 import _ from 'lodash'
 
 export default class CartService {
-    public static async all({ filters = {} }: any) {
+    public static all({ filters = {} }: any) {
         try {
             const item = Cart.query()
             if (_.result(filters, 'id')) {
@@ -21,7 +21,7 @@ export default class CartService {
         let query = Cart.query()
 
         if (filters && filters.id) {
-            query = query.where('id', '=', filters.id)
+         query.where('id', '=', filters.id)
         }
 
         // Return the query builder to allow chaining
@@ -31,15 +31,25 @@ export default class CartService {
     public static getItemAll(filters?: any) {
         let query = CartItem.query()
 
+        let my = this.my(1)
+
         if (filters && filters.id) {
             query = query.where('id', '=', filters.id)
         }
 
         // Return the query builder to allow chaining
-        return query
+        return {
+            query : query,
+            my : my
+        }
     }
 
-    static async decreaseProduct(id: any) {
+    public static my(id : number){
+
+        return id
+    }
+
+    public static async decreaseProduct(id: any) {
         const item = await CartItem.findOrFail(id);
 
         if (item.quantity > 1) {
@@ -155,7 +165,7 @@ export default class CartService {
     }
 
     public static async findCartByUserId(userId: number) {
-        return await Cart.query().where('userId', userId).first();
+        return await Cart.findBy("user_id",userId)
     }
 
 

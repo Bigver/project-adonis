@@ -1,67 +1,68 @@
-import User from 'App/Models/User'
-import _ from 'lodash'
+import User from "App/Models/User";
+import _ from "lodash";
+import Cache from '@ioc:Adonis/Addons/Cache'
 
 
 export default class UserService {
-  public static all({ filters = {} }: any) {
-    const item = User.query()
-    if (_.result(filters, 'id')) {
-        item.where('id', filters.id)
+  public static async all({ filters = {} }: any) {
+    let check = true
+    if(!filters.keyword || filters.keyword == ""){
+      check = false
+      filters.keyword = "all"
     }
+    const cachedUsers : any = await Cache.remember(`users_${filters.keyword}`, 60, async () => {
+      let users : any =  User.query()
+      if (check){
+        users
+        .where("username", "like", `%${filters.keyword}%`)
+        .orWhere("id", "like", `%${filters.keyword}%`)
+        .orWhere("email", "like", `%${filters.keyword}%`)
+      }
+      return users
+    })
+    return cachedUsers
+  }
 
-    return item
-}
+  public static async findByIdUser($id){
+    const cachedUsers = await Cache.remember('user', 60, async () => {
+      const user : any = await User.find($id)
+      return user.toJSON()
+    })
+    return cachedUsers
+  }
 
-  public static async searchUser(keyword : any , page : any) {
-    const user = await User.query()
-    .where('username', 'like', `%${keyword}%`)
-    .orWhere('email', 'like', `%${keyword}%`)
-    .orWhere('id', 'like', `%${keyword}%`).paginate(page)
+  public static async createUser(data: any) {
+    await Cache.forget('users_all')
+    const user = await User.create(data);
     return user;
   }
-    
 
-  
-public static async createUser(data : any){
-    const user = await User.create(data)
-    console.log(user)
-    return user
+  public static async login(email: any) {
+    const user = await User.query().where("email", email).firstOrFail();
+    return user.serialize();
+  }
+
+  public static async updateUser(id: any, data: any, access: any) {
+    await Cache.forget('users_all')
+    await Cache.forget('user')
+
+    data.access = access;
+    data.id = parseInt(id)
+
+    const user = await User.find(id);
+    return await user?.merge(data).save();
     }
 
+  public static async updateProfile(id: any, data: any) {
+    await Cache.forget('user')
+    const user = await User.find(id);
+    return await user?.merge(data).save();
+  }
 
-public static async updateUser(id : any , data : any , access : any){
-    data.access = access
-    const user = await User.find(id)
-    return await user?.merge(data).save()
-    
-}
+  public static async delete(id: any) {
+    await Cache.forget('users_all')
+    const item = await User.findOrFail(id);
+    return await item.delete();
+  }
 
-public static async updateProfile(id : any , data : any){
-  const user = await User.find(id)
-  return await user?.merge(data).save()
-  
-}
-
-
-public static async delete(id : any){
-  const item = await User.findOrFail(id)
-  return await item.delete()
-}
-
-
-
-// public static async login(email : any , password : any , session : any) {
-//     const user = await User.findBy('email', email)
-//     if (!user) {
-//       return  console.log("User ไม่ถูก")
-//     }
-//     await hash.verify(user.password, password)
-//     if (!user.password) {
-//       return console.log("password ไม่ถูก")
-//     }
-//     await User.verifyCredentials(email, password)
-//     session.put('user', user.toJSON())
-//     return user
-//   } 
-  
 }

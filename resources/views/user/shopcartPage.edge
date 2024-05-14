@@ -33,10 +33,10 @@
                         <div class="d-flex gap-3">
                           <div class="d-inline-flex p-2">
                             <div>
-                              <div class="w-px-200 h-px-200 mb-3 me-3">
-                                <img src="{{product.img_product}}" alt="google home" class="w-px-200 h-px-200 me-5 mb-3">
+                              <div class="w-px-150 h-px-150 mb-3 me-1">
+                                <img src="{{product.img_product}}" alt="google home" class="w-px-150 h-px-100 mb-3">
                               </div>
-                              <div class="w-px-200 h-px-40">
+                              <div class="w-px-150 h-px-40">
                                 <form action="{{route('add.cart')}}" method="post" style="text-align:center">
                                   {{ csrfField() }}
                                   <input type="hidden" name="userId" id="userId" value="{{user.id}}">
@@ -55,9 +55,7 @@
                                 <p class="shop_product_detail">
                                   <b>Product ID: </b><span>{{product.id}}</span>
                                   <br>
-                                  <br>
                                   <b>Name: </b> <span>{{product.product_name}}</span>
-                                  <br>
                                   <br>
                                   <b>Price: </b><span>{{product.price_product}}</span>
                                 </p>

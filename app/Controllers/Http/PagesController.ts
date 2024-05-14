@@ -1,6 +1,5 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AboutService from "App/Service/about_service";
-import UserService from "App/Service/user_service";
 import interestingsService from "App/Service/interestings_service";
 import NewsService from "App/Service/NewsService";
 import HomeService from "App/Service/home_service";
@@ -66,47 +65,7 @@ export default class PagesController {
     }
   }
 
-  public async userAdmin({ view , request }: HttpContextContract) {
-    try {
-      const filter = {};
-      let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
-      const limit = 2; // จำนวนรายการต่อหน้า
-      page = Math.max(page, 1);
-      let users : any
-      const keyword = request.input('keyword')
-      let usersPaginator : any
-      
-      if (keyword){
-        usersPaginator = await UserService.searchUser(keyword , page);
-      } else {
-        usersPaginator = await UserService.all({ filter: filter }).paginate(page, limit);        
-      }
-      users = usersPaginator.serialize();
-      const paginationLinks = await UrlService.getUrlsForRange(1, usersPaginator.lastPage);
-      return view.render("admin/userPage", { users ,  pagination: usersPaginator, paginationLinks , keyword  });
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  public async userUpdateAdmin({ view, params }: HttpContextContract) {
-    const id = params.id;
-    const filters = { id: id };
-    let users: any = await UserService.all({ filters: filters });
-    users = users[0].serialize();
-    return view.render("admin/userUpdatePage", { users });
-  }
-
-  public async aboutAdmin({ view }: HttpContextContract) {
-    const filter = {
-      id: 1,
-    };
-    let aboutData: any = await AboutService.all({ filters: filter });
-    if (aboutData.length != 0) {
-      aboutData = aboutData[0].serialize();
-    }
-    return view.render("admin/aboutPage", { data: aboutData  });
-  }
+  
 
   public async newsUpdatePage({ params, view }: HttpContextContract) {
       const filter = {};
@@ -148,32 +107,22 @@ export default class PagesController {
     return view.render("admin/homeAdmin" , {home : homeData});
   }
 
-  public async contactAdmin({ view }: HttpContextContract) {
-    const filter = {
-      id: 1
-    };
-    let contactData: any = await ContactService.all({ filters: filter })
-    if (contactData.length != 0){
-      contactData = contactData[0].serialize() 
-    }
-    return view.render("admin/contactPage" , {data : contactData});
-  }
 
   public async showInteresting({ view , request}: HttpContextContract) {
     try {
-      const filter = {};
+      const filter : any = {};
       let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
       const limit = 2; // จำนวนรายการต่อหน้า
       page = Math.max(page, 1);
       let interestings : any
       const keyword = request.input('keyword')
       let interestingsPaginator : any
+
+      filter.keyword = keyword
       
-      if (keyword){
-        interestingsPaginator = await interestingsService.searchinteresting(keyword , page);
-      } else {
-        interestingsPaginator = await interestingsService.all({ filter: filter }).paginate(page, limit);        
-      }
+     
+      interestingsPaginator = await interestingsService.all({ filter: filter }).paginate(page, limit);        
+      
       interestings = interestingsPaginator.serialize();
       const paginationLinks = await UrlService.getUrlsForRange(1, interestingsPaginator.lastPage);
       return view.render("admin/interestingListPage", { items : interestings ,  pagination: interestingsPaginator, paginationLinks , keyword  });
@@ -192,58 +141,71 @@ export default class PagesController {
     return view.render("admin/newsPage");
   }
 
-  public async shopCart({ view, auth }: HttpContextContract) {
-    try {
-      // ดึงข้อมูลผู้ใช้ที่เข้าสู่ระบบ
-      const user = auth.user?.serialize();
+  // public async shopCart({ view, auth }: HttpContextContract) {
+  //   try {
+  //     // ดึงข้อมูลผู้ใช้ที่เข้าสู่ระบบ
+  //     const user = auth.user?.serialize();
 
-      const filter = {};
+  //     const filter = {};
 
 
-      // ตรวจสอบว่ามีผู้ใช้ที่เข้าสู่ระบบหรือไม่
-      if (!user) {
-        return view.render('errors.unauthorized');
-      }
+  //     // ตรวจสอบว่ามีผู้ใช้ที่เข้าสู่ระบบหรือไม่
+  //     if (!user) {
+  //       return view.render('errors.unauthorized');
+  //     }
 
-      // ดึงรายการสินค้าในตะกร้าของผู้ใช้
-      const cart = await CartService.getItemAll({ filters: { userId: user.id } }).preload('product').paginate(1, 10);
-      const carts = cart.serialize();
+  //     // ดึงรายการสินค้าในตะกร้าของผู้ใช้
+  //     const cart = await CartService.getItemAll({ filters: { userId: user.id } }).preload('product').paginate(1, 10);
+  //     const carts = cart.serialize();
 
-      const cartItem = await CartService.getCartByUser(user.id)
-      const item = await ProductService.all({ filter: filter }).paginate(1, 10);
-      const items = item.serialize()
+  //     const cartItem = await CartService.getCartByUser(user.id)
+  //     const item = await ProductService.all({ filter: filter }).paginate(1, 10);
+  //     const items = item.serialize()
 
-      // ดึงรายการสินค้าในตะกร้าทั้งหมดของผู้ใช้
-      const cartItems = await CartService.itemAll({ filter: { userId: user.id } });
-      const serializedCartItems = cartItems.map((item) => item.serialize());
+  //     // ดึงรายการสินค้าในตะกร้าทั้งหมดของผู้ใช้
+  //     const cartItems = await CartService.itemAll({ filter: { userId: user.id } });
+  //     const serializedCartItems = cartItems.map((item) => item.serialize());
 
-      // คำนวณยอดรวมของรายการสินค้าในตะกร้า
-      let total = 0;
-      serializedCartItems.forEach((item: any) => {
-        total += item.total_price;
-      });
+  //     // คำนวณยอดรวมของรายการสินค้าในตะกร้า
+  //     let total = 0;
+  //     serializedCartItems.forEach((item: any) => {
+  //       total += item.total_price;
+  //     });
 
-      // ส่งข้อมูลไปยังแม่แบบเพื่อแสดงผล
-      return view.render("user/shopcartPage", { user: user, items, cartData: carts, total, cartItem });
-    } catch (error) {
-      console.error(error);
-      return view.render("errors.something_went_wrong");
-    }
-  }
+  //     // ส่งข้อมูลไปยังแม่แบบเพื่อแสดงผล
+  //     return view.render("user/shopcartPage", { user: user, items, cartData: carts, total, cartItem });
+  //   } catch (error) {
+  //     console.error(error);
+  //     return view.render("errors.something_went_wrong");
+  //   }
+  // }
 
-  public async order({ view }: HttpContextContract) {
+  public async order({ view , request }: HttpContextContract) {
     const filter = {}
-    const orderItem = await OrderService.all({ filters: filter })
-
-    return view.render("user/order", { orderItem });
+    let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+    const limit = 10; // จำนวนรายการต่อหน้า
+    page = Math.max(page, 1);
+    let orders : any
+    const keyword = request.input('keyword')
+    let ordersPaginator : any
+    if (keyword){
+      ordersPaginator = await  OrderService.searchOrders(keyword , page);
+    } else {
+      ordersPaginator = await  OrderService.all({ filter: filter }).paginate(page, limit);        
+    }
+    orders =ordersPaginator.serialize();
+    const paginationLinks = await UrlService.getUrlsForRange(1,  ordersPaginator.lastPage);
+    return view.render("user/order", {  orderItem : orders ,  pagination:  ordersPaginator, paginationLinks , keyword  });
+  } catch (error) {
+    console.log(error)
   }
+    
 
 
   public async orderDetail({ view, params }: HttpContextContract) {
     try {
       const orderId = params.id
       const item = await OrderService.itemAll(orderId);
-      console.log(item);
 
       const orders = await OrderService.all({filters: {id: orderId}})
       const order = orders.map((item) => item.serialize())

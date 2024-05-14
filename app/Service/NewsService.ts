@@ -25,7 +25,15 @@ export default class NewsService {
             const item = await News.create(data)
             return item
         } catch (error) {
-            throw new Error('Failed to create news')
+            // const data = {
+            //     error : error,
+            //     file : "",
+            //     path : "",
+
+            // }
+
+            // LogService.create(data)
+            //throw new Error('Failed to create news')
         }
 
     }

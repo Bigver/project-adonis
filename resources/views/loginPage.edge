@@ -131,6 +131,11 @@
                     <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
                   </div>
                 </div>
+                @if (flashMessages.has('error'))
+                <p class="text-danger">
+                    {{ flashMessages.get('error') }}
+                </p>
+                @endif
                 <div class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" id="remember-me" />
@@ -141,6 +146,7 @@
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                 </div>
               </form>
+
 
               <p class="text-center">
                 <span>New on our platform?</span>

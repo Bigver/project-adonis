@@ -1,5 +1,3 @@
-
-
 .form-about{
     height: 100%;
 }
@@ -10,4 +8,38 @@
     width: 50px;
     color: white;
     border-radius: 5px;
+}
+
+.product_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 2rem
+}
+
+.product_item {   
+    border: 1px solid gray;
+    border-radius: 10px;
+    padding: 20px;
+    /* font-size: 30px; */
+}
+
+.shop_product_detail b{
+    font-size: 2vh;
+}
+
+.shop_product_detail span {
+    font-size: 2vh;
+}
+
+.cart_container {
+    padding: 20px;
+}
+
+
+
+.btn-page{
+    width: 60px;
+    height: 30px;
+    border: 1px solid rgb(0, 0, 0);
+    font-size: 0.5rem;
 }

@@ -3,6 +3,11 @@ import HomeService from 'App/Service/home_service'
 import uploadService from 'App/Service/uploads_service';
 
 export default class HomeController {
+      async index({response}){
+        return response.json({
+          data : "ok"
+        })
+      }
 
       async update({ request, response }: HttpContextContract) {
         const filter = {
