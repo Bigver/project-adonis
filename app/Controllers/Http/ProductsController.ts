@@ -1,10 +1,17 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Product from "App/Models/Product";
-import UrlService from "App/Service/getUrl_service";
 import ProductService from "App/Service/product_service";
 import uploadService from "App/Service/uploads_service";
 
 export default class ProductsController {
+  public async productListAdmin({ view }: HttpContextContract) {
+    return view.render("admin/productListPage");
+  }
+
+  public async productAdmin({ view }: HttpContextContract) {
+    return view.render("admin/productPage");
+  }
+
   async createProduct({ request, response }: HttpContextContract) {
     try {
       const File1 = request.file("imagefile1", {
@@ -23,7 +30,7 @@ export default class ProductsController {
       const fileName1 = await uploadService.upload(File1);
       const fileName2 = await uploadService.upload(File2);
       const fileName3 = await uploadService.upload(File3);
-      
+
       const productData = request.only([
         "product_name",
         "price_product",
@@ -104,15 +111,15 @@ export default class ProductsController {
   }
 
   async updateProductPage({ params, view }: HttpContextContract) {
-    const { id } = params
+    const { id } = params;
     let product = await Product.find(id);
     return view.render("admin/updateProductPage", { product });
   }
 
   async editProduct({ params, view }: HttpContextContract) {
-    const  id = params.id
+    const id = params.id;
     const product = await ProductService.findById(id);
-    return view.render("admin/UpdateProductPage", { product  , productId : id});
+    return view.render("admin/UpdateProductPage", { product, productId: id });
   }
 
   async deleteProduct({ response, params }: HttpContextContract) {
@@ -120,32 +127,29 @@ export default class ProductsController {
     return response.redirect("back");
   }
 
-  
-
   async listProduct({ request, view, response }: HttpContextContract) {
     try {
-      const filters : any = {}
-      let page = request.input('page', 1); // รับค่าหน้าปัจจุบันจาก request
+      const filters: any = {};
+      let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
       const perPage = 5; // จำนวนรายการต่อหน้า
       // ดึงข้อมูลสินค้าพร้อมที่แบ่งหน้า
-      const keyword = request.input('keyword')
-      filters.keyword = keyword
+      const keyword = request.input("keyword");
+      filters.keyword = keyword;
 
-      const products : any = await ProductService.all({filters})
+      const products: any = await ProductService.all({ filters });
 
+      const startIndex = (page - 1) * perPage;
+      const endIndex = Math.min(startIndex + perPage, products.length);
+      const paginatedProducts = products.slice(startIndex, endIndex);
 
-      const startIndex = (page - 1) * perPage
-      const endIndex = Math.min(startIndex + perPage, products.length)
-      const paginatedProducts = products.slice(startIndex, endIndex)
-  
-      return view.render('admin/productListPage', 
-        {products : paginatedProducts , 
-        pagination:products , 
-        total:products.length,
+      return view.render("admin/productListPage", {
+        products: paginatedProducts,
+        pagination: products,
+        total: products.length,
         perPage: perPage,
         currentPage: parseInt(page),
-        lastPage: Math.ceil(products.length / perPage),}
-      );
+        lastPage: Math.ceil(products.length / perPage),
+      });
     } catch (error) {
       console.error(error);
       return response.status(500).json({ error: error.message });
