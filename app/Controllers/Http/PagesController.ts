@@ -14,7 +14,7 @@ export default class PagesController {
   }
 
   public async Dashboard({ view }: HttpContextContract) {
-    return view.render("admin/Dashboard");
+    return view.render("admin/dashBoard");
   }
 
   public async errorPage({ view }: HttpContextContract) {

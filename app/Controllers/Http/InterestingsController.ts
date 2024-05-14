@@ -36,7 +36,7 @@ export default class InterestingsController {
   }
 
   public async UpdateinterestingPage({ view }: HttpContextContract) {
-    return view.render("admin/UpdateInterestingPage");
+    return view.render("admin/interestingUpdatePage");
   }
 
   public async interestingAdmin({ view }: HttpContextContract) {

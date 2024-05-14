@@ -119,7 +119,7 @@ export default class ProductsController {
   async editProduct({ params, view }: HttpContextContract) {
     const id = params.id;
     const product = await ProductService.findById(id);
-    return view.render("admin/UpdateProductPage", { product, productId: id });
+    return view.render("admin/productUpdatePage", { product, productId: id });
   }
 
   async deleteProduct({ response, params }: HttpContextContract) {
