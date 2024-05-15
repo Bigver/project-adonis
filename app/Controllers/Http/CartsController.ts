@@ -15,8 +15,7 @@ export default class CartsController {
             }
             const carts = await CartItemsService.getCartByUser(user.id) //Items
             const cartItem = await CartService.findByUserId(user.id) //Cart
-            const item = await ProductService.all({ filter: filter })
-            const items = item.serialize()
+            const items = await ProductService.all({ filter: filter })
 
             const serializedCartItems = carts.map((item) => item.serialize());
             let total = 0;
@@ -26,6 +25,7 @@ export default class CartsController {
 
             return view.render("user/shopcartPage", { user: user, items, cartData: carts, total, cartItem });
         } catch (error) {
+            console.log(error)
             const { level, message, context } = {
                 level: "warn",
                 message: "Failed to open Shop Cart page",
@@ -88,6 +88,24 @@ export default class CartsController {
             }
             await LogService.create(level, message, context);
             error = "failed to increse product quantity"
+            return view.render('error', { error })
+        }
+    }
+
+    async decreaseProductQuantityInCart({ view, response, params }: HttpContextContract) {
+        try {
+            await CartItemsService.decreaseProduct(params.id)
+            return response.redirect().back()
+        } catch (error) {
+            const { level, message, context } = {
+                level: "warn",
+                message: "failed to decrease product quantity",
+                context: {
+                    params: params.id
+                }
+            }
+            await LogService.create(level, message, context);
+            error = "failed to decrease product quantity"
             return view.render('error', { error })
         }
     }
