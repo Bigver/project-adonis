@@ -2,183 +2,677 @@
 @set('title', 'homepage')
 
 @section('body')
+
+
+<head>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+  <title>Modals - UI elements | Vuexy - Bootstrap Admin Template</title>
+
+  <meta name="description" content="" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/x-icon" href="../../assets/img/favicon/favicon.ico" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&ampdisplay=swap"
+    rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome.css" />
+  <link rel="stylesheet" href="../../assets/vendor/fonts/tabler-icons.css" />
+  <link rel="stylesheet" href="../../assets/vendor/fonts/flag-icons.css" />
+
+  <!-- Core CSS -->
+  <link rel="stylesheet" href="../../assets/vendor/css/rtl/core.css" class="template-customizer-core-css" />
+  <link rel="stylesheet" href="../../assets/vendor/css/rtl/theme-default.css" class="template-customizer-theme-css" />
+  <link rel="stylesheet" href="../../assets/css/demo.css" />
+
+  <!-- Vendors CSS -->
+  <link rel="stylesheet" href="../../assets/vendor/libs/node-waves/node-waves.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/typeahead-js/typeahead.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/select2/select2.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/@form-validation/form-validation.css" />
+  <link rel="stylesheet" href="../../assets/vendor/libs/bs-stepper/bs-stepper.css" />
+
+  <!-- Page CSS -->
+
+  <!-- Helpers -->
+  <script src="../../assets/vendor/js/helpers.js"></script>
+  <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+  <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
+  <script src="../../assets/vendor/js/template-customizer.js"></script>
+  <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+  <script src="../../assets/js/config.js"></script>
+</head>
+
 @if ( access.checkAdmin == 'yes' )
-<div style="display: inline-flex; align-item:center; justify-content:center">
+
+<div class="justify-content-center d-block align-item-center">
   
 
-{{--  Product  --}}
-  <div class="col-md-4 col-xl-5 mb-5 ms-4 mt-3 me-2">
-    <div class="card h-auto ">
-        <div class="card-header d-flex justify-content-center align-items-center">
-            <div class="card-title m-0 me-2">
-              <h2 class="m-0 me-2"><b>Products</b></h2>
-            </div>
-        </div>
-    </div>
-    <br>
-    <div class="card h-auto ">
-        <div class="card-header d-flex justify-content-between align-items-center">
-              <div>
-                  <div class="card-body">
-                    <ul class="list-group mb-3">
-                      @each(product in items.data)
-  
-                      {{--  Product List  --}}
-                      <li class="list-group-item ">
-                        <div class="d-flex gap-3">
-                          <div class="d-inline-flex align-items-center p-2">
-                            <div class="d-block">
-                              <img src="{{product.img_product}}" alt="google home" class="w-px-200 me-5 mb-3">
-                              <form action="{{route('add.cart')}}" method="post" style="text-align:center">
-                                {{ csrfField() }}
-                                <input type="hidden" name="userId" id="userId" value="{{user.id}}">
-                                <input type="hidden" name="productId" id="productId" value="{{product.id}}">
-                                <input type="hidden" name="quantity" id="quantity" value="{{1}}">
-                                <button class="btn btn-secondary add-new btn-label-success waves-effect waves-light" type="submit">
-                                  <span>
-                                    <i class="ti ti-plus me-0 me-sm-1 ti-xs"></i>
-                                    <span class="d-none d-sm-inline-block">Add to Cart</span>
-                                  </span>
-                                </button>
-                              </form>
-                            </div>
-                            <div class="flex-grow-1">
-                              <div class="col-md-12" style="font-size: 20px">
-                                <p>
-                                  <b>Product ID: </b>{{product.id}}
-                                </p>
-                                <p class="col-md-15 me-3">
-                                  <b>Name: </b>{{product.product_name}}
-                                </p>
-                                <p>
-                                  <b>Price: </b>{{product.price_product}}
-                                </p>
-                              </div>
-                          </div>
-                          </div>
-                        </div>
-                      </li>
-                      @endeach                    
-                      
-                    </ul>
-              </div>
-            </div>
-        </div>
-    </div>
-</div>
+    <div class="container-xxl flex-grow-1 container-p-y">
 
-{{--  Cart  --}}
-<div class="col-md-6 col-xl-5 mb-4 mt-3 ms-4 mft-3">
-  <div class="card h-auto ">
-      <div class="card-header d-flex justify-content-center align-items-center">
-          <div class="card-title m-0 me-2">
-              <h2 class="m-0 me-2"><b>Cart</b></h2>
+      <div class="app-academy">
+        <div class="card h-auto mb-3">
+          <div class="card-header d-flex justify-content-between">
+            <h2 class="card-title m-0"><b>Products</b></h2>
+            <h6 class="m-0">
+              <a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#cartModal">
+                <button class="btn btn-primary waves-effect waves-light">
+                  <i class="ti ti-garden-cart"></i> Cart
+                </button>
+              </a>
+              <a href=" javascript:void(0)" data-bs-toggle="modal" data-bs-target="#createApp">
+                <button class="btn btn-primary waves-effect waves-light">
+                  <i class="ti ti-garden-cart"></i> Better Cart
+                </button>
+              </a>
+            </h6>
           </div>
-      </div>
-  </div>
-  <br>
-  <div class="card h-auto ">
-      <div class="card-header d-flex justify-content-center align-items-center">
-          <div class="card-title m-0 me-2">
-            <div> 
 
-              
-              <div class="card-body">
-                <div class="col-xl-15 mb-3 mb-xl-0">
+          <div class="card-body">
+            <div class="row gy-4 mb-4">
 
-
-                  <ul class="list-group mb-3">
-
-                    @each(cart in cartData.data) 
-
-                    {{--  Product List  --}}
-                    <li class="list-group-item p-5">
-                      <div class="d-flex gap-3">
-                        <div class=" align-items-center">
-                          {{--  <img src="{{cart.product.img_product}}" alt="" width="200px">
-                          <p>Product ID {{cart.product_id}}</p>
-                          <p>Quantity {{cart.quantity}}</p>
-                          <p>Total Price {{cart.total_price}}</p>  --}}
-                          <img src="{{cart.product.img_product}}" class="w-px-200 h-px-140">
-                        </div>
-                        <div class="flex-grow-1">
-                          
-                          <div class="row">
-
-                            <div class="col-md-12 col-xl-12">
-                              <p class="col-md-12 col-xl-12">
-                                <p>
-                                  <b class="fs-5">Product ID: {{cart.product.id}}</b>
-                                </p>
-                                <p>
-                                  <b class="fs-5">Product Name: </b>
-                                    {{cart.product.product_name}}
-                                </p>
-                                    <div style="display:inline-flex;">
-                                      <div class="me-2 mb-2 text-center" style="height:30px;">
-                                        <b class="fs-5">
-                                          Quantity:
-                                        </b>
-                                    </div>
-                                      <form action="{{route('decrease.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
-                                        {{ csrfField() }}
-                                        <input type="hidden" name="user_id" value="{{user.id}}">
-                                        <input type="hidden" name="total_price" value="{{total_price}}">
-                                        <button type="submit" class="btn rounded-pill btn-icon btn-danger me-2" style="height:30px; font-size: 25px">
-                                          <b>-</b>
-                                        </button>
-                                      </form>
-                                      <div id="quantityInput" type="number" class="form-control form-control-sm me-2" style="width: 50px; height:34px;">
-                                        <b style="font-size: 18px">
-                                          {{cart.quantity}}
-                                        </b>
-                                      </div>
-                                    <form action="{{route('increase.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
-                                      {{ csrfField() }}
-                                      <input type="hidden" name="user_id" value="{{user.id}}">
-                                      <input type="hidden" name="total_price" value="{{total_price}}">
-                                      <button type="submit" class="btn rounded-pill btn-icon btn-success" style="height:30px; font-size: 25px">
-                                        <b>+</b>
-                                      </button>
-                                  </form>
-                                    </div>
-                              </p>  
-                            </div>
-                            <div class="col-md-12">
-                              <p class="col-md-13 me-3">
-                                <b class="fs-5 me-2">TotalPrice:</b>
-                                <span class="fs-5">{{cart.total_price}}</span>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                    @endeach                    
-                    
-                  </ul>
+              @each(product in items.data)
+              <div class="col-sm-6 col-lg-4">
+                <div class="card p-3 h-100 shadow-none border">
                   
-                    <a href="javascript:void(0)" class="list-group-item d-flex justify-content-center">
-                      <div>
-                        <form action="{{route('checkout')}}" method="POST">
-                          {{ csrfField() }}
-                          <input type="hidden" name="total" id="" value="{{total}}">
-                          <button type="submit" class="btn btn-primary waves-effect waves-light mt-3">Checkout</button>
-                        </form>
+                  <div class="image-container text-center mb-3">
+                    <img class="img-fluid w-px-200 h-px-200 mt-3" src="{{product.img_product}}" alt="tutor image 1">
+                  </div>
+                  <div class="card-body p-3 pt-2">
+                    <div class="d-block">
+                      <h4>Name: {{product.product_name}}</h4>
+                      <p class="d-flex align-items-center">Price: {{product.price_product}} Bath</p>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row gap-2 text-nowrap justify-content-center">
+
+                      <form action="{{route('add.cart')}}" method="post" style="text-align:center">
+                        {{ csrfField() }}
+                        <input type="hidden" name="userId" id="userId" value="{{user.id}}">
+                        <input type="hidden" name="productId" id="productId" value="{{product.id}}">
+                        <input type="hidden" name="quantity" id="quantity" value="{{1}}">
+                        <button class="btn btn-secondary add-new btn-success waves-effect waves-light w-px-200 h-px-50" type="submit">
+                          <span>
+                            <span class="d-none d-sm-inline-block">Add to Cart</span>
+                            <i class="ti ti-shopping-cart-plus me-0 me-sm-1 ti-xs"></i>
+                          </span>
+                        </button>
+                      </form>
+                      <div class="mt-1">
+                        <a href=" javascript:void(0)" 
+                          data-bs-toggle="modal" 
+                          data-bs-target="#productModal" 
+                          data-product-id="{{product.id}}"
+                          data-product-img="{{product.img_product}}"
+                          data-product-price="{{product.price_product}}"
+                          data-product-name="{{product.product_name}}"
+                          >
+                              <i class="ti ti-info-circle overlay-icon ti-xl"></i>
+                        </a>
+
                       </div>
-                    </a>
-
+                    </div>
+                  </div>
                 </div>
+              </div>
+              @endeach
+              
+              
+            </div>
 
+          </div>
+        </div>
+
+        {{--  Card  --}}
+        <div class="row gy-4 mb-4">
+          <div class="col-lg-6">
+            <div class="card bg-label-primary h-100">
+              <div class="card-body d-flex justify-content-between flex-wrap-reverse">
+                <div class="mb-0 w-100 app-academy-sm-60 d-flex flex-column justify-content-between text-center text-sm-start">
+                  <div class="card-title">
+                    <h4 class="text-primary mb-2">Earn a Certificate</h4>
+                    <p class="text-body w-sm-80 app-academy-xl-100">
+                      Get the right professional certificate program for you.
+                    </p>
+                  </div>
+                  <div class="mb-0"><button class="btn btn-primary waves-effect waves-light">View Programs</button></div>
+                </div>
+                <div class="w-100 app-academy-sm-40 d-flex justify-content-center justify-content-sm-end h-px-150 mb-3 mb-sm-0">
+                  <img class="img-fluid scaleX-n1-rtl" src="../../assets/img/illustrations/boy-app-academy.png" alt="boy illustration">
+                </div>
               </div>
             </div>
           </div>
+          <div class="col-lg-6">
+            <div class="card bg-label-danger h-100">
+              <div class="card-body d-flex justify-content-between flex-wrap-reverse">
+                <div class="mb-0 w-100 app-academy-sm-60 d-flex flex-column justify-content-between text-center text-sm-start">
+                  <div class="card-title">
+                    <h4 class="text-danger mb-2">Best Rated Courses</h4>
+                    <p class="text-body app-academy-sm-60 app-academy-xl-100">
+                      Enroll now in the most popular and best rated courses.
+                    </p>
+                  </div>
+                  <div class="mb-0"><button class="btn btn-danger waves-effect waves-light">View Courses</button></div>
+                </div>
+                <div class="w-100 app-academy-sm-40 d-flex justify-content-center justify-content-sm-end h-px-150 mb-3 mb-sm-0">
+                  <img class="img-fluid scaleX-n1-rtl" src="../../assets/img/illustrations/girl-app-academy.png" alt="girl illustration">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-  </div>
-</div>
+    </div>
 
 </div>
+
+{{--  Cart Modal Condition  --}}
+@if(cartData.data.length ==0)
+  <!-- Cart Modal -->
+  <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+      <div class="modal-content p-3 p-md-5 ">
+        <div class="modal-body">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="text-center mb-4">
+            <h3 class="mb-2">Cart</h3>
+            <h4 class="text-muted address-subtitle mt-5">Your cart is empty go add some product!</h4>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {{--  Cart Modal  --}}
+@endif
+  <!-- Cart Modal True-->
+  <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-simple modal-add-new-address">
+      <div class="modal-content p-3 p-md-5 ">
+        <div class="modal-body">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+          {{--  Heading  --}}
+          <div class="text-center mb-4">
+            <h3 class="mb-2">Cart</h3>
+            {{--  <p class="text-muted address-subtitle">TEXT TEXT TEXT TEXT TEXT TEXT</p>  --}}
+          </div>
+            
+            <div class="col-xl-15 mb-3 mb-xl-0">
+                @each(cart in cartData.data) 
+                <div class="d-flex align-item-center justify-content-center">
+                  <div class="cart_container w-px-700">
+                    <div class="d-inline-flex justify-content-between">
+
+                      <img src="{{cart.product.img_product}}" height="150px" width="180px">
+
+                      <div class="ms-4 w-px-250" style="border: 1px solid gray;padding: 20px;">
+                        <h6 class="mb-0">{{cart.product.product_name}}</h6>
+                        <small class="text-muted d-block">Product ID: {{cart.product.id}}</small>
+                        <br>
+                        <h5>฿{{cart.product.price_product}} per each</h5>
+                      </div>
+
+                      <div class="ms-4 w-px-250 d-block" style="text-align:center" >
+                            <h6 class="mb-0">Quantity:</h6>
+
+                        <div class="d-inline-flex mt-3">
+                          <form action="{{route('decrease.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
+                            {{ csrfField() }}
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <input type="hidden" name="total_price" value="{{total_price}}">
+                            <button type="submit" class="btn rounded-pill btn-icon btn-danger me-2 h-px-30 w-px-40">
+                              <b>-</b>
+                            </button>
+                          </form>
+                          <div id="quantityInput" type="number" class="form-control form-control-sm me-2" style="width:60px; height:40px">
+                            <b class="fs-4">{{cart.quantity}}</b>
+                          </div>
+                          <form action="{{route('increase.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
+                            {{ csrfField() }}
+                            <input type="hidden" name="user_id" value="{{user.id}}">
+                            <input type="hidden" name="total_price" value="{{total_price}}">
+                            <button type="submit" class="btn rounded-pill btn-icon btn-success h-px-30 w-px-40">
+                              <b>+</b>
+                            </button>
+                          </form>
+                        </div>
+
+                        <div class="mt-3">
+                          Total Product Price: {{cart.total_price}}฿
+                        </div>
+
+                        <div class="mt-3">
+                          <a href="{{route('delete.cart' , {id : cart.id})}}">
+                            <button class="btn rounded-pill btn-icon btn-danger h-px-30 w-px-200">
+                              <i class="ti ti-trash-x me-0 me-sm-1 ti-xs"></i>
+                              <b>Remove from cart</b>
+                            </button>
+                          </a>
+                        </div>
+                        
+                      </div>
+
+                      
+                    </div>
+                  </div>
+                </div>
+                @endeach                    
+              <div class="d-flex justify-content-center align-items-center m-3 mb-2 p-1">
+                  <div class="d-flex justify-content-between">
+                    <h2 >Total Cart Price: {{total}}฿</h2>
+                  </div>
+              </div>
+                <a href="javascript:void(0)" class="list-group-item d-flex justify-content-center">
+                  <div>
+                    <form action="{{route('checkout')}}" method="POST">
+                      {{ csrfField() }}
+                      <input type="hidden" name="total" id="" value="{{total}}">
+                      <button type="submit" class="btn btn-primary waves-effect waves-light mt-3" id="type-success">Checkout</button>
+                    </form>
+                  </div>
+                </a>
+            </div>
+
+            
+        </div>
+      </div>
+    </div>
+  </div>
+  {{--  Cart Modal  --}}
+
 
 @endif
+
+<div class="modal fade" id="createApp" tabindex="-1" style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-simple modal-upgrade-plan">
+    <div class="modal-content p-3 p-md-5">
+      <div class="modal-body p-2">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="text-center">
+          <h3 class="mb-2">Create App</h3>
+          <p>Provide data with this form to create your app.</p>
+        </div>
+        <div id="wizard-create-app" class="bs-stepper vertical mt-2 shadow-none">
+          <div class="bs-stepper-header border-0 p-1">
+
+            <div class="step active" data-target="#details">
+              <button type="button" class="step-trigger" aria-selected="true">
+                <span class="bs-stepper-circle"><i class="ti ti-file-text ti-sm"></i></span>
+                <span class="bs-stepper-label">
+                  <span class="bs-stepper-title text-uppercase">Cart</span>
+                  <span class="bs-stepper-subtitle">Your Cart</span>
+                </span>
+              </button>
+            </div>
+            <div class="line"></div>
+            <div class="step" data-target="#frameworks">
+              <button type="button" class="step-trigger" aria-selected="false">
+                <span class="bs-stepper-circle"><i class="ti ti-box ti-sm"></i></span>
+                <span class="bs-stepper-label">
+                  <span class="bs-stepper-title text-uppercase">Frameworks</span>
+                  <span class="bs-stepper-subtitle">Select Framework</span>
+                </span>
+              </button>
+            </div>
+            <div class="line"></div>
+            <div class="step" data-target="#database">
+              <button type="button" class="step-trigger" aria-selected="false">
+                <span class="bs-stepper-circle"><i class="ti ti-database ti-sm"></i></span>
+                <span class="bs-stepper-label">
+                  <span class="bs-stepper-title text-uppercase">Database</span>
+                  <span class="bs-stepper-subtitle">Select Database</span>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="bs-stepper-content p-1">
+            <form onsubmit="return false">
+              <!-- Details -->
+              <div id="details" class="content pt-3 pt-lg-0 dstepper-block active">
+                @if(cartData.data.length == 0)
+                  <div class="text-center mb-4">
+                    <h3 class="mb-2">Cart</h3>
+                    <h4 class="text-muted address-subtitle mt-5">Your cart is empty go add some product!</h4>
+                  </div>
+                @else
+                <div class="cart_container h-px-50" style="border: 1px solid gray">
+                  <div class="d-inline-flex justify-content-between p-2 mt-1">
+                    <span class="ms-5 me-5">Product</span>
+                    <span class="ms-5 me-5"></span>
+                    <span class="ms-5">Quantity</span>
+                  </div>
+                </div>
+                @each(cart in cartData.data) 
+                <div class="cart_container" style="border: 1px solid gray">
+                  <div class="d-inline-flex justify-content-between p-2">
+
+                    <div class="d-block text-center me-3">
+                      <img src="{{cart.product.img_product}}" height="150px" width="150px" class="p-2">   
+                      <h6 class="mb-0">Name: {{cart.product.product_name}}</h6>
+                    </div>
+
+                    <div class="ms-5 d-block" style="text-align:center" >
+                      <div class="d-inline-flex mt-3">
+                        <form action="{{route('decrease.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
+                          {{ csrfField() }}
+                          <input type="hidden" name="user_id" value="{{user.id}}">
+                          <input type="hidden" name="total_price" value="{{total_price}}">
+                          <button type="submit" class="btn rounded-pill btn-icon btn-danger me-2 h-px-30 w-px-40">
+                            <b>-</b>
+                          </button>
+                        </form>
+                        <div id="quantityInput" type="number" class="form-control form-control-sm me-2" style="width:60px; height:40px">
+                          <b class="fs-4">{{cart.quantity}}</b>
+                        </div>
+                        <form action="{{route('increase.cart', {id: cart.id,quantity: cart.quantity})}}" method="POST">
+                          {{ csrfField() }}
+                          <input type="hidden" name="user_id" value="{{user.id}}">
+                          <input type="hidden" name="total_price" value="{{total_price}}">
+                          <button type="submit" class="btn rounded-pill btn-icon btn-success h-px-30 w-px-40">
+                            <b>+</b>
+                          </button>
+                        </form>
+                      </div>
+                      <div class="mt-3">
+                          Total Product Price: {{cart.total_price}}฿
+                      </div>
+                      <div class="mt-3">
+                        <a href="{{route('delete.cart' , {id : cart.id})}}">
+                          <button class="btn rounded-pill btn-icon btn-danger h-px-30 w-px-200">
+                            <i class="ti ti-trash-x me-0 me-sm-1 ti-xs"></i>
+                            <b>Remove from cart</b>
+                          </button>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                @endeach                    
+                <div class="d-flex justify-content-center align-items-center m-3 mb-2 p-1">
+                    <div class="d-flex justify-content-between">
+                      <h5 >Total Cart Price: {{total}}฿</h5>
+                    </div>
+                </div>
+                  @endif
+                  <div class="col-12 d-flex justify-content-between mt-4">
+                    <button class="btn btn-label-secondary btn-prev waves-effect" disabled="">
+                      <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
+                      <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                    </button>
+                    <button class="btn btn-primary btn-next waves-effect waves-light">
+                      <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                      <i class="ti ti-arrow-right ti-xs"></i>
+                    </button>
+                  </div>
+                </div>
+
+              <!-- Frameworks -->
+              <div id="frameworks" class="content pt-3 pt-lg-0 dstepper-block">
+                <h5>Category</h5>
+                <ul class="p-0 m-0">
+                  <li class="d-flex align-items-start mb-3">
+                    <div class="badge bg-label-info p-2 me-3 rounded">
+                      <i class="ti ti-brand-react-native ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">React Native</h6>
+                        <small class="text-muted">Create truly native apps</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="frameworks-radio" class="form-check-input" type="radio" value="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="d-flex align-items-start mb-3">
+                    <div class="badge bg-label-danger p-2 me-3 rounded">
+                      <i class="ti ti-brand-angular ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">Angular</h6>
+                        <small class="text-muted">Most suited for your application</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="frameworks-radio" class="form-check-input" type="radio" value="" checked="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="d-flex align-items-start mb-3">
+                    <div class="badge bg-label-warning p-2 me-3 rounded">
+                      <i class="ti ti-brand-html5 ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">HTML</h6>
+                        <small class="text-muted">Progressive Framework</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="frameworks-radio" class="form-check-input" type="radio" value="" checked="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="d-flex align-items-start">
+                    <div class="badge bg-label-success p-2 me-3 rounded">
+                      <i class="ti ti-brand-vue ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">VueJs</h6>
+                        <small class="text-muted">JS web frameworks</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="frameworks-radio" class="form-check-input" type="radio" value="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+
+                <div class="col-12 d-flex justify-content-between mt-4">
+                  <button class="btn btn-label-secondary btn-prev waves-effect">
+                    <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
+                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                  </button>
+                  <button class="btn btn-primary btn-next waves-effect waves-light">
+                    <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                    <i class="ti ti-arrow-right ti-xs"></i>
+                  </button>
+                </div>
+              </div>
+              <!-- Database -->
+              <div id="database" class="content pt-3 pt-lg-0 dstepper-block">
+                <div class="mb-3">
+                  <input type="text" class="form-control form-control-lg" id="exampleInputEmail2" placeholder="Database Name">
+                </div>
+                <h5>Select Database Engine</h5>
+                <ul class="p-0 m-0">
+                  <li class="d-flex align-items-start mb-3">
+                    <div class="badge bg-label-danger p-2 me-3 rounded">
+                      <i class="ti ti-brand-firebase ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">Firebase</h6>
+                        <small class="text-muted">Cloud Firestone</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="database-radio" class="form-check-input" type="radio" value="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="d-flex align-items-start mb-3">
+                    <div class="badge bg-label-warning p-2 me-3 rounded">
+                      <i class="ti ti-brand-amazon ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">AWS</h6>
+                        <small class="text-muted">Amazon Fast NoSQL Database</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="database-radio" class="form-check-input" type="radio" value="" checked="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="d-flex align-items-start">
+                    <div class="badge bg-label-info p-2 me-3 rounded">
+                      <i class="ti ti-database ti-md"></i>
+                    </div>
+                    <div class="d-flex justify-content-between w-100">
+                      <div class="me-2">
+                        <h6 class="mb-0">MySQL</h6>
+                        <small class="text-muted">Basic MySQL database</small>
+                      </div>
+                      <div class="d-flex align-items-center">
+                        <div class="form-check form-check-inline">
+                          <input name="database-radio" class="form-check-input" type="radio" value="">
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <div class="col-12 d-flex justify-content-between mt-4">
+                  <button class="btn btn-label-secondary btn-prev waves-effect">
+                    <i class="ti ti-arrow-left ti-xs me-sm-1 me-0"></i>
+                    <span class="align-middle d-sm-inline-block d-none">Previous</span>
+                  </button>
+                  <button class="btn btn-primary btn-next waves-effect waves-light">
+                    <span class="align-middle d-sm-inline-block d-none me-sm-1">Next</span>
+                    <i class="ti ti-arrow-right ti-xs"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="productModal" tabindex="-1" aria-labelledby="productModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header justify-content-center d-flex">
+        <h5 class="modal-title" id="productModalLabel">Product Information</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+
+      <div class="p-4">
+        <div class="modal-body d-block">
+          <div>
+            <img id="product-img" class="w-px-400">
+          </div>
+          <div>
+            <span>Product ID: <p id="product-id"></p></span>
+          </div>
+          <div>
+            <span>Product Name: <p id="product-name"></p></span>
+          </div>
+          <div>
+            <span>Product Price: <p id="product-price"></p></span>
+          </div>
+        </div>
+      </div>
+
+      
+      {{--  <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>  --}}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const productModal = document.getElementById('productModal');
+    productModal.addEventListener('show.bs.modal', (event) => {
+        // ปุ่มที่กดเพื่อเปิดโมดอล
+        const button = event.relatedTarget;
+        // ดึงค่า data-product-id
+        const productId = button.getAttribute('data-product-id');
+        const productName = button.getAttribute('data-product-name');
+        const productPrice = button.getAttribute('data-product-price');
+        const productImg = button.getAttribute('data-product-img');
+        
+        // ใส่ค่าลงในโมดอล
+        const id = productModal.querySelector('.modal-body #product-id');
+        id.textContent = productId;
+        const name = productModal.querySelector('.modal-body #product-name');
+        name.textContent = productName;
+        const price = productModal.querySelector('.modal-body #product-price');
+        price.textContent = productPrice;
+        const img = productModal.querySelector('.modal-body #product-img');
+        img.src = productImg;
+    });
+});
+</script>
+
+
+<!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script src="../../assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="../../assets/vendor/libs/popper/popper.js"></script>
+    <script src="../../assets/vendor/js/bootstrap.js"></script>
+    <script src="../../assets/vendor/libs/node-waves/node-waves.js"></script>
+    <script src="../../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="../../assets/vendor/libs/hammer/hammer.js"></script>
+    <script src="../../assets/vendor/libs/i18n/i18n.js"></script>
+    <script src="../../assets/vendor/libs/typeahead-js/typeahead.js"></script>
+    <script src="../../assets/vendor/js/menu.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="../../assets/vendor/libs/cleavejs/cleave.js"></script>
+    <script src="../../assets/vendor/libs/cleavejs/cleave-phone.js"></script>
+    <script src="../../assets/vendor/libs/select2/select2.js"></script>
+    <script src="../../assets/vendor/libs/@form-validation/popular.js"></script>
+    <script src="../../assets/vendor/libs/@form-validation/bootstrap5.js"></script>
+    <script src="../../assets/vendor/libs/@form-validation/auto-focus.js"></script>
+    <script src="../../assets/vendor/libs/bs-stepper/bs-stepper.js"></script>
+
+    <!-- Main JS -->
+    <script src="../../assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="../../assets/js/pages-pricing.js"></script>
+    <script src="../../assets/js/modal-create-app.js"></script>
+    <script src="../../assets/js/modal-add-new-cc.js"></script>
+    <script src="../../assets/js/modal-add-new-address.js"></script>
+    <script src="../../assets/js/modal-edit-user.js"></script>
+    <script src="../../assets/js/modal-enable-otp.js"></script>
+    <script src="../../assets/js/modal-share-project.js"></script>
+    <script src="../../assets/js/modal-two-factor-auth.js"></script>
 
 @end
