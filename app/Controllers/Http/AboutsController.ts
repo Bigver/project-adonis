@@ -1,14 +1,28 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import AboutService from "App/Service/about_service";
+import LogService from "App/Service/log_service";
 import uploadService from "App/Service/uploads_service";
 
 export default class AboutsController {
-  public async aboutAdmin({ view }: HttpContextContract) {
-    let aboutData: any = await AboutService.findById(1);
-    return view.render("admin/aboutPage", { data: aboutData });
+  public async aboutAdmin({ view, auth }: HttpContextContract) {
+    try {
+      let aboutData: any = await AboutService.findById(1);
+      return view.render("admin/aboutPage", { data: aboutData });
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open admin about page",
+        context: {
+          userId: auth.user?.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open admin about page"
+      return view.render('error', { error })
+    }
   }
 
-  async create({ request, response }: HttpContextContract) {
+  async create({ request, response, view }: HttpContextContract) {
     try {
       let aboutData: any = await AboutService.findById(1);
 
@@ -51,8 +65,30 @@ export default class AboutsController {
       await AboutService.createAbout(about);
       return response.redirect("back");
     } catch (error) {
-      console.error(error);
-      return response.status(500).json({ error: "Failed to create about" });
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to add about page data",
+        context: {
+          title: request.input('title'),
+          img1: request.file("imagefile1", {
+            size: "2mb",
+            extnames: ["jpg", "png", "gif"],
+          }),
+          img2: request.file("imagefile2", {
+            size: "2mb",
+            extnames: ["jpg", "png", "gif"],
+          }),
+          img3: request.file("imagefile3", {
+            size: "2mb",
+            extnames: ["jpg", "png", "gif"],
+          }),
+          detail: ('detail')
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to add about page data"
+      return view.render('error', { error })
     }
   }
+
 }

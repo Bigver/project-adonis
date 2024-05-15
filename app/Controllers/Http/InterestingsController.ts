@@ -1,34 +1,30 @@
-import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import UrlService from "App/Service/get_url_service";
-import interestingsService from "App/Service/interestings_service";
-import uploadService from "App/Service/uploads_service";
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import interestingsService from 'App/Service/interestings_service';
+import LogService from 'App/Service/log_service';
+import uploadService from 'App/Service/uploads_service';
 export default class InterestingsController {
+
   public async showInteresting({ view, request }: HttpContextContract) {
     try {
-      const filter: any = {};
+      const filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
-      const limit = 2; // จำนวนรายการต่อหน้า
-      page = Math.max(page, 1);
-      let interestings: any;
+
+      const perPage = 4;
       const keyword = request.input("keyword");
-      let interestingsPaginator: any;
+      filters.keyword = keyword;
 
-      filter.keyword = keyword;
+      const interestings: any = await interestingsService.all({ filters });
+      const startIndex = (page - 1) * perPage;
+      const endIndex = Math.min(startIndex + perPage, interestings.length);
+      const paginatedInterestings = interestings.slice(startIndex, endIndex);
 
-      interestingsPaginator = await interestingsService
-        .all({ filter: filter })
-        .paginate(page, limit);
-
-      interestings = interestingsPaginator.serialize();
-      const paginationLinks = await UrlService.getUrlsForRange(
-        1,
-        interestingsPaginator.lastPage
-      );
       return view.render("admin/interestingListPage", {
-        items: interestings,
-        pagination: interestingsPaginator,
-        paginationLinks,
-        keyword,
+        items: paginatedInterestings,
+        pagination: interestings,
+        total: interestings.length,
+        perPage: perPage,
+        currentPage: parseInt(page),
+        lastPage: Math.ceil(interestings.length / perPage),
       });
     } catch (error) {
       console.log(error);
@@ -43,80 +39,139 @@ export default class InterestingsController {
     return view.render("admin/interestingPage");
   }
 
-  
-
-  async add({ request, response }: HttpContextContract) {
+  async add({ view, request, response }: HttpContextContract) {
     try {
-      const data = request.only(["title", "description", "imgUrl", "content"]);
-      const File = request.file("imagefile1", {
-        size: "2mb",
-        extnames: ["jpg", "png", "gif"],
-      });
-      const fileName1 = await uploadService.upload(File);
+      const data = request.only(['title', 'description', 'imgUrl', 'content'])
+      const File = request.file("imagefile1", { size: '2mb', extnames: ['jpg', 'png', 'gif'], });
+      const fileName1 = await uploadService.upload(File)
 
       if (File) {
-        await uploadService.deleteFile(data.imgUrl);
+        await uploadService.deleteFile(data.imgUrl)
         data.imgUrl = `${fileName1}`;
       }
       await interestingsService.create(data);
       return response.redirect().back();
     } catch (error) {
-      //console.error(error);
-
-      return response.status(500).json({ error: "Failed to add Interestings" });
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to add data in interesting page",
+        context: {
+          img1: request.file("imagefile1", {
+            size: "2mb",
+            extnames: ["jpg", "png", "gif"],
+          }),
+          title: request.input('title'),
+          description: request.input('description'),
+          imgUrl: request.input('imgUrl'),
+          content: request.input('content'),
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to add data in interesting page"
+      return view.render('error', { error })
     }
   }
 
-  async UpdateInteresting({ params, request, response }: HttpContextContract) {
+  async UpdateInteresting({ view, params, request, response }: HttpContextContract) {
     try {
       const { id } = params;
-      const data = request.only(["title", "description", "imgUrl", "content"]);
-      const File = request.file("imagefile1", {
-        size: "2mb",
-        extnames: ["jpg", "png", "gif"],
-      });
-      const fileName1 = await uploadService.upload(File);
+      const data = request.only(['title', 'description', 'imgUrl', 'content'])
+      const File = request.file("imagefile1", { size: '2mb', extnames: ['jpg', 'png', 'gif'], });
+      const fileName1 = await uploadService.upload(File)
 
       if (File) {
-        await uploadService.deleteFile(data.imgUrl);
+        await uploadService.deleteFile(data.imgUrl)
         data.imgUrl = `${fileName1}`;
       }
       await interestingsService.update(id, data);
-      return response.redirect().toRoute("showInteresting");
+      return response.redirect().toRoute('showInteresting')
     } catch (error) {
-      return response.badRequest(error.message);
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to add data in interesting page",
+        context: {
+          img1: request.file("imagefile1", {
+            size: "2mb",
+            extnames: ["jpg", "png", "gif"],
+          }),
+          title: request.input('title'),
+          description: request.input('description'),
+          imgUrl: request.input('imgUrl'),
+          content: request.input('content'),
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to add data in interesting page"
+      return view.render('error', { error })
     }
   }
   async editInteresting({ params, view }: HttpContextContract) {
-    const Interestings = await interestingsService.all({
-      filters: { id: params.id },
-    });
-    const Interesting = Interestings[0];
-    const inter = Interesting.serialize();
-    return view.render("admin/UpdateInterestingPage", { inter });
-  }
-
-  async deleteInteresting({ response, params }: HttpContextContract) {
-    await interestingsService.delete(params.id);
-    return response.redirect("back");
-  }
-  public async toggleStatus({ params, response }: HttpContextContract) {
     try {
-      const { id } = params;
-      const interestings = await interestingsService.findById(id);
-
-      if (!interestings) {
-        return response.status(404).json({ error: "News not found" });
-      }
-
-      interestings.status = interestings.status === "show" ? "hide" : "show";
-      await interestings.save();
-      return response.redirect().back();
+      const id = params.id;
+      const inter: any = await interestingsService.findById(id);
+      return view.render("admin/interestingUpdatePage", { inter });
     } catch (error) {
-      console.error(error);
-      return response
-        .status(500)
-        .json({ error: "Failed to toggle news status" });
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to edit data in interesting page",
+        context: {
+          ID: params.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to edit data in interesting page"
+      return view.render('error', { error })
     }
   }
+
+  async deleteInteresting({ view, response, params }: HttpContextContract) {
+    try {
+      await interestingsService.delete(params.id);
+      return response.redirect("back");
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to delete page",
+        context: {
+          ID: params.id
+        }
+      }
+      await LogService.create(level, message, context);
+      error = "Failed to delete page"
+      return view.render('error', { error })
+    }
+  }
+
+  public async toggleStatus({ view, params, response }: HttpContextContract) {
+    try {
+      const { id } = params;
+      const interesting = await interestingsService.findById(id);
+
+      if (!interesting) {
+        return response.status(404).json({ error: "Interesting not found" });
+      }
+
+      if (interesting.status === "show") {
+        interesting.status = "hide";
+      }
+      else if (interesting.status === "hide") {
+        interesting.status = "show";
+      }
+
+      await interestingsService.updateStatus(id, interesting);
+      return response.redirect().back();
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to toggle status page",
+        context: {
+          ID: params.id
+        }
+      }
+      await LogService.create(level, message, context);
+      error = "Failed to toggle status page"
+      return view.render('error', { error })
+    }
+  }
+
 }

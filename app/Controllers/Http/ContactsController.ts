@@ -1,14 +1,28 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import ContactService from "App/Service/contact_service";
+import LogService from "App/Service/log_service";
 import uploadService from "App/Service/uploads_service";
 
 export default class ContactsController {
-  public async contactAdmin({ view }: HttpContextContract) {
-    let contactData: any = await ContactService.findById(1);
-    return view.render("admin/contactPage", { data: contactData });
+  public async contactAdmin({ view, auth }: HttpContextContract) {
+    try {
+      let contactData: any = await ContactService.findById(1);
+      return view.render("admin/contactPage", { data: contactData });
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open admin contact page",
+        context: {
+          userId: auth.user?.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open admin contact page"
+      return view.render('error', { error })
+    }
   }
 
-  async create({ request, response }: HttpContextContract) {
+  async create({ request, response, view }: HttpContextContract) {
     try {
       let contactData: any = await ContactService.findById(1);
       const contact = request.only([
@@ -34,13 +48,28 @@ export default class ContactsController {
         return response.redirect().back();
       }
 
-      return;
-
       await ContactService.create(contact);
       return response.redirect("back");
     } catch (error) {
-      console.error(error);
-      return response.status(500).json({ error: "Failed to create contact" });
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to add contact page data",
+        context: {
+          img1: request.file("imagefile1", {
+            size: "2mb",
+            extnames: ["jpg", "png", "gif"],
+          }),
+          map: request.input('map'),
+          location_title: request.input('location_title'),
+          location_detial: request.input('location_detail'),
+          img_line: request.input('img_line'),
+          link_fb: request.input('ink_facebook'),
+          link_line: request.input('ink_line'),
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to add contact page data"
+      return view.render('error', { error })
     }
   }
 }

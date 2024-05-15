@@ -5,24 +5,24 @@ import Cache from '@ioc:Adonis/Addons/Cache'
 export default class ProductService {
   public static async all({ filters = {} }: any) {
     let check = true
-    if(!filters.keyword || filters.keyword == ""){
+    if (!filters.keyword || filters.keyword == "") {
       check = false
       filters.keyword = "all"
     }
-    const cachedproducts : any = await Cache.remember(`products_${filters.keyword}`, 60, async () => {
-      let products : any =  Product.query()
-      if (check){
+    const cachedproducts: any = await Cache.remember(`products_${filters.keyword}`, 60, async () => {
+      let products: any = Product.query()
+      if (check) {
         products = Product.query()
-        .where("product_name", "like", `%${filters.keyword}%`)
-        .orWhere("id", "like", `%${filters.keyword}%`)
+          .where("product_name", "like", `%${filters.keyword}%`)
+          .orWhere("id", "like", `%${filters.keyword}%`)
       }
       return products
     })
     return cachedproducts
   }
-  public static async findById($id : any) {
+  public static async findById($id: any) {
     const cachedProduct = await Cache.remember('product', 60, async () => {
-      const product : any = await Product.find($id)
+      const product: any = await Product.find($id)
       return product.toJSON()
     })
     return cachedProduct
@@ -31,7 +31,7 @@ export default class ProductService {
 
   static async createProduct(data: any) {
     await Cache.forget('products_all')
-    const product : any= await Product.create(data)
+    const product: any = await Product.create(data)
     return product
   }
 
@@ -42,15 +42,15 @@ export default class ProductService {
     const product = await Product.findOrFail($id)
     product.merge(data)
     return await product.save()
-    
+
   }
-  
+
   static async delete(id: any) {
     await Cache.forget('products_all')
     const item = await Product.findOrFail(id)
     return await item.delete()
   }
 
-  
+
 
 }

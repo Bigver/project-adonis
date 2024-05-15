@@ -1,78 +1,81 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import UrlService from "App/Service/get_url_service";
+import LogService from "App/Service/log_service";
 import NewsService from "App/Service/news_service";
 import uploadService from "App/Service/uploads_service";
 
 export default class NewsController {
-  public async newsAdmin({ view }: HttpContextContract) {
-    return view.render("admin/newsPage");
+  public async newsUpdateList({ view, request, auth }: HttpContextContract) {
+    try {
+      const filters: any = {};
+      let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
+      const keyword = request.input("keyword");
+      filters.keyword = keyword;
+
+      const perPage = 4;
+      const news: any = await NewsService.all({ filters });
+      const startIndex = (page - 1) * perPage;
+      const endIndex = Math.min(startIndex + perPage, news.length);
+      const paginatedNews = news.slice(startIndex, endIndex);
+
+      return view.render("admin/newsUpdateListPage", {
+        items: paginatedNews,
+        pagination: news,
+        total: news.length,
+        perPage: perPage,
+        currentPage: parseInt(page),
+        lastPage: Math.ceil(news.length / perPage),
+      });
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open news list page",
+        context: {
+          userId: auth.user?.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open news list page"
+      return view.render('error', { error })
+    }
   }
 
-  public async newsPage({ view }: HttpContextContract) {
+  public async newsAdmin({ view, auth }: HttpContextContract) {
+    try {
+      return view.render("admin/newsPage");
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open admin news page",
+        context: {
+          userId: auth.user?.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open admin news page"
+      return view.render('error', { error })
+    }
+  }
+
+
+  public async newsPage({ view, auth }: HttpContextContract) {
     try {
       const news = await NewsService.getShowNews();
       return view.render("user/newsPage", { news });
     } catch (error) {
-      // หากเกิดข้อผิดพลาด
-      console.error(error);
-      return view.render("errors.serverError");
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open news page",
+        context: {
+          userId: auth.user?.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open news page"
+      return view.render('error', { error })
     }
   }
 
-  public async newsUpdateList({ view, request }: HttpContextContract) {
-    try {
-      const filter = {};
-      let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
-      const limit = 10; // จำนวนรายการต่อหน้า
-      page = Math.max(page, 1);
-      let news: any;
-      const keyword = request.input("keyword");
-      let newsPaginator: any;
-
-      if (keyword) {
-        newsPaginator = await NewsService.searchNews(keyword, page);
-      } else {
-        newsPaginator = await NewsService.all({ filter: filter }).paginate(
-          page,
-          limit
-        );
-      }
-      news = newsPaginator.serialize();
-
-      const paginationLinks = await UrlService.getUrlsForRange(
-        1,
-        newsPaginator.lastPage
-      );
-      return view.render("admin/newsUpdateListPage", {
-        news,
-        pagination: newsPaginator,
-        paginationLinks,
-        keyword,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  public async newsUpdatePage({ params, view }: HttpContextContract) {
-    const filter = {};
-    const news = await NewsService.all({ filter: filter }).paginate(1, 10);
-    const serializedNews = news.serialize();
-    const item = await NewsService.all({ filters: { id: params.id } });
-    const items = item[0];
-    return view.render("admin/newsUpdatePage", {
-      news: items,
-      items: serializedNews,
-    });
-  }
-
-  public async newsContent({ view, params }: HttpContextContract) {
-    const items = await NewsService.all({ filters: { id: params.id } });
-    const item = items[0];
-    return view.render("user/newsContent", { item });
-  }
-
-  async add({ request, response }: HttpContextContract) {
+  async addNews({ request, response, view }: HttpContextContract) {
     try {
       const data = request.only(["title", "description", "imgUrl", "content"]);
       const File = request.file("imagefile1", {
@@ -83,18 +86,29 @@ export default class NewsController {
 
       if (File) {
         await uploadService.deleteFile(data.imgUrl);
-        data.imgUrl = `/uploads/${fileName1}`;
+        data.imgUrl = `${fileName1}`;
       }
 
       await NewsService.create(data);
       return response.redirect().back();
     } catch (error) {
-      console.error(error);
-      return response.status(500).json({ error: "Failed to add News" });
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to add news page",
+        context: {
+          title: request.input('title'),
+          description: request.input('description'),
+          img: request.input('imgUrl'),
+          content: request.input('content'),
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to add news page"
+      return view.render('error', { error })
     }
   }
 
-  async update({ params, request, response }: HttpContextContract) {
+  async updateNews({ view, params, request, response }: HttpContextContract) {
     try {
       const { id } = params;
       const data = request.only(["title", "description", "imgUrl", "content"]);
@@ -106,17 +120,89 @@ export default class NewsController {
 
       if (File) {
         await uploadService.deleteFile(data.imgUrl);
-        data.imgUrl = `/uploads/${fileName1}`;
+        data.imgUrl = `${fileName1}`;
       }
 
       await NewsService.update(id, data);
       return response.redirect().toRoute("news.update.list");
     } catch (error) {
-      response.badRequest(error.message);
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to update news page",
+        context: {
+          title: request.input('title'),
+          description: request.input('description'),
+          img: request.input('imgUrl'),
+          content: request.input('content')
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to update news page"
+      return view.render('error', { error })
     }
   }
 
-  public async toggleStatus({ params, response }: HttpContextContract) {
+  public async newsContent({ view, params }: HttpContextContract) {
+    try {
+      const id = params.id
+      const items = await NewsService.findById(id)
+      const item = items[0];
+      return view.render("user/newsContent", { item });
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open user news page",
+        context: {
+          ID: params.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open user news page"
+      return view.render('error', { error })
+    }
+  }
+
+
+  async editNews({ params, view }: HttpContextContract) {
+    try {
+      const id = params.id;
+      const news: any = await NewsService.findById(id);
+      return view.render("admin/newsUpdatePage", { news });
+    } catch (error) {
+      const { level, message, context } = {
+        level: "debug",
+        message: "Failed to open edit news page",
+        context: {
+          ID: params.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open open edit news page"
+    }
+  }
+
+  async deleteNews({ response, params, view }: HttpContextContract) {
+    try {
+      await NewsService.delete(params.id);
+      return response.redirect().toRoute("news.update.list");
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to delete page",
+        context: {
+          ID: params.id
+        }
+      }
+      await LogService.create(level, message, context);
+      error = "Failed to delete page"
+      return view.render('error', { error })
+    }
+  }
+
+
+
+
+  public async toggleStatus({ params, response, view }: HttpContextContract) {
     try {
       const { id } = params;
       const news = await NewsService.findById(id);
@@ -124,20 +210,68 @@ export default class NewsController {
       if (!news) {
         return response.status(404).json({ error: "News not found" });
       }
-
-      news.status = news.status === "show" ? "hide" : "show";
-      await news.save();
+      if (news.status === "show" && news.status != 'hide') {
+        news.status = "hide";
+      } else if (news.status === 'hide' && news.status != 'show') {
+        news.status = "show";
+      }
+      await NewsService.updateStatus(id, news);
       return response.redirect().back();
     } catch (error) {
-      console.error(error);
-      return response
-        .status(500)
-        .json({ error: "Failed to toggle news status" });
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to toggle status page",
+        context: {
+          ID: params.id
+        }
+      }
+      await LogService.create(level, message, context);
+      error = "Failed to toggle status page"
+      return view.render('error', { error })
     }
   }
 
-  async delete({ response, params }: HttpContextContract) {
-    await NewsService.delete(params.id);
-    return response.redirect().toRoute("news.update.list");
-  }
+
+  //   public async newsUpdatePage({ params, view }: HttpContextContract) {
+  //   try {
+  //     const filter = {};
+  //     const news = await NewsService.all({ filter: filter }).paginate(1, 10);
+  //     const serializedNews = news.serialize();
+  //     const item = await NewsService.all({ filters: { id: params.id } });
+  //     const items = item[0];
+  //     return view.render("admin/newsUpdatePage", {
+  //       news: items,
+  //       items: serializedNews,
+  //     });
+  //   } catch (error) {
+  //     const { level, message, context } = {
+  //       level: "warn",
+  //       message: "Failed to open update news page",
+  //       context: {
+  //         ID: params.id
+  //       }
+  //     };
+  //     await LogService.create(level, message, context);
+  //     error = "Failed to open update news page"
+  //     return view.render('error', { error })
+  //   }
+  // }
+
+  // public async updateNewsPage({ view,auth }: HttpContextContract) {
+  //   try {
+  //     return view.render("admin/newsUpdatePage");
+  //   } catch(error) {
+  //     const { level, message, context } = {
+  //       level: "warn",
+  //       message: "Failed to open update news page",
+  //       context: {
+  //         ID: auth.user?.id
+  //       }
+  //     };
+  //     await LogService.create(level, message, context);
+  //     error = "Failed to open update news page"
+  //     return view.render('error', { error })
+  //   }
+  // }
+
 }

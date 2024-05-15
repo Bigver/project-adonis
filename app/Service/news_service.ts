@@ -1,71 +1,64 @@
 import News from "App/Models/News";
-import _ from 'lodash'
-
+import _ from "lodash";
+import Cache from "@ioc:Adonis/Addons/Cache";
 
 export default class NewsService {
-    public static all({ filters = {} }: any) {
-        const item = News.query()
-        if (_.result(filters, 'id')) {
-            item.where('id', filters.id)
+    public static async all({ filters = {} }: any) {
+        let check = true
+        if (!filters.keyword || filters.keyword == "") {
+            check = false
+
+        }
+        let item: any = News.query()
+        if (check) {
+            item
+                .where("title", "like", `%${filters.keyword}%`)
+                .orWhere("id", "like", `%${filters.keyword}%`)
         }
 
-        return item
-    }
+        return item;
 
-    public static async searchNews(keyword : any , page : any) {
-        const newsPaginator = await News.query()
-        .where('title', 'like', `%${keyword}%`)
-        .orWhere('id', 'like', `%${keyword}%`).paginate(page)
-        return newsPaginator;
-      }
-        
+    }
 
     static async create(data: any) {
-        try {
-            const item = await News.create(data)
-            return item
-        } catch (error) {
-            // const data = {
-            //     error : error,
-            //     file : "",
-            //     path : "",
-
-            // }
-
-            // LogService.create(data)
-            //throw new Error('Failed to create news')
-        }
+        const item = await News.create(data);
+        return item.serialize();
 
     }
-
 
     static async update(id: number, data: any) {
-        try {
-            const news = await News.findOrFail(id)
-            news.merge(data)
-            await news.save()
-            return news
-        } catch (error) {
-            throw new Error('Failed to update news')
-        }
+        await Cache.forget(`news:${id}`);
+        const news = await News.find(id);
+        return await news?.merge(data).save();
     }
 
-    public static async findById(id: number) {
-        try {
-            const news = await News.findOrFail(id);
-            return news;
-        } catch (error) {
-            throw new Error('News not found');
+    static async updateStatus(id: number, data: any) {
+        const value = {
+            status: data.status
         }
-    }
-
-    public static async getShowNews() {
-        return await News.query().where('status', 'show').orderBy('updatedAt', "desc").exec();
+        await Cache.forget(`news:${id}`);
+        const news = await News.find(id);
+        return await news?.merge(value).save();
     }
 
     static async delete(id: any) {
-        const item = await News.findOrFail(id)
-        return await item.delete()
+        await Cache.forget('news_all');
+        const item = await News.findOrFail(id);
+        return await item.delete();
     }
+
+    public static async getShowNews() {
+        return await News.query().where("status", "show").exec();
+    }
+
+    public static async findById(id: number) {
+        const cachedNews = await Cache.remember(`news:${id}`, 60, async () => {
+            const news: any = await News.find(id)
+            return news.serialize();
+        });
+        return cachedNews;
+    }
+
+
 
 }

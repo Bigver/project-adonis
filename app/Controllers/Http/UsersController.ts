@@ -2,6 +2,7 @@ import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import Hash from "@ioc:Adonis/Core/Hash";
 import UserService from "App/Service/user_service";
 import { schema, rules } from "@ioc:Adonis/Core/Validator";
+import LogService from "App/Service/log_service";
 // import * as Pusher from 'pusher-js'
 
 export default class UsersController {
@@ -23,38 +24,81 @@ export default class UsersController {
     }
   }
 
-  async update({ params, request, response }: HttpContextContract) {
-    const { id } = params;
-    const { user_admin, check_admin, pages_admin } = request.all() || null;
-    let accessData: any;
-    const userAdmin = user_admin || "no";
-    const checkAdmin = check_admin || "no";
-    const pageAdmin = pages_admin || "no";
+  async update({ params, request, response, view }: HttpContextContract) {
+    try {
+      const { id } = params;
+      const { user_admin, check_admin, pages_admin } = request.all() || null;
+      let accessData: any;
+      const userAdmin = user_admin || "no";
+      const checkAdmin = check_admin || "no";
+      const pageAdmin = pages_admin || "no";
 
-    accessData = [];
+      accessData = [];
 
-    accessData.push({
-      userAdmin,
-      checkAdmin,
-      pageAdmin,
-    });
-    const access = JSON.stringify(accessData);
+      accessData.push({
+        userAdmin,
+        checkAdmin,
+        pageAdmin,
+      });
+      const access = JSON.stringify(accessData);
 
-    const userData = request.only(["email", "username", "password", "role"]);
-    await UserService.updateUser(id, userData, access);
-    return response.redirect().toRoute("admin.user");
+      const userData = request.only(["email", "username", "password", "role"]);
+      await UserService.updateUser(id, userData, access);
+      return response.redirect().toRoute("admin.user");
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to update user",
+        context: {
+          username: request.input('username'),
+          email: request.input('email'),
+          password: request.input('password'),
+          access: request.input('access'),
+          role: request.input('role')
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to update user"
+      return view.render('error', { error })
+    }
   }
 
-  async updateProfile({ params, request, response }: HttpContextContract) {
-    const id = params.id;
-    const userData = request.only(["email", "username", "password", "role"]);
-    await UserService.updateProfile(id, userData);
-    return response.redirect().toRoute("admin.user");
+  async updateProfile({ params, request, response, view }: HttpContextContract) {
+    try {
+      const id = params.id;
+      const userData = request.only(["email", "username", "password", "role"]);
+      await UserService.updateProfile(id, userData);
+      return response.redirect().toRoute("admin.user");
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open user profile",
+        context: {
+          ID: params.id
+        }
+      }
+      await LogService.create(level, message, context);
+      error = "Failed to open user profile"
+      return view.render('error', { error })
+    }
   }
 
-  async destroy({ response, params }: HttpContextContract) {
-    await UserService.delete(params.id);
-    return response.redirect("back");
+  async destroy({ response, params, view }: HttpContextContract) {
+    try {
+      await UserService.delete(params.id);
+      return response.redirect("back");
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to delete user",
+        context: {
+          ID: params.id
+        }
+      }
+      await LogService.create(level, message, context);
+      error = "Failed to delete user"
+      return view.render('error', { error })
+    }
   }
 
   async login({ request, response, auth, session }: HttpContextContract) {
@@ -85,7 +129,7 @@ export default class UsersController {
     return response.redirect().toRoute("page.login");
   }
 
-  public async userAdmin({ view, request }: HttpContextContract) {
+  public async userAdmin({ view, request, auth }: HttpContextContract) {
     try {
       let filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
@@ -109,13 +153,35 @@ export default class UsersController {
         lastPage: Math.ceil(users.length / perPage),
       });
     } catch (error) {
-      console.log(error);
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open user list page",
+        context: {
+          userId: auth.user?.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open user list page"
+      return view.render('error', { error })
     }
   }
 
   public async userUpdateAdmin({ view, params }: HttpContextContract) {
-    const id = params.id;
-    const users: any = await UserService.findByIdUser(id);
-    return view.render("admin/userUpdatePage", { users });
+    try {
+      const id = params.id;
+      const users: any = await UserService.findByIdUser(id);
+      return view.render("admin/userUpdatePage", { users });
+    } catch (error) {
+      const { level, message, context } = {
+        level: "warn",
+        message: "Failed to open user update page",
+        context: {
+          userId: params.id
+        }
+      };
+      await LogService.create(level, message, context);
+      error = "Failed to open user update page"
+      return view.render('error', { error })
+    }
   }
 }

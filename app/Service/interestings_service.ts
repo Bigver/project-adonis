@@ -1,56 +1,62 @@
 import Interesting from "App/Models/Interesting";
 import _ from "lodash";
+import Cache from "@ioc:Adonis/Addons/Cache";
 
 export default class interestingsService {
-  public static all({ filters = {} }: any) {
-    const item = Interesting.query();
-    if (_.result(filters, "id")) {
-      item.where("id", filters.id);
+  public static async all({ filters = {} }: any) {
+    let check = true
+    if (!filters.keyword || filters.keyword == "") {
+      check = false
     }
-    if(_.result(filters,'keyword')){
-      item.where("title", "like", `%${filters.keyword}%`)
-      item.orWhere("id", "like", `%${filters.keyword}%`)
+
+    let item: any = Interesting.query()
+    if (check) {
+      item
+        .where("title", "like", `%${filters.keyword}%`)
+        .orWhere("id", "like", `%${filters.keyword}%`)
     }
 
     return item;
-  }
 
+  }
 
   static async create(data: any) {
-    try {
-      const item = await Interesting.create(data);
-      return item;
-    } catch (error) {
-      throw new Error("Failed to create interestings");
-    }
+
+    const item = await Interesting.create(data);
+
+    return item.serialize;
+
   }
 
-  static async update(id: number, data: any) {
-    try {
-      const interesting = await Interesting.findOrFail(id);
-      interesting.merge(data);
-      await interesting.save();
-    } catch (error) {
-      console.log(error);
-      return;
-      throw new Error("Failed to update interesting");
-    }
+  static async update(id: any, data: any) {
+    await Cache.forget(`intersting:${id}`)
+    const interesting = await Interesting.find(id);
+    return await interesting?.merge(data).save();
   }
+
 
   static async delete(id: any) {
+    await Cache.forget('interstings_all')
     const item = await Interesting.findOrFail(id);
     return await item.delete();
   }
 
-  public static async getShowNews() {
+  public static async getShowinterestings() {
     return await Interesting.query().where("status", "show").exec();
   }
   public static async findById(id: number) {
-    try {
-      const interestings = await Interesting.findOrFail(id);
-      return interestings;
-    } catch (error) {
-      throw new Error("News not found");
+    const cachedInteresting = await Cache.remember(`intersting:${id}`, 60, async () => {
+      const interesting: any = await Interesting.find(id)
+      return interesting.toJSON()
+    })
+    return cachedInteresting
+  }
+  static async updateStatus(id: number, data: any) {
+    const value = {
+      status: data.status
     }
+    await Cache.forget(`interestings:${id}`);
+    const interestings = await Interesting.find(id);
+    return await interestings?.merge(value).save();
   }
 }

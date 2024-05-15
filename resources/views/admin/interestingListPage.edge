@@ -51,7 +51,7 @@
                         </tr>
                     </thead>
             
-                    @each(item in items.data)
+                    @each(item in items)
                     <tr>
                         <td>{{ item.id }}</td>
                         <td> <img src="/uploads/{{ item.img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
@@ -70,34 +70,36 @@
                 </table>           
                 </div>
                 <nav aria-label="Page navigation" class="mt-3">
-                    <ul class="pagination justify-content-center">
-                      <li class="page-item ">
-                        @if (keyword)
-                        <div></div>
-                        @else
-                        <a class="page-link" href="{{ pagination.currentPage  === 1 ? '#' : `/admin/showInteresting?page=${pagination.currentPage - 1}` }}">Previous</a>
+                  <ul class="justify-content-center d-flex text-center">
+                    <div class="d-flex gap-3 align-items-center">
+                      <form id="searchForm" action="{{ route('showInteresting') }}" method="get" class="input-group">
+                        <input  name="page" class="form-control rounded" type="hidden" value="{{currentPage-1}}" placeholder="next" aria-describedby="search-addon" />
+                        @if (currentPage  === 1)
+                        <button class="btn-page btn-rounded" type="submit" disabled>Previous</i></button>
+                        @else 
+                        <button class="btn-page btn-primary rounded" type="submit">Previous</i></button>
                         @endif
-                      </li>
-                
-                      @if (keyword)
-                        <div></div>
-                        @else
-                        <li class="page-item"><a class="page-link">{{ pagination.currentPage }}</a></li>
+                      </form>
+  
+                      <h5 class="mt-3">{{currentPage}}</h5>
+  
+                      <form id="searchForm" action="{{ route('showInteresting') }}" method="get" class="input-group">
+                        <input  name="page" class="form-control rounded" type="hidden" value="{{currentPage+1}}" placeholder="next" aria-describedby="search-addon" />
+                        @if (currentPage  === lastPage)
+                        <button class="btn-page btn-rounded" type="submit" disabled>Next Page</i></button>
+                        @else 
+                        <button class="btn-page btn-primary rounded" type="submit">Next Page</i></button>
                         @endif
-                  
-                      <li class="page-item">
-                        @if (keyword)
-                        <div></div>
-                        @else
-                        <a class="page-link" href="{{ pagination.currentPage === pagination.lastPage ? '#' : `/admin/showInteresting?page=${pagination.currentPage + 1}` }}">Next</a>
-                        @endif
-                      </li>
-                    </ul>
-                  </nav>     
-            </div>
-        </div>
-    </div>
-</div>
+                      </form>
+                    </div>
+                  </ul>
+                </nav>
+              </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  
 @else
 <div class="container-xxl container-p-y">
     <div class="misc-wrapper d-grid justify-content-center">
