@@ -4,37 +4,32 @@ import OrderService from "App/Service/order_service";
 
 export default class OrdersController {
   public async order({ view, request }: HttpContextContract) {
-    const filter = {};
-    let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
-    const limit = 10; // จำนวนรายการต่อหน้า
-    page = Math.max(page, 1);
-    let orders: any;
-    const keyword = request.input("keyword");
-    let ordersPaginator: any;
-    if (keyword) {
-      ordersPaginator = await OrderService.searchOrders(keyword, page);
-    } else {
-      ordersPaginator = await OrderService.all({ filter: filter }).paginate(
-        page,
-        limit
-      );
+    try {
+      const filters: any = {};
+      let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
+       
+      const perPage = 1;
+      const keyword = request.input("keyword");
+      filters.keyword = keyword;
+    
+     const orders = await OrderService.all({ filters });
+      const startIndex = (page - 1) * perPage;
+      const endIndex = Math.min(startIndex + perPage, orders.length);
+      const paginatedOrders = orders.slice(startIndex, endIndex);
+    
+      return view.render("user/order", {
+        orderItem: paginatedOrders,
+        pagination: orders,
+        total: orders.length,
+        perPage: perPage,
+        currentPage: parseInt(page),
+        lastPage: Math.ceil(orders.length / perPage),
+      });
+    } catch (error) {
+      console.log(error);
     }
-    orders = ordersPaginator.serialize();
-    const paginationLinks = await UrlService.getUrlsForRange(
-      1,
-      ordersPaginator.lastPage
-    );
-    return view.render("user/order", {
-      orderItem: orders,
-      pagination: ordersPaginator,
-      paginationLinks,
-      keyword,
-    });
+    
   }
-  catch(error) {
-    console.log(error);
-  }
-
   public async orderDetail({ view, params }: HttpContextContract) {
     try {
       const orderId = params.id;
