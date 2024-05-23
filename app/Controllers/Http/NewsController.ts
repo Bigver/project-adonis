@@ -86,7 +86,7 @@ export default class NewsController {
 
       if (File) {
         await uploadService.deleteFile(data.imgUrl);
-        data.imgUrl = `${fileName1}`;
+        data.imgUrl = `uploads/${fileName1}`;
       }
 
       await NewsService.create(data);
@@ -120,7 +120,7 @@ export default class NewsController {
 
       if (File) {
         await uploadService.deleteFile(data.imgUrl);
-        data.imgUrl = `${fileName1}`;
+        data.imgUrl = `/uploads/${fileName1}`;
       }
 
       await NewsService.update(id, data);

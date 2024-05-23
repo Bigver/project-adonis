@@ -1,5 +1,5 @@
 @layout('layout')
-@set('title', 'homepage')
+@set('title', 'interestingList')
 
 @section('body')
 @if ( access.pageAdmin == 'yes' )
@@ -49,12 +49,11 @@
                             <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0" rowspan="1" colspan="1" style="width: 120px;" aria-label="status: activate to sort column ascending">Status</th>
                             <th class="sorting_disabled dtr-hidden" rowspan="1" colspan="1" style="display: none;" aria-label="Actions">Actions</th>
                         </tr>
-                    </thead>
-            
+                    </thead>    
                     @each(item in items)
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td> <img src="/uploads/{{ item.img_url }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
+                        <td> <img src="/uploads/{{ item.imgUrl }}" alt="Product Image" style="width: 100px; height: 100px; object-fit:cover;  overflow: hidden; border-radius: 5px;"></td>
                         <td>{{ item.title }}</td>
                         <td>{{ item.description.length > 100 ? item.description.substr(0, 1000) + '...' : item.description }}</td>
                     

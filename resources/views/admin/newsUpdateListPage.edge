@@ -1,5 +1,5 @@
 @layout('layout')
-@set('title', 'homepage')
+@set('title', 'newsList')
 
 @section('body')
 @if ( access.pageAdmin == 'yes' )
@@ -56,7 +56,7 @@
                         <td>{{ item.id }}</td>
                         <td><a href="{{route('news.content', {id:item.id})}}" >{{ item.title }}</a></td>
                         <td>{{ item.description.length > 50 ? item.description.substr(0, 50) + '...' : item.description }}</td>
-                        <td><img src="{{ item.img_url }}" style="height: 60px; width: 95px;"></td>
+                        <td><img src="{{ item.imgUrl }}" style="height: 60px; width: 95px;"></td>
                         <td class="d-flex gap-1" >
                           <a href="{{route('news.update.page', {id:item.id})}}"  class="btn btn-xs bg-primary text-white">Edit</a>                      
                           <a href="{{route('news.delete', {id:item.id})}}" class="btn btn-xs bg-danger text-white" id="type-danger">Delete</a>

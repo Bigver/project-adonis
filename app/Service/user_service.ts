@@ -8,31 +8,27 @@ export default class UserService {
     let check = true
     if(!filters.keyword || filters.keyword == ""){
       check = false
-      filters.keyword = "all"
     }
-    const cachedUsers : any = await Cache.remember(`users_${filters.keyword}`, 60, async () => {
-      let users : any =  User.query()
-      if (check){
-        users
-        .where("username", "like", `%${filters.keyword}%`)
-        .orWhere("id", "like", `%${filters.keyword}%`)
-        .orWhere("email", "like", `%${filters.keyword}%`)
-      }
-      return users
-    })
-    return cachedUsers
+    // connection : 'read'
+    let users : any =  User.query({connection : 'mysqlRead'})
+    if (check){
+      users
+      .where("username", "like", `%${filters.keyword}%`)
+      .orWhere("id", "like", `%${filters.keyword}%`)
+      .orWhere("email", "like", `%${filters.keyword}%`)
+    }
+    return users
   }
-
-  public static async findByIdUser($id){
-    const cachedUsers = await Cache.remember('user', 60, async () => {
-      const user : any = await User.find($id)
-      return user.toJSON()
+6
+  public static async findByIdUser(id : Number){
+    const cachedUsers = await Cache.remember(`user:${id}`, 60, async () => {
+      const user : any = await User.find(id)
+      return user.serialize()
     })
     return cachedUsers
   }
 
   public static async createUser(data: any) {
-    await Cache.forget('users_all')
     const user = await User.create(data);
     return user;
   }
@@ -43,24 +39,21 @@ export default class UserService {
   }
 
   public static async updateUser(id: any, data: any, access: any) {
-    await Cache.forget('users_all')
-    await Cache.forget('user')
+    await Cache.forget(`user:${id}`)
 
     data.access = access;
     data.id = parseInt(id)
-
     const user = await User.find(id);
     return await user?.merge(data).save();
     }
 
   public static async updateProfile(id: any, data: any) {
-    await Cache.forget('user')
+    await Cache.forget(`user:${id}`)
     const user = await User.find(id);
     return await user?.merge(data).save();
   }
 
   public static async delete(id: any) {
-    await Cache.forget('users_all')
     const item = await User.findOrFail(id);
     return await item.delete();
   }

@@ -1,37 +1,30 @@
 import type { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import UrlService from "App/Service/get_url_service";
 import LogService from "App/Service/log_service";
 import OrderItemService from "App/Service/order_item_service";
 import OrderService from "App/Service/order_service";
 
 export default class OrdersController {
-  public async order({ view, request, auth }: HttpContextContract) {
+  public async order({ view, request ,auth }: HttpContextContract) {
     try {
-      const filter = {};
+      const filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
-      const limit = 10; // จำนวนรายการต่อหน้า
-      page = Math.max(page, 1);
-      let orders: any;
+       
+      const perPage = 10;
       const keyword = request.input("keyword");
-      let ordersPaginator: any;
-      if (keyword) {
-        ordersPaginator = await OrderService.searchOrders(keyword, page);
-      } else {
-        ordersPaginator = await OrderService.getOrderById({ filter: filter }).paginate(
-          page,
-          limit
-        );
-      }
-      orders = ordersPaginator.serialize();
-      const paginationLinks = await UrlService.getUrlsForRange(
-        1,
-        ordersPaginator.lastPage
-      );
+      filters.keyword = keyword;
+    
+     const orders = await OrderService.all({ filters });
+      const startIndex = (page - 1) * perPage;
+      const endIndex = Math.min(startIndex + perPage, orders.length);
+      const paginatedOrders = orders.slice(startIndex, endIndex);
+    
       return view.render("user/order", {
-        orderItem: orders,
-        pagination: ordersPaginator,
-        paginationLinks,
-        keyword,
+        orderItem: paginatedOrders,
+        pagination: orders,
+        total: orders.length,
+        perPage: perPage,
+        currentPage: parseInt(page),
+        lastPage: Math.ceil(orders.length / perPage),
       });
     } catch (error) {
       const { level, message, context } = {
@@ -53,7 +46,7 @@ export default class OrdersController {
       const orderId = params.id;
       const item = await OrderItemService.getItemById(orderId);
 
-      const orders = await OrderService.getOrderById({ filters: { id: orderId } });
+      const orders = await OrderService.all({ filters: { id: orderId } });
       const order = orders.map((item) => item.serialize());
 
       return view.render("user/orderDetail", { item, order });

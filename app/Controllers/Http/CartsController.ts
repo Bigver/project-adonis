@@ -15,8 +15,7 @@ export default class CartsController {
             }
             const carts = await CartItemsService.getCartByUser(user.id) //Items
             const cartItem = await CartService.findByUserId(user.id) //Cart
-            const item = await ProductService.all({ filter: filter })
-            const items = item.serialize()
+            const items = await ProductService.all({ filter: filter })
 
             const serializedCartItems = carts.map((item) => item.serialize());
             let total = 0;

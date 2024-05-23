@@ -42,10 +42,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @each(order in orderItem.data)
+              
+                    @each(order in orderItem)
                     <tr class="odd">
                         <td valign="top" class="dataTables_empty">{{order.id}}</td>
-                        <td>{{order.user_id}}</td>
+                        <td>{{order.userId}}</td>
                         <td>{{order.status}}</td>
                         <td>{{order.total}}</td>
                         <td>
@@ -60,41 +61,28 @@
                     @endeach
                 </tbody>
               </table>
-              <nav aria-label="Page navigation" class="mt-3">
-                <ul class="pagination justify-content-center">
-                  <li class="page-item ">
-                    @if (keyword)
-                    <div></div>
-                    @else
-                    <a class="page-link" href="{{ pagination.currentPage  === 1 ? '#' : `/admin/order?page=${pagination.currentPage - 1}` }}">Previous</a>
-                    @endif
-                  </li>
-            
-                  @if (keyword)
-                    <div></div>
-                    @else
-                    <li class="page-item"><a class="page-link">{{ pagination.currentPage }}</a></li>
-                    @endif
-              
-                  <li class="page-item">
-                    @if (keyword)
-                    <div></div>
-                    @else
-                    <a class="page-link" href="{{ pagination.currentPage === pagination.lastPage ? '#' : `/admin/order?page=${pagination.currentPage + 1}` }}">Next</a>
-                    @endif
-                  </li>
-                </ul>
-              </nav>   
-            {{--  Table Footer  --}}
-            <div class="row mx-2">
-                <div class="col-sm-12 col-md-6">
-                   
-                </div>
-
-                {{--  Prev Next  --}}
-
-                
-            </div>
+              <div class="w-100 d-flex justify-content-center">
+                <nav aria-label="Page navigation d.flex" style="justify-content-center" class="mt-3">
+                  <ul class="justify-content-center d.flex text-center">
+                    <div class="d-flex gap-3 align-items-center justify-content-center">
+                      <form id="searchForm" action="{{ route('order.page') }}" method="get" class="input-group">
+                        <input  name="page" class="form-control rounded" type="hidden" value="{{currentPage-1}}" placeholder="next" aria-describedby="search-addon" />
+                        @if (currentPage  === 1)
+                        <button class="btn-page btn-rounded" type="submit" disabled>Previous</i></button>
+                        @else 
+                        <button class="btn-page btn-primary rounded" type="submit">Previous</i></button>
+                        @endif
+                      </form>
+  
+                      <h5 class="mt-3">{{currentPage}}</h5>
+  
+                      <form id="searchForm" action="{{ route('order.page') }}" method="get" class="input-group">
+                        <input  name="page" class="form-control rounded" type="hidden" value="{{currentPage+1}}" placeholder="next" aria-describedby="search-addon" />
+                        @if (currentPage  === lastPage)
+                        <button class="btn-page btn-rounded" type="submit" disabled>Next Page</i></button>
+                        @else 
+                        <button class="btn-page btn-primary rounded" type="submit">Next Page</i></button>
+                        @endif
 
         </div>
     </div>

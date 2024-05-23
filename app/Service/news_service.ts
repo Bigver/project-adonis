@@ -9,7 +9,7 @@ export default class NewsService {
             check = false
 
         }
-        let item: any = News.query()
+        let item: any = News.query({connection : 'mysqlRead'})
         if (check) {
             item
                 .where("title", "like", `%${filters.keyword}%`)
@@ -24,6 +24,14 @@ export default class NewsService {
         const item = await News.create(data);
         return item.serialize();
 
+    }
+
+    public static async findById(id: number) {
+        const cachedNews = await Cache.remember(`news:${id}`, 60, async () => {
+            const news: any = await News.find(id)
+            return news.serialize();
+        });
+        return cachedNews;
     }
 
     static async update(id: number, data: any) {
@@ -42,7 +50,6 @@ export default class NewsService {
     }
 
     static async delete(id: any) {
-        await Cache.forget('news_all');
         const item = await News.findOrFail(id);
         return await item.delete();
     }
@@ -50,15 +57,4 @@ export default class NewsService {
     public static async getShowNews() {
         return await News.query().where("status", "show").exec();
     }
-
-    public static async findById(id: number) {
-        const cachedNews = await Cache.remember(`news:${id}`, 60, async () => {
-            const news: any = await News.find(id)
-            return news.serialize();
-        });
-        return cachedNews;
-    }
-
-
-
 }

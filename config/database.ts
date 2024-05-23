@@ -33,6 +33,30 @@ const databaseConfig: DatabaseConfig = {
     | npm i mysql2
     |
     */
+    mysqlWrite: {
+      client: 'mysql2',
+      connection: {
+        host: Env.get('MYSQL_WRITE_HOST'),
+        port: Env.get('MYSQL_PORT'),
+        user: Env.get('MYSQL_USER'),
+        password: Env.get('MYSQL_PASSWORD', ''),
+        database: Env.get('MYSQL_DB_NAME'),
+      },
+      healthCheck: false,
+      debug: false,
+    },
+    mysqlRead: {
+      client: 'mysql2',
+      connection: {
+        host: Env.get('MYSQL_READ_HOST'),
+        port: Env.get('MYSQL_PORT'),
+        user: Env.get('MYSQL_USER'),
+        password: Env.get('MYSQL_PASSWORD', ''),
+        database: Env.get('MYSQL_DB_NAME'),
+      },
+      healthCheck: false,
+      debug: false,
+    },
     mysql: {
       client: 'mysql2',
       connection: {

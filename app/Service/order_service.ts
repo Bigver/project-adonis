@@ -3,9 +3,29 @@ import CartItem from "App/Models/CartItem"
 import Order from "App/Models/Order"
 import OrderItem from "App/Models/OrderItem"
 import _ from "lodash";
+import Cache from '@ioc:Adonis/Addons/Cache'
 
 export default class OrderService {
-    public static getOrderById({ filters = {} }: any) {
+    public static async all({ filters = {} }: any) {
+        let check = true
+        if(!filters.keyword || filters.keyword == ""){
+          check = false
+        }
+        // connection : 'read'
+        let orders : any =  Order.query({connection : 'mysqlRead'})
+
+        if (_.result(filters, 'id')) {
+            orders.where('id', filters.id)
+        }
+        
+        if (check){
+          orders
+          .orWhere("id", "like", `%${filters.keyword}%`)
+        }
+        return orders
+      }
+
+      public static getOrderById({ filters = {} }: any) {
         const item = Order.query()
         if (_.result(filters, 'id')) {
             item.where('id', filters.id)
@@ -14,13 +34,13 @@ export default class OrderService {
         return item
     }
 
-    public static async searchOrders(keyword: any, page: any) {
-        const newsPaginator = await Order.query()
-            .where('user_id', 'like', `%${keyword}%`)
-            .orWhere('id', 'like', `%${keyword}%`).paginate(page)
-        return newsPaginator;
+    public static async findById(id : Number){
+    const cachedUsers = await Cache.remember(`order:${id}`, 60, async () => {
+        const order : any = await Order.find(id)
+        return order.serialize()
+    })
+    return cachedUsers
     }
-
     public static async create(data: any) {
         try {
             const item = await Order.create(data)

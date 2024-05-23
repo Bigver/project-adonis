@@ -1,30 +1,36 @@
-import Cart from "App/Models/Cart"
-import _ from 'lodash'
+import Cart from "App/Models/Cart";
+import _ from "lodash";
 
 export default class CartService {
-    public static async all({ filters = {} }: any) {
-        const item = Cart.query()
-        if (_.result(filters, 'id')) {
-            item.where('id', filters.id)
-        }
-        return item
+  public static async all({ filters = {} }: any) {
+    const item = Cart.query();
+    if (_.result(filters, "id")) {
+      item.where("id", filters.id);
     }
+    return item;
+  }
 
-    public static async findByUserId(userId: number) { // Cart
-        return await Cart.query().where('userId', userId).first();
-    }
+  public static async findByUserId(userId: number) {
+    // Cart
+    return await Cart.query().where("userId", userId).first();
+  }
 
-    public static async create(data: any) {
-        const item = await Cart.query()
-            .where('userId', data.userId)
-            .first();
-        if (item) {
-            item.merge(data);
-            await item.save();
-            return item;
-        } else {
-            const newItem = await Cart.create(data);
-            return newItem;
-        }
+  public static async create(data: any) {
+    const item = await Cart.query().where("userId", data.userId).first();
+    if (item) {
+      item.merge(data);
+      await item.save();
+      return item;
+    } else {
+      const newItem = await Cart.create(data);
+      return newItem;
     }
+  }
+
+  public static async deleteCart() {
+    const carts = await Cart.query()
+      .where("created_at", "<", new Date(Date.now() - 15 * 24 * 60 * 60 * 1000))
+      .delete();
+    return carts;
+  }
 }

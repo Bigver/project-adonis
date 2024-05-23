@@ -6,7 +6,9 @@
     "@adonisjs/repl/build/commands",
     "@adonisjs/lucid/build/commands",
     "@adonisjs/bouncer/build/commands",
-    "@melchyore/adonis-cache/build/commands"
+    "@melchyore/adonis-cache/build/commands",
+    "adonis5-scheduler/build/commands",
+    "@rocketseat/adonis-bull/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -30,7 +32,9 @@
     "@adonisjs/auth",
     "@adonisjs/bouncer",
     "@adonisjs/redis",
-    "@melchyore/adonis-cache"
+    "@melchyore/adonis-cache",
+    "adonis5-scheduler",
+    "@rocketseat/adonis-bull"
   ],
   "metaFiles": [
     {

@@ -1,5 +1,5 @@
 @layout('layout')
-@set('title', 'Update')
+@set('title', 'newsUpdate')
 
 @section('body')
 @if ( access.pageAdmin == 'yes' )
@@ -42,12 +42,12 @@
                   class="form-control"
                   id="ecommerce-product-name"
                   placeholder="URL"
-                  value="{{news.imgUrl}}"
+                  value="{{news.img_url}}"
                   name="imgUrl"
                   aria-label="imgUrl" />
                   <input type="file" class="form-control" name="imagefile1" accept="image/*">
               </div>
-              <img src="{{news.imgUrl}}" alt="" class="w-25 h-25">
+              <img src="{{news.img_url}}" alt="" class="w-25 h-25">
 
             <div class="mb-3">
               <label class="form-label" for="ecommerce-product-name">Description</label>

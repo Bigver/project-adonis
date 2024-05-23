@@ -80,7 +80,7 @@
                       <form id="searchForm" action="{{ route('admin.user') }}" method="get" class="input-group page-item">
                         <input  name="page" class="form-control rounded" type="hidden" value="{{currentPage-1}}" placeholder="next" aria-describedby="search-addon" />
                         @if (currentPage  === 1)
-                        <button class="btn-page btn-primary rounded" type="submit" disabled>Previous</i></button>
+                        <button class="btn-page btn-rounded" type="submit" disabled>Previous</i></button>
                         @else 
                         <button class="btn-page btn-primary rounded" type="submit">Previous</i></button>
                         @endif
@@ -91,7 +91,7 @@
                       <form id="searchForm" action="{{ route('admin.user') }}" method="get" class="input-group">
                         <input  name="page" class="form-control rounded" type="hidden" value="{{currentPage+1}}" placeholder="next" aria-describedby="search-addon" />
                         @if (currentPage  === lastPage)
-                        <button class="btn-page btn-primary rounded" type="submit" disabled>Next Page</i></button>
+                        <button class="btn-page btn-rounded" type="submit" disabled>Next Page</i></button>
                         @else 
                         <button class="btn-page btn-primary rounded" type="submit">Next Page</i></button>
                         @endif

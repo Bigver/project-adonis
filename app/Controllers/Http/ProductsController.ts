@@ -134,7 +134,7 @@ export default class ProductsController {
       }
       await LogService.create(level, message, context);
       error = "Failed to update product data"
-      return view.render('error', { error, url })
+      return view.render('error', { error })
     }
   }
 

@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 export default class CartItemsService {
     public static getItemById(filters?: any) { // 
-        let query = CartItem.query();
+        let query = CartItem.query({connection : 'mysqlRead'});
         if (filters && filters.id) {
             query = query.where('id', '=', filters.id);
         }
@@ -11,7 +11,7 @@ export default class CartItemsService {
     }
 
     public static async getCartByUser(userId: number) { // Cart Items
-        const cartItem = await CartItem.query()
+        const cartItem = await CartItem.query({connection : 'mysqlRead'})
             .whereHas('cart', (query) => {
                 query.where('userId', userId);
             })

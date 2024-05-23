@@ -9,7 +9,7 @@ export default class interestingsService {
       check = false
     }
 
-    let item: any = Interesting.query()
+    let item: any = Interesting.query({connection : 'mysqlRead'})
     if (check) {
       item
         .where("title", "like", `%${filters.keyword}%`)
@@ -21,9 +21,7 @@ export default class interestingsService {
   }
 
   static async create(data: any) {
-
     const item = await Interesting.create(data);
-
     return item.serialize;
 
   }
@@ -36,7 +34,6 @@ export default class interestingsService {
 
 
   static async delete(id: any) {
-    await Cache.forget('interstings_all')
     const item = await Interesting.findOrFail(id);
     return await item.delete();
   }
@@ -51,6 +48,8 @@ export default class interestingsService {
     })
     return cachedInteresting
   }
+
+  
   static async updateStatus(id: number, data: any) {
     const value = {
       status: data.status
