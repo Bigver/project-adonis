@@ -46,18 +46,9 @@ export default class UsersController {
       await UserService.updateUser(id, userData, access);
       return response.redirect().toRoute("admin.user");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to update user",
-        context: {
-          username: request.input('username'),
-          email: request.input('email'),
-          password: request.input('password'),
-          access: request.input('access'),
-          role: request.input('role')
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to update user"
       return view.render('error', { error })
     }
@@ -70,14 +61,9 @@ export default class UsersController {
       await UserService.updateProfile(id, userData);
       return response.redirect().toRoute("admin.user");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open user profile",
-        context: {
-          ID: params.id
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open user profile"
       return view.render('error', { error })
     }
@@ -88,14 +74,9 @@ export default class UsersController {
       await UserService.delete(params.id);
       return response.redirect("back");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to delete user",
-        context: {
-          ID: params.id
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to delete user"
       return view.render('error', { error })
     }
@@ -129,7 +110,7 @@ export default class UsersController {
     return response.redirect().toRoute("page.login");
   }
 
-  public async userAdmin({ view, request, auth }: HttpContextContract) {
+  public async userAdmin({ view, request }: HttpContextContract) {
     try {
       let filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
@@ -153,14 +134,9 @@ export default class UsersController {
         lastPage: Math.ceil(users.length / perPage),
       });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open user list page",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open user list page"
       return view.render('error', { error })
     }
@@ -172,14 +148,9 @@ export default class UsersController {
       const users: any = await UserService.findByIdUser(id);
       return view.render("admin/userUpdatePage", { users });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open user update page",
-        context: {
-          userId: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open user update page"
       return view.render('error', { error })
     }

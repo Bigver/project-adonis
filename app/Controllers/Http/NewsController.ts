@@ -4,7 +4,7 @@ import NewsService from "App/Service/news_service";
 import uploadService from "App/Service/uploads_service";
 
 export default class NewsController {
-  public async newsUpdateList({ view, request, auth }: HttpContextContract) {
+  public async newsUpdateList({ view, request }: HttpContextContract) {
     try {
       const filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
@@ -26,50 +26,35 @@ export default class NewsController {
         lastPage: Math.ceil(news.length / perPage),
       });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open news list page",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open news list page"
       return view.render('error', { error })
     }
   }
 
-  public async newsAdmin({ view, auth }: HttpContextContract) {
+  public async newsAdmin({ view }: HttpContextContract) {
     try {
       return view.render("admin/newsPage");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open admin news page",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open admin news page"
       return view.render('error', { error })
     }
   }
 
 
-  public async newsPage({ view, auth }: HttpContextContract) {
+  public async newsPage({ view }: HttpContextContract) {
     try {
       const news = await NewsService.getShowNews();
       return view.render("user/newsPage", { news });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open news page",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open news page"
       return view.render('error', { error })
     }
@@ -92,17 +77,9 @@ export default class NewsController {
       await NewsService.create(data);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to add news page",
-        context: {
-          title: request.input('title'),
-          description: request.input('description'),
-          img: request.input('imgUrl'),
-          content: request.input('content'),
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to add news page"
       return view.render('error', { error })
     }
@@ -126,17 +103,9 @@ export default class NewsController {
       await NewsService.update(id, data);
       return response.redirect().toRoute("news.update.list");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to update news page",
-        context: {
-          title: request.input('title'),
-          description: request.input('description'),
-          img: request.input('imgUrl'),
-          content: request.input('content')
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to update news page"
       return view.render('error', { error })
     }
@@ -149,14 +118,9 @@ export default class NewsController {
       const item = items[0];
       return view.render("user/newsContent", { item });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open user news page",
-        context: {
-          ID: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open user news page"
       return view.render('error', { error })
     }
@@ -169,14 +133,9 @@ export default class NewsController {
       const news: any = await NewsService.findById(id);
       return view.render("admin/newsUpdatePage", { news });
     } catch (error) {
-      const { level, message, context } = {
-        level: "debug",
-        message: "Failed to open edit news page",
-        context: {
-          ID: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open open edit news page"
     }
   }
@@ -186,14 +145,9 @@ export default class NewsController {
       await NewsService.delete(params.id);
       return response.redirect().toRoute("news.update.list");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to delete page",
-        context: {
-          ID: params.id
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to delete page"
       return view.render('error', { error })
     }
@@ -218,60 +172,11 @@ export default class NewsController {
       await NewsService.updateStatus(id, news);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to toggle status page",
-        context: {
-          ID: params.id
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to toggle status page"
       return view.render('error', { error })
     }
   }
-
-
-  //   public async newsUpdatePage({ params, view }: HttpContextContract) {
-  //   try {
-  //     const filter = {};
-  //     const news = await NewsService.all({ filter: filter }).paginate(1, 10);
-  //     const serializedNews = news.serialize();
-  //     const item = await NewsService.all({ filters: { id: params.id } });
-  //     const items = item[0];
-  //     return view.render("admin/newsUpdatePage", {
-  //       news: items,
-  //       items: serializedNews,
-  //     });
-  //   } catch (error) {
-  //     const { level, message, context } = {
-  //       level: "warn",
-  //       message: "Failed to open update news page",
-  //       context: {
-  //         ID: params.id
-  //       }
-  //     };
-  //     await LogService.create(level, message, context);
-  //     error = "Failed to open update news page"
-  //     return view.render('error', { error })
-  //   }
-  // }
-
-  // public async updateNewsPage({ view,auth }: HttpContextContract) {
-  //   try {
-  //     return view.render("admin/newsUpdatePage");
-  //   } catch(error) {
-  //     const { level, message, context } = {
-  //       level: "warn",
-  //       message: "Failed to open update news page",
-  //       context: {
-  //         ID: auth.user?.id
-  //       }
-  //     };
-  //     await LogService.create(level, message, context);
-  //     error = "Failed to open update news page"
-  //     return view.render('error', { error })
-  //   }
-  // }
-
 }

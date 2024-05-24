@@ -31,7 +31,9 @@
         <a href="{{route('order.page')}}">
             <button class="btn btn-dark delete-order waves-effect">Back</button>
         </a>
-        <button class="btn btn-danger delete-order waves-effect">Delete Order</button>
+        <a href="{{route('order.delete',{id:order.id})}}">
+          <button class="btn btn-danger delete-order waves-effect">Delete Order</button>
+        </a>
       </div>
     </div>
 

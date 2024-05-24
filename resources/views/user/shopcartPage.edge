@@ -34,7 +34,7 @@
                           <div class="d-inline-flex p-2">
                             <div>
                               <div class="w-px-150 h-px-150 mb-3 me-1">
-                                <img src="{{product.img_product}}" alt="google home" class="w-px-150 h-px-100 mb-3">
+                                <img src="{{product.img_product}}" alt="google home" class="w-px-150 h-px-100 mb-3" style="object-fit:scale-down">
                               </div>
                               <div class="w-px-150 h-px-40">
                                 <form action="{{route('add.cart')}}" method="post" style="text-align:center">
@@ -94,7 +94,7 @@
                     <div class="cart_container w-px-700">
                       <div class="d-inline-flex justify-content-between">
 
-                        <img src="{{cart.product.img_product}}" height="150px" width="180px">
+                        <img src="{{cart.product.img_product}}" height="150px" width="180px" style="object-fit:scale-down">
 
                         <div class="ms-4 w-px-250" style="border: 1px solid gray;padding: 20px;">
                           <h6 class="mb-0">{{cart.product.product_name}}</h6>

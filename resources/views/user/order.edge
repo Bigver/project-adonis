@@ -56,6 +56,10 @@
                                 <a href="{{route('order.change.status', {id: order.id, status: order.status})}}">
                                     <button class="btn btn-warning waves-effect">Switch State</button>
                                 </a>
+                                <a href="{{route('order.delete', {id: order.id})}}">
+                                    <button class="btn btn-danger waves-effect">Delete</button>
+                                </a>
+
                         </td>
                     </tr>
                     @endeach

@@ -69,6 +69,7 @@ Route.group(() => {
     Route.get('/order/', 'OrderController.order').as('order.page')
     Route.get('/order/:id', 'OrderController.orderDetail').as('order.detail')
     Route.get('/orderChangeStatus/:id', 'OrderController.changeStatusOrder').as('order.change.status')
+    Route.get('/order/delete/:id', 'OrderController.delete').as('order.delete')
 
 }).prefix('admin').middleware('auth').middleware('authCheck')
 

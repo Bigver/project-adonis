@@ -27,7 +27,11 @@ export default class InterestingsController {
         lastPage: Math.ceil(interestings.length / perPage),
       });
     } catch (error) {
-      console.log(error);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message)
+      error = "Failed to open show interesting page"
+      return view.render('error', { error })
     }
   }
 
@@ -52,21 +56,9 @@ export default class InterestingsController {
       await interestingsService.create(data);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to add data in interesting page",
-        context: {
-          img1: request.file("imagefile1", {
-            size: "2mb",
-            extnames: ["jpg", "png", "gif"],
-          }),
-          title: request.input('title'),
-          description: request.input('description'),
-          imgUrl: request.input('imgUrl'),
-          content: request.input('content'),
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to add data in interesting page"
       return view.render('error', { error })
     }
@@ -86,21 +78,9 @@ export default class InterestingsController {
       await interestingsService.update(id, data);
       return response.redirect().toRoute('showInteresting')
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to add data in interesting page",
-        context: {
-          img1: request.file("imagefile1", {
-            size: "2mb",
-            extnames: ["jpg", "png", "gif"],
-          }),
-          title: request.input('title'),
-          description: request.input('description'),
-          imgUrl: request.input('imgUrl'),
-          content: request.input('content'),
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to add data in interesting page"
       return view.render('error', { error })
     }
@@ -111,14 +91,10 @@ export default class InterestingsController {
       const inter: any = await interestingsService.findById(id);
       return view.render("admin/interestingUpdatePage", { inter });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to edit data in interesting page",
-        context: {
-          ID: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+
+      await LogService.create(level, message);
       error = "Failed to edit data in interesting page"
       return view.render('error', { error })
     }
@@ -129,14 +105,9 @@ export default class InterestingsController {
       await interestingsService.delete(params.id);
       return response.redirect("back");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to delete page",
-        context: {
-          ID: params.id
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to delete page"
       return view.render('error', { error })
     }
@@ -161,14 +132,9 @@ export default class InterestingsController {
       await interestingsService.updateStatus(id, interesting);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to toggle status page",
-        context: {
-          ID: params.id
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to toggle status page"
       return view.render('error', { error })
     }

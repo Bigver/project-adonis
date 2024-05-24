@@ -25,14 +25,9 @@ export default class CartsController {
 
             return view.render("user/shopcartPage", { user: user, items, cartData: carts, total, cartItem });
         } catch (error) {
-            const { level, message, context } = {
-                level: "warn",
-                message: "Failed to open Shop Cart page",
-                context: {
-                    userId: auth.user?.id
-                }
-            };
-            await LogService.create(level, message, context);
+            const message = error.message || JSON.stringify(error);
+            const level = "warn"
+            await LogService.create(level, message);
             error = "Failed to open Shop Cart page"
             return view.render('error', { error })
         }
@@ -58,16 +53,9 @@ export default class CartsController {
             await CartItemsService.create(detail);
             return response.redirect().back()
         } catch (error) {
-            const { level, message, context } = {
-                level: "warn",
-                message: "Add cart failed",
-                context: {
-                    userId: request.input('userId'),
-                    productId: request.input('productId'),
-                    quantity: request.input('quantity')
-                }
-            };
-            await LogService.create(level, message, context);
+            const message = error.message || JSON.stringify(error);
+            const level = "warn"
+            await LogService.create(level, message);
             error = "add cart failed"
             return view.render('error', { error })
         }
@@ -78,16 +66,12 @@ export default class CartsController {
             await CartItemsService.increaseProduct(params.id)
             return response.redirect().back()
         } catch (error) {
-            const { level, message, context } = {
-                level: "warn",
-                message: "failed to increse product quantity",
-                context: {
-                    params: params.id
-                }
-            }
-            await LogService.create(level, message, context);
+            const message = error.message || JSON.stringify(error);
+            const level = "warn"
+            await LogService.create(level, message);
             error = "failed to increse product quantity"
             return view.render('error', { error })
         }
     }
 }
+

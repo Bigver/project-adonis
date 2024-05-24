@@ -3,10 +3,23 @@ import _ from "lodash";
 import Cache from '@ioc:Adonis/Addons/Cache'
 
 export default class HomeService {
-  public static async findById(id : number){
+  public static async findById(id: number) {
     const cachedUsers = await Cache.remember(`home:${id}`, 60, async () => {
       // ถ้าไม่มีข้อมูลใน Cache ให้ดึงข้อมูลจาก MySQL
-      const home : any = await Home.find(id)
+      const home: any = await Home.find(id)
+      if (!home) {
+        const data = {
+          keyvisual_img_url: 'keyvisual_img_url',
+          slideshow1_img_url: 'slideshow1_img_url',
+          slideshow2_img_url: 'slideshow2_img_url',
+          slideshow3_img_url: 'slideshow3_img_url',
+          slideshow1_video_url: 'slideshow1_video_url',
+          slideshow2_video_url: 'slideshow2_video_url',
+          slideshow3_video_url: 'slideshow3_video_url',
+          home_messages: 'home_message'
+        }
+        await HomeService.create(data);
+      }
       // จัดเก็บข้อมูลใน Cache
       return home.serialize()
     })

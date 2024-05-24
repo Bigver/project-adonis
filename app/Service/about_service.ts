@@ -3,10 +3,20 @@ import _ from "lodash";
 import Cache from '@ioc:Adonis/Addons/Cache'
 
 export default class AboutService {
-  public static async findById(id : number){
+  public static async findById(id: number) {
     const cachedUsers = await Cache.remember(`about:${id}`, 60, async () => {
       // ถ้าไม่มีข้อมูลใน Cache ให้ดึงข้อมูลจาก MySQL
-      const about : any = await About.find(id)
+      const about: any = await About.find(id)
+      if (!about) {
+        const data = {
+          img1: 'img1',
+          img2: 'img2',
+          img3: 'img3',
+          title: 'title',
+          detail: 'detail'
+        };
+        await AboutService.createAbout(data);
+      }
       // จัดเก็บข้อมูลใน Cache
       return about.serialize()
     })

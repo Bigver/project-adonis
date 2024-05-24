@@ -11,6 +11,6 @@ export default class DeleteCart extends BaseTask {
   }
 
   public async handle() {
-    Bull.add('DeleteCart',{data: 'schedule ทำงาน'})
+    Bull.add('DeleteCart', { data: 'schedule ทำงาน' })
   }
 }

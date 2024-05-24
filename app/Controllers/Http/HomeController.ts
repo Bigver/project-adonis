@@ -9,7 +9,7 @@ export default class HomeController {
     return view.render("admin/homeAdmin", { home: homeData });
   }
 
-  async update({ request, response , view }: HttpContextContract) {
+  async update({ request, response, view }: HttpContextContract) {
     try {
       let homeData: any = await HomeService.findById(1);
       const File1 = request.file("imagefile1", {
@@ -60,41 +60,16 @@ export default class HomeController {
       }
       await HomeService.createHome(home);
       return response.redirect("back");
-    } 
+    }
     catch (error) {
-    
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to update home page data",
-        context: {
-          img1: request.file("imagefile1", {
-            size: "2mb",
-            extnames: ["jpg", "png", "gif"],
-          }),
-          img2: request.file("imagefile2", {
-            size: "2mb",
-            extnames: ["jpg", "png", "gif"],
-          }),
-          img4: request.file("imagefile4", {
-            size: "2mb",
-            extnames: ["jpg", "png", "gif"],
-          }),
-          keyvisual_img_url: request.input('keyvisual_img_url'),
-          slideshow1_img_url: request.input('slideshow1_img_url'),
-          slideshow1_video_url: request.input('slideshow1_video_url'),
-          slideshow2_img_url: request.input('slideshow2_img_url'),
-          slideshow2_video_url: request.input('slideshow2_video_url'),
-          slideshow3_img_url: request.input('slideshow3_img_url'),
-          slideshow3_video_url: request.input('slideshow3_video_url'),
-          home_messages: request.input('home_messages'),
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to add contact page data"
       return view.render('error', { error })
-      }
     }
   }
+}
 
 
 

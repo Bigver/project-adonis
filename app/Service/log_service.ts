@@ -1,14 +1,7 @@
-import Log from 'App/Models/Log'
+import Bull from "@ioc:Rocketseat/Bull";
 
 export default class LogService {
-    public static async create(level: string, message: string, context: any) {
-        await Log.create({
-            level,
-            message,
-            context: JSON.stringify(context),
-        })
+    public static create(level: string, message: string) {
+        Bull.add('LogJob', { level, message }, { removeOnComplete: true, removeOnFail: true })
     }
-
 }
-
-

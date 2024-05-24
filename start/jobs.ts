@@ -1,5 +1,5 @@
 const jobs = [
-  'App/Jobs/DeleteCart',
+  'App/Jobs/LogJob',
 ]
 
 export default jobs

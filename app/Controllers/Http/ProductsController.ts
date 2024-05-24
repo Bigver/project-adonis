@@ -56,19 +56,9 @@ export default class ProductsController {
       await ProductService.createProduct(productData);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to add product data",
-        context: {
-          product_name: request.input('product_name'),
-          price_product: request.input('price_product'),
-          detail_product: request.input('detail_product'),
-          img_product: request.input('img_product'),
-          img2_product: request.input('img2_product'),
-          img3_product: request.input('img3_product')
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to add product data"
       return view.render('error', { error })
     }
@@ -120,19 +110,9 @@ export default class ProductsController {
       await ProductService.updateProduct(id, productData);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to update product data",
-        context: {
-          product_name: request.input('product_name'),
-          price_product: request.input('price_product'),
-          detail_product: request.input('detail_product'),
-          img_product: request.input('img_product'),
-          img2_product: request.input('img2_product'),
-          img3_product: request.input('img3_product')
-        }
-      }
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to update product data"
       return view.render('error', { error })
     }
@@ -144,14 +124,9 @@ export default class ProductsController {
       let product = await ProductService.findById(id)
       return view.render("admin/updateProductPage", { product });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open update product page",
-        context: {
-          ID: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open update product page"
       return view.render('error', { error })
     }
@@ -163,14 +138,9 @@ export default class ProductsController {
       const product = await ProductService.findById(id);
       return view.render("admin/productUpdatePage", { product, productId: id });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open edit product page",
-        context: {
-          ID: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open edit product page"
       return view.render('error', { error })
     }
@@ -181,20 +151,15 @@ export default class ProductsController {
       await ProductService.delete(params.id);
       return response.redirect("back");
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open delete product",
-        context: {
-          ID: params.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open delete product"
       return view.render('error', { error })
     }
   }
 
-  async listProduct({ request, view, auth }: HttpContextContract) {
+  async listProduct({ request, view }: HttpContextContract) {
     try {
       const filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
@@ -218,14 +183,9 @@ export default class ProductsController {
         lastPage: Math.ceil(products.length / perPage),
       });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open list product",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      LogService.create(level, message);
       error = "Failed to open list product"
       return view.render('error', { error })
     }

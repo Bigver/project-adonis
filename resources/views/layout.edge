@@ -113,7 +113,7 @@
 
           <ul class="menu-inner py-1">
             <!-- Page -->
-            <li class="menu-item active">
+            <li class="menu-item ">
               <a href="{{route('admin.dashboard')}}" class='menu-link'>
                 <i class="menu-icon tf-icons ti ti-smart-home"></i>
                 <div>DashBoard</div>
@@ -360,6 +360,27 @@
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
+    <script>
+      // เพิ่มคลาส "active" ให้กับเมนูที่ตรงกับ URL ปัจจุบัน
+      function setActiveMenu() {
+        const currentUrl = window.location.href;
+    
+        // เลือกเมนูทั้งหมด
+        const menuItems = document.querySelectorAll('.menu-item');
+    
+        // ตรวจสอบ URL และเพิ่มคลาส "active" ให้กับเมนูที่ตรงกับ URL ปัจจุบัน
+        menuItems.forEach(item => {
+          const menuLink = item.querySelector('.menu-link');
+          if (menuLink && menuLink.href === currentUrl) {
+            item.classList.add('active');
+          }
+        });
+      }
+    
+      // เรียกใช้ setActiveMenu เมื่อหน้าโหลดเสร็จ
+      window.addEventListener('DOMContentLoaded', setActiveMenu);
+    </script>
+    
 
     
     <script src="/assets/vendor/libs/jquery/jquery.js"></script>

@@ -4,20 +4,20 @@ import OrderItemService from "App/Service/order_item_service";
 import OrderService from "App/Service/order_service";
 
 export default class OrdersController {
-  public async order({ view, request ,auth }: HttpContextContract) {
+  public async order({ view, request }: HttpContextContract) {
     try {
       const filters: any = {};
       let page = request.input("page", 1); // รับค่าหน้าปัจจุบันจาก request
-       
+
       const perPage = 10;
       const keyword = request.input("keyword");
       filters.keyword = keyword;
-    
-     const orders = await OrderService.all({ filters });
+
+      const orders = await OrderService.all({ filters });
       const startIndex = (page - 1) * perPage;
       const endIndex = Math.min(startIndex + perPage, orders.length);
       const paginatedOrders = orders.slice(startIndex, endIndex);
-    
+
       return view.render("user/order", {
         orderItem: paginatedOrders,
         pagination: orders,
@@ -27,21 +27,16 @@ export default class OrdersController {
         lastPage: Math.ceil(orders.length / perPage),
       });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Can't open order page",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open order page"
       return view.render('error', { error })
     }
   }
 
 
-  public async orderDetail({ view, params, auth }: HttpContextContract) {
+  public async orderDetail({ view, params }: HttpContextContract) {
     try {
       const orderId = params.id;
       const item = await OrderItemService.getItemById(orderId);
@@ -51,14 +46,9 @@ export default class OrdersController {
 
       return view.render("user/orderDetail", { item, order });
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Failed to open order detail page",
-        context: {
-          userId: auth.user?.id
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "Failed to open order detail page"
       return view.render('error', { error })
     }
@@ -79,14 +69,9 @@ export default class OrdersController {
 
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "Check out failed",
-        context: {
-          userId: request.input('userId'),
-        }
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "check out failed"
       return view.render('error', { error })
     }
@@ -97,13 +82,23 @@ export default class OrdersController {
       await OrderService.changeStatus(params.id);
       return response.redirect().back();
     } catch (error) {
-      const { level, message, context } = {
-        level: "warn",
-        message: "change status failed",
-        context: {}
-      };
-      await LogService.create(level, message, context);
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
       error = "change status failed"
+      return view.render('error', { error })
+    }
+  }
+
+  async delete({ response, params, view }: HttpContextContract) {
+    try {
+      await OrderService.delete(params.id);
+      return response.redirect().back()
+    } catch (error) {
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      await LogService.create(level, message);
+      error = "Failed to delete orders"
       return view.render('error', { error })
     }
   }

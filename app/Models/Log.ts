@@ -10,6 +10,4 @@ export default class Log extends BaseModel {
   @column()
   public message: string
 
-  @column()
-  public context: string
 }

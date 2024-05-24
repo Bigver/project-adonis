@@ -8,7 +8,6 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('level')
       table.text('message')
-      table.json('context')
       table.timestamp('created_at', { useTz: true }).defaultTo(this.now())
     })
   }
