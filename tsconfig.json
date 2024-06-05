@@ -39,7 +39,8 @@
       "@adonisjs/redis",
       "@melchyore/adonis-cache",
       "adonis5-scheduler",
-      "@rocketseat/adonis-bull"
+      "@rocketseat/adonis-bull",
+      "@adonisjs/ally"
     ]
   }
 }

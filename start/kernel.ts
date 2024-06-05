@@ -43,6 +43,7 @@ Server.middleware.register([
 |
 */
 Server.middleware.registerNamed({
+  passwordCheck: () => import("App/Middleware/CheckPasswordUpdate"),
   auth: () => import("App/Middleware/Auth"),
   authCheck: () => import("App/Middleware/AuthCheck"),
 })

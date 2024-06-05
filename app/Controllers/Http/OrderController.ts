@@ -29,26 +29,29 @@ export default class OrdersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open order page"
       return view.render('error', { error })
     }
   }
 
 
-  public async orderDetail({ view, params }: HttpContextContract) {
+  public async orderDetail({ view, params, auth }: HttpContextContract) {
     try {
       const orderId = params.id;
       const item = await OrderItemService.getItemById(orderId);
+      const count = item ? item.length : 0;
 
       const orders = await OrderService.all({ filters: { id: orderId } });
       const order = orders.map((item) => item.serialize());
 
-      return view.render("user/orderDetail", { item, order });
+      const user = auth.user?.serialize()
+
+      return view.render("user/orderDetail", { item, order, user, count });
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open order detail page"
       return view.render('error', { error })
     }
@@ -71,7 +74,7 @@ export default class OrdersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "check out failed"
       return view.render('error', { error })
     }
@@ -84,7 +87,7 @@ export default class OrdersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "change status failed"
       return view.render('error', { error })
     }
@@ -97,7 +100,7 @@ export default class OrdersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to delete orders"
       return view.render('error', { error })
     }

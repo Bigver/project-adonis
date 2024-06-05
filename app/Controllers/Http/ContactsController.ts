@@ -12,7 +12,7 @@ export default class ContactsController {
       const message = error.message || JSON.stringify(error)
       const level = 'error'
 
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Fail to get contact admin page"
       return view.render('error', { error })
     }
@@ -49,7 +49,7 @@ export default class ContactsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to add contact page data"
       return view.render('error', { error })
     }

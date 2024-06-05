@@ -9,7 +9,7 @@ export default class User extends BaseModel {
   @column()
   public username: string
 
-  
+
   @column()
   public email: string
 
@@ -24,7 +24,13 @@ export default class User extends BaseModel {
   public rememberMeToken: string | null
 
   @column()
-  declare role: 'admin' | 'user'  
+  declare role: 'admin' | 'user'
+
+  @column()
+  public loginMethod: 'normal' | 'facebook' | 'google' | 'twitter'
+
+  @column()
+  public passwordUpdated: boolean
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -33,7 +39,7 @@ export default class User extends BaseModel {
   public updatedAt: DateTime
 
   @beforeSave()
-  public static async hashPassword (user: User) {
+  public static async hashPassword(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
     }

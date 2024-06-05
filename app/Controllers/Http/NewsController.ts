@@ -28,7 +28,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open news list page"
       return view.render('error', { error })
     }
@@ -40,7 +40,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open admin news page"
       return view.render('error', { error })
     }
@@ -54,7 +54,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open news page"
       return view.render('error', { error })
     }
@@ -79,7 +79,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to add news page"
       return view.render('error', { error })
     }
@@ -120,7 +120,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open user news page"
       return view.render('error', { error })
     }
@@ -135,7 +135,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open open edit news page"
     }
   }
@@ -147,7 +147,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to delete page"
       return view.render('error', { error })
     }
@@ -174,7 +174,7 @@ export default class NewsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to toggle status page"
       return view.render('error', { error })
     }

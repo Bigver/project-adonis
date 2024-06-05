@@ -146,15 +146,27 @@
                   <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                 </div>
               </form>
-
-
               <p class="text-center">
                 <span>New on our platform?</span>
                 <a href="{{route('page.register')}}">
                   <span>Create an account</span>
                 </a>
               </p>
+              <div class="d-flex justify-content-center">
+                <a href="{{route('redirect.fb')}}" class="btn btn-icon btn-label-facebook me-3">
+                  <i class="tf-icons fa-brands fa-facebook-f fs-5"></i>
+                </a>
+  
+                <a href="{{route('redirect.gg')}}" class="btn btn-icon btn-label-google-plus me-3">
+                  <i class="tf-icons fa-brands fa-google fs-5"></i>
+                </a>
+  
+                <a href="{{route('redirect.tt')}}" class="btn btn-icon btn-label-twitter">
+                  <i class="tf-icons fa-brands fa-twitter fs-5"></i>
+                </a>
+              </div>
             </div>
+            
           </div>
           <!-- /Register -->
         </div>

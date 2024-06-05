@@ -48,7 +48,7 @@ export default class UsersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to update user"
       return view.render('error', { error })
     }
@@ -63,7 +63,7 @@ export default class UsersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open user profile"
       return view.render('error', { error })
     }
@@ -76,7 +76,7 @@ export default class UsersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to delete user"
       return view.render('error', { error })
     }
@@ -136,7 +136,7 @@ export default class UsersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open user list page"
       return view.render('error', { error })
     }
@@ -150,7 +150,7 @@ export default class UsersController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open user update page"
       return view.render('error', { error })
     }

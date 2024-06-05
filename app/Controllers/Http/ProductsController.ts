@@ -58,7 +58,7 @@ export default class ProductsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to add product data"
       return view.render('error', { error })
     }
@@ -112,7 +112,7 @@ export default class ProductsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to update product data"
       return view.render('error', { error })
     }
@@ -126,7 +126,7 @@ export default class ProductsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open update product page"
       return view.render('error', { error })
     }
@@ -140,7 +140,7 @@ export default class ProductsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open edit product page"
       return view.render('error', { error })
     }
@@ -153,7 +153,7 @@ export default class ProductsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to open delete product"
       return view.render('error', { error })
     }

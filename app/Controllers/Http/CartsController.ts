@@ -27,7 +27,7 @@ export default class CartsController {
         } catch (error) {
             const message = error.message || JSON.stringify(error);
             const level = "warn"
-            await LogService.create(level, message);
+            LogService.create(level, message);
             error = "Failed to open Shop Cart page"
             return view.render('error', { error })
         }
@@ -55,7 +55,7 @@ export default class CartsController {
         } catch (error) {
             const message = error.message || JSON.stringify(error);
             const level = "warn"
-            await LogService.create(level, message);
+            LogService.create(level, message);
             error = "add cart failed"
             return view.render('error', { error })
         }
@@ -68,7 +68,7 @@ export default class CartsController {
         } catch (error) {
             const message = error.message || JSON.stringify(error);
             const level = "warn"
-            await LogService.create(level, message);
+            LogService.create(level, message);
             error = "failed to increse product quantity"
             return view.render('error', { error })
         }

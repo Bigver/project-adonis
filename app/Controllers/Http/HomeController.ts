@@ -5,8 +5,16 @@ import uploadService from "App/Service/uploads_service";
 
 export default class HomeController {
   public async homeAdmin({ view }: HttpContextContract) {
-    let homeData: any = await HomeService.findById(1);
-    return view.render("admin/homeAdmin", { home: homeData });
+    try {
+      let homeData: any = await HomeService.findById(1);
+      return view.render("admin/homeAdmin", { home: homeData });
+    } catch (error) {
+      const message = error.message || JSON.stringify(error);
+      const level = "warn"
+      LogService.create(level, message);
+      error = "Failed to add contact page data"
+      return view.render('error', { error })
+    }
   }
 
   async update({ request, response, view }: HttpContextContract) {
@@ -64,7 +72,7 @@ export default class HomeController {
     catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to add contact page data"
       return view.render('error', { error })
     }

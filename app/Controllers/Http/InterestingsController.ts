@@ -29,7 +29,7 @@ export default class InterestingsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message)
+      LogService.create(level, message)
       error = "Failed to open show interesting page"
       return view.render('error', { error })
     }
@@ -58,7 +58,7 @@ export default class InterestingsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to add data in interesting page"
       return view.render('error', { error })
     }
@@ -94,7 +94,7 @@ export default class InterestingsController {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
 
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to edit data in interesting page"
       return view.render('error', { error })
     }
@@ -107,7 +107,7 @@ export default class InterestingsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to delete page"
       return view.render('error', { error })
     }
@@ -134,7 +134,7 @@ export default class InterestingsController {
     } catch (error) {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to toggle status page"
       return view.render('error', { error })
     }

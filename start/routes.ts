@@ -71,8 +71,15 @@ Route.group(() => {
     Route.get('/orderChangeStatus/:id', 'OrderController.changeStatusOrder').as('order.change.status')
     Route.get('/order/delete/:id', 'OrderController.delete').as('order.delete')
 
-}).prefix('admin').middleware('auth').middleware('authCheck')
 
+
+}).prefix('admin').middleware(['auth', 'authCheck', 'passwordCheck'])
+
+
+Route.group(() => {
+    Route.get('/update/password', 'AuthController.updatePage').as('social.update.page')
+    Route.post('/update/password/', 'AuthController.update').as('social.update')
+}).prefix('user').middleware('passwordCheck')
 
 
 Route.get('/error', 'PagesController.errorPage').as('page.error')
@@ -82,4 +89,9 @@ Route.post('/register', 'UsersController.register').as('user.register')
 Route.get('/login', 'PagesController.loginPage').as('page.login')
 Route.post('/login', 'UsersController.login').as('user.login')
 Route.get('/logout', 'UsersController.logout').as('user.logout')
-
+Route.get('facebook', 'AuthController.redirectToFacebook').as('redirect.fb')
+Route.get('facebook/callback', 'AuthController.handleFacebookCallback').as('callback.fb')
+Route.get('google', 'AuthController.redirectToGoogle').as('redirect.gg')
+Route.get('google/callback', 'AuthController.handleGoogleCallback').as('callback.gg')
+Route.get('twitter', 'AuthController.redirectToTwitter').as('redirect.tt')
+Route.get('twitter/callback', 'AuthController.handleTwitterCallback').as('callback.tt')

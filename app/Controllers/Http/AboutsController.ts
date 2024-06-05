@@ -65,7 +65,7 @@ export default class AboutsController {
       const message = error.message || JSON.stringify(error);
       const level = "warn"
 
-      await LogService.create(level, message);
+      LogService.create(level, message);
       error = "Failed to add about page data"
       return view.render('error', { error })
     }
